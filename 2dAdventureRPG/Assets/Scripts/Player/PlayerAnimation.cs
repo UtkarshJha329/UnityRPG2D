@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
@@ -5,12 +6,13 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 [RequireComponent(typeof(CharacterStates))]
 [RequireComponent(typeof(PlayerProperties))]
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerAnimation : MonoBehaviour
 {
-
     private Rigidbody2D rb2d;
+    private SpriteRenderer currentPlayerSpriteRenderer;
     private Animator animator;
 
     private CharacterStates characterStates;
@@ -21,6 +23,7 @@ public class PlayerAnimation : MonoBehaviour
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        currentPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
         characterStates = GetComponent<CharacterStates>();
@@ -71,6 +74,7 @@ public class PlayerAnimation : MonoBehaviour
 
         if (characterStates.isKnockbacked && !waitingToResetKnockback)
         {
+            DamageFlash();
             StartCoroutine(KnockbackResetTime());
             waitingToResetKnockback = true;
         }
@@ -84,4 +88,15 @@ public class PlayerAnimation : MonoBehaviour
         characterStates.isKnockbacked = false;
         waitingToResetKnockback = false;
     }
+    private void DamageFlash()
+    {
+        Color originalSpriteColor = currentPlayerSpriteRenderer.color;
+
+        Sequence damageFlashSequence = DOTween.Sequence();
+        damageFlashSequence.Append(currentPlayerSpriteRenderer.DOColor(Color.red, s_PlayerProperties.personalDamageFlashTime).SetEase(Ease.OutElastic));
+        damageFlashSequence.Append(currentPlayerSpriteRenderer.DOColor(originalSpriteColor, s_PlayerProperties.personalDamageFlashTime).SetEase(Ease.OutElastic));
+
+        damageFlashSequence.SetLoops(s_PlayerProperties.numDamageFlashLoops);
+    }
+
 }

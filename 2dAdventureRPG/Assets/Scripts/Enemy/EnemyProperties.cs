@@ -20,5 +20,7 @@ public class EnemyProperties : MonoBehaviour
     public float knockbackForce = 10.0f;
 
     public float personalKnockbackTime = 0.25f;
+    public float personalDamageFlashTime = 0.25f * 0.25f;
+    public int numDamageFlashLoops = 5;
 
 }

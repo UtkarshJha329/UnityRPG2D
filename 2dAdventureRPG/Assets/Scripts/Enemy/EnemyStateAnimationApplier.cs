@@ -1,12 +1,15 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CharacterStates))]
 [RequireComponent(typeof(EnemyProperties))]
 public class EnemyStateAnimationApplier : MonoBehaviour
 {
+    private SpriteRenderer currentEnemySprite;
     private Animator animator;
     private Rigidbody2D rb2d;
     private CharacterStates characterStates;
@@ -16,6 +19,7 @@ public class EnemyStateAnimationApplier : MonoBehaviour
 
     private void Awake()
     {
+        currentEnemySprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         characterStates = GetComponent<CharacterStates>();
@@ -55,6 +59,7 @@ public class EnemyStateAnimationApplier : MonoBehaviour
 
         if (characterStates.isKnockbacked && !waitingToResetKnockback)
         {
+            DamageFlash();
             StartCoroutine(KnockbackResetTime());
             waitingToResetKnockback = true;
         }
@@ -66,6 +71,17 @@ public class EnemyStateAnimationApplier : MonoBehaviour
         rb2d.linearVelocity = Vector2.zero;
         characterStates.isKnockbacked = false;
         waitingToResetKnockback = false;
+    }
+
+    private void DamageFlash()
+    {
+        Color originalSpriteColor = currentEnemySprite.color;
+
+        Sequence damageFlashSequence = DOTween.Sequence();
+        damageFlashSequence.Append(currentEnemySprite.DOColor(Color.red, s_EnemyProperties.personalDamageFlashTime).SetEase(Ease.OutElastic));
+        damageFlashSequence.Append(currentEnemySprite.DOColor(originalSpriteColor, s_EnemyProperties.personalDamageFlashTime).SetEase(Ease.OutElastic));
+
+        damageFlashSequence.SetLoops(s_EnemyProperties.numDamageFlashLoops);
     }
 
 }
