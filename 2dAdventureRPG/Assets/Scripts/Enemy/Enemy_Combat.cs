@@ -134,9 +134,11 @@ public class Enemy_Combat : MonoBehaviour
             {
                 if (collidedColliders.CompareTag("Player"))
                 {
-                    playerHealthManager.ChangeHealth(s_EnemyProperties.damage);
-                    Vector3 knockbackDirection = playerTransform.position - transform.position;
-                    s_PlayerMovement.KnockbackPlayer(s_EnemyProperties.knockbackForce, knockbackDirection);
+                    if (playerHealthManager.ChangeHealth(s_EnemyProperties.damage))
+                    {
+                        Vector3 knockbackDirection = playerTransform.position - transform.position;
+                        s_PlayerMovement.KnockbackPlayer(s_EnemyProperties.knockbackForce, knockbackDirection);
+                    }
                     damagedPlayerSoBreak = true;
                     break;
                 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerCanvas
   - Enemy
+  - DamageTextUIHandler
   layers:
   - Default
   - TransparentFX

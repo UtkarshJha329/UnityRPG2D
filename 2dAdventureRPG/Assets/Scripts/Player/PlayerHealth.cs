@@ -8,8 +8,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]private float currentHealth = 16.0f;
     [SerializeField]private float maxHealth = 16.0f;
 
-    private PlayerHealthUIManager s_PlayerHealthUIManager;
     private CharacterStates characterStates;
+    private PlayerHealthUIManager s_PlayerHealthUIManager;
 
     private void Awake()
     {
@@ -17,20 +17,29 @@ public class PlayerHealth : MonoBehaviour
         s_PlayerHealthUIManager = GetComponent<PlayerHealthUIManager>();
     }
 
-    public void ChangeHealth(float changeAmmount)
+    public bool ChangeHealth(float changeAmmount)
     {
-        currentHealth += changeAmmount;
-
-        if(currentHealth > maxHealth)
+        if(!characterStates.isKnockbacked)
         {
-            currentHealth = maxHealth;
+            currentHealth += changeAmmount;
+
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+
+            s_PlayerHealthUIManager.updatedHealth = true;
+
+            if (currentHealth <= 0)
+            {
+                characterStates.isDead = true;
+            }
+
+            return true;
         }
-
-        s_PlayerHealthUIManager.updatedHealth = true;
-
-        if (currentHealth <= 0)
+        else
         {
-            characterStates.isDead = true;
+            return false;
         }
     }
 

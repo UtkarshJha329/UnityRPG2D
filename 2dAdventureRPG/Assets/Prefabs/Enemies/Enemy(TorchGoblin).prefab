@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 9008648374589221489}
   - component: {fileID: 7762718947023659391}
   - component: {fileID: 2626874037556475673}
+  - component: {fileID: 8269918054671843715}
   - component: {fileID: 5225682628449209119}
   m_Layer: 0
   m_Name: Enemy(TorchGoblin)
@@ -315,6 +316,9 @@ MonoBehaviour:
   facingDirection: {x: 1, y: 1, z: 1}
   knockbackForce: 5
   personalKnockbackTime: 0.25
+  personalDamageFlashTime: 0.0625
+  personalDamageTextTime: 7.5
+  numDamageFlashLoops: 5
 --- !u!114 &6646084242993171397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,6 +394,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96d0c1476ea46ce4d85ea4bea813cef5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8269918054671843715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6897299781908151801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8884b2f3b915324a99293cbb7c9c4d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5225682628449209119
