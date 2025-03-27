@@ -12327,6 +12327,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1354260182}
   - component: {fileID: 1354260181}
+  - component: {fileID: 1354260183}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -12366,6 +12367,31 @@ Transform:
   - {fileID: 1514064513}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1354260183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354260180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec5ebfe37482664592fbd27b577cd45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundTileMap: {fileID: 846549900}
+  groundTileGrassTL: {fileID: 11400000, guid: 588d45008e403ea478b2c3c885be86c2, type: 2}
+  groundTileGrassTM: {fileID: 11400000, guid: de0e8d7b782de924fbd07f450da88a8f, type: 2}
+  groundTileGrassTR: {fileID: 11400000, guid: cd5f679027c8bf34abe5c9d80c2b0d14, type: 2}
+  groundTileGrassML: {fileID: 11400000, guid: 49372ae6a1d31634fb5b87b2030cd69a, type: 2}
+  groundTileGrassMM: {fileID: 11400000, guid: baedc16c793ee5944aa61b0cd42fc11b, type: 2}
+  groundTileGrassMR: {fileID: 11400000, guid: 57e63350284c68349a409485f0687d89, type: 2}
+  groundTileGrassBL: {fileID: 11400000, guid: bb9e911fd93b40046bd9308d5b1c06f4, type: 2}
+  groundTileGrassBM: {fileID: 11400000, guid: e11d7b9594952084d990918a914b5bda, type: 2}
+  groundTileGrassBR: {fileID: 11400000, guid: bfb3dc9d72b54454781caced874a3dea, type: 2}
+  groundTileDrySand: {fileID: 11400000, guid: 6462677d6df4f554fb2e8f4606b3d6f2, type: 2}
+  mapSizeInRooms: {x: 3, y: 10}
+  numTilesInRooms: {x: 18, y: 10}
 --- !u!1 &1362821506
 GameObject:
   m_ObjectHideFlags: 0
