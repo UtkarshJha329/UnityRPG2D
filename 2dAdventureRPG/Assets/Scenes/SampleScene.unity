@@ -12391,6 +12391,7 @@ MonoBehaviour:
   groundTileGrassBR: {fileID: 11400000, guid: bfb3dc9d72b54454781caced874a3dea, type: 2}
   stoneWallTile: {fileID: 11400000, guid: fe5261daf0078e44e9ade140425fe333, type: 2}
   groundTileDrySand: {fileID: 11400000, guid: 6462677d6df4f554fb2e8f4606b3d6f2, type: 2}
+  torchGoblinEnemy: {fileID: 6897299781908151801, guid: c2d6ec4f72573f6418b8cbeb05cd1f31, type: 3}
   mapSizeInRooms: {x: 3, y: 10}
   numTilesInRooms: {x: 18, y: 10}
   minimumSectionSize: {x: 4, y: 4}

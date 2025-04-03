@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -29,6 +30,8 @@ public class MapGenerator : MonoBehaviour
 
     [SerializeField] private Tile groundTileDrySand;
 
+    [SerializeField] private GameObject torchGoblinEnemy;
+
     [SerializeField] private Vector2Int mapSizeInRooms;
     [SerializeField] private Vector2Int numTilesInRooms;
 
@@ -36,6 +39,8 @@ public class MapGenerator : MonoBehaviour
     //[SerializeField] private Vector2Int maximumSectionSize = new Vector2Int(5, 5);
 
     private Vector2Int mapSizeInTiles;
+
+    private List<Vector3> enemyPositions = new List<Vector3>();
 
     private void Awake()
     {
@@ -63,6 +68,14 @@ public class MapGenerator : MonoBehaviour
         {
             //FillRoomWithMaze(new Vector2Int(2 * numTilesInRooms.x, 1 * numTilesInRooms.y));
             FillMapWithMaze();
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        for (int i = 0; i < enemyPositions.Count; i++)
+        {
+            Gizmos.DrawWireSphere(enemyPositions[i], 0.5f);
         }
     }
 
@@ -121,6 +134,7 @@ public class MapGenerator : MonoBehaviour
 
     private void FillMapWithMaze()
     {
+        enemyPositions.Clear();
         for (int j = 0; j < mapSizeInRooms.y; j++)
         {
             for (int i = 0; i < mapSizeInRooms.x; i++)
@@ -143,14 +157,10 @@ public class MapGenerator : MonoBehaviour
                     int maxWidth = numTilesInRooms.x - x;
                     int maxHeight = numTilesInRooms.y - y;
 
-                    //maxWidth = maxWidth > maximumSectionSize.x ? maximumSectionSize.x : maxWidth;
-                    //maxHeight = maxHeight > maximumSectionSize.y ? maximumSectionSize.y : maxHeight;
-
                     for (int i = 0; i < maxWidth; i++)
                     {
                         if (marked[i + x, y])
                         {
-                            //Debug.Log("Extended Max Width from : " + maxWidth + ", to : " + i);
                             maxWidth = i + 1;
                             break;
                         }
@@ -160,24 +170,26 @@ public class MapGenerator : MonoBehaviour
                     int randomSizeY = Random.Range(minimumSectionSize.y, maxHeight);
                     Vector2Int randomSectionSize = new Vector2Int(randomSizeX, randomSizeY);
 
-                    //int remainingTilesX = numTilesInRooms.x - x - randomSectionSize.x;
                     int remainingTilesX = maxWidth - randomSectionSize.x;
-                    Vector2Int added = new Vector2Int(0, 0);
+                    //Vector2Int added = new Vector2Int(0, 0);
                     if (remainingTilesX <= minimumSectionSize.x)
                     {
-                        added.x = remainingTilesX;
+                        //added.x = remainingTilesX;
                         randomSectionSize.x += remainingTilesX;
                     }                    
 
                     int remainingTilesY = numTilesInRooms.y - y - randomSectionSize.y;
                     if (remainingTilesY <= minimumSectionSize.y)
                     {
-                        added.y = remainingTilesY;
+                        //added.y = remainingTilesY;
                         randomSectionSize.y += remainingTilesY;
                     }
 
-                    //Debug.Log("Random Section Size : " + randomSectionSize.x + ", " + randomSectionSize.y + " From : " + x + ", " + y);
-                    //Debug.Log("Added " + added.x + ", " + added.y);
+                    List<Vector2> enemySpawnCornerPos = new List<Vector2>();
+                    enemySpawnCornerPos.Add(new Vector2(x + 1, y + 1));          // Bottom Left
+                    enemySpawnCornerPos.Add(new Vector2(x + randomSectionSize.x - 2, y + 1));          // Bottom Right
+                    enemySpawnCornerPos.Add(new Vector2(x + 1, y + randomSectionSize.y - 2));          // Top Left
+                    enemySpawnCornerPos.Add(new Vector2(x + randomSectionSize.x - 2, y + randomSectionSize.y - 2));         // Top Right
 
                     for (int j = y; j < (y + randomSectionSize.y); j++)
                     {
@@ -185,26 +197,36 @@ public class MapGenerator : MonoBehaviour
                         {
                             if (!marked[i, j])
                             {
-                                //Debug.Log("Before : " + i + ", " + j);
+                                int enemyTilePosIndex = IsEnemyGenerationTile(new Vector2(i, j), ref enemySpawnCornerPos);
+                                if (enemyTilePosIndex != -1)
+                                {
+                                    //Debug.Log("Enemy generation tile pos.");
+                                    //Debug.Log(i + ", " + j);
+                                    Vector3 curEnemyPos = new Vector3(offsetInTiles.x + i, offsetInTiles.y + j, 0);
+                                    curEnemyPos.x += 0.5f;
+                                    curEnemyPos.y += 0.5f;
+                                    //Gizmos.DrawWireSphere(curEnemyPos, 0.5f);
+                                    enemyPositions.Add(curEnemyPos);
+                                    //if(enemyPositions.Count % 1 == 0)
+                                    //{
+                                    //    Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity);
+                                    //}
+                                    Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity);
+                                }
+
                                 marked[i, j] = true;
-                                //Debug.Log("After : " + i + ", " + j);
 
                                 Vector3Int curTilePosInTileMapGrid = new Vector3Int(offsetInTiles.x + i, offsetInTiles.y + j, 0);
                                 bool borderTile = false;
                                 if (j == y)
                                 {
                                     //Bottom border of the section.
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassBM);
                                     groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassMM);
                                     borderTile = true;
                                 }
                                 else if (j == (y + randomSectionSize.y - 1))
                                 {
                                     //Top border of the section.
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassTM);
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassMM);
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileDrySand);
                                     marked[i, j] = false;
                                     borderTile = true;
                                 }
@@ -212,18 +234,12 @@ public class MapGenerator : MonoBehaviour
                                 if (i == x)
                                 {
                                     //Left border of the section.
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassML);
                                     groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassMM);
                                     borderTile = true;
                                 }
                                 else if (i == (x + randomSectionSize.x - 1))
                                 {
                                     //Right border of the section.
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassMR);
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassMM);
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileDrySand);
-                                    //marked[i, j] = false;
                                     marked[i, j] = false;
                                     borderTile = true;
                                 }
@@ -232,7 +248,6 @@ public class MapGenerator : MonoBehaviour
                                 {
                                     //Non border of the section.
                                     groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileGrassMM);
-                                    //groundTileMap.SetTile(curTilePosInTileMapGrid, groundTileDrySand);
                                 }
                             }
                         }
@@ -240,5 +255,24 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    void GenerateEnemy(Vector3 position)
+    {
+        GameObject instantiatedEnemy = Instantiate(torchGoblinEnemy);
+        instantiatedEnemy.transform.position = new Vector3(position.x, position.y, 0.0f);
+    }
+
+    private int IsEnemyGenerationTile(Vector2 tilePosIndex, ref List<Vector2> enemyGenerationTileIndices)
+    {
+        for (int i = 0; i < enemyGenerationTileIndices.Count; i++)
+        {
+            if (enemyGenerationTileIndices[i].x == tilePosIndex.x && enemyGenerationTileIndices[i].y == tilePosIndex.y)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
