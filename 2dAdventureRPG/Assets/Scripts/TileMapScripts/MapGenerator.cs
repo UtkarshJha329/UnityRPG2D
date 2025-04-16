@@ -139,13 +139,14 @@ public class MapGenerator : MonoBehaviour
         {
             for (int i = 0; i < mapSizeInRooms.x; i++)
             {
-                FillRoomWithMaze(new Vector2Int(numTilesInRooms.x * i, numTilesInRooms.y * j));
+                FillRoomWithMaze(new Vector2Int(i, j));
             }
         }
     }
 
-    private void FillRoomWithMaze(Vector2Int offsetInTiles)
+    private void FillRoomWithMaze(Vector2Int roomIndex)
     {
+        Vector2Int offsetInTiles = new Vector2Int(roomIndex.x * numTilesInRooms.x, roomIndex.y * numTilesInRooms.y);
         bool[,] marked = new bool[numTilesInRooms.x, numTilesInRooms.y];
 
         for (int y = 0; y < numTilesInRooms.y; y++)
@@ -185,12 +186,15 @@ public class MapGenerator : MonoBehaviour
                         randomSectionSize.y += remainingTilesY;
                     }
 
-                    List<Vector2> enemySpawnCornerPos = new List<Vector2>();
-                    enemySpawnCornerPos.Add(new Vector2(x + 1, y + 1));          // Bottom Left
-                    enemySpawnCornerPos.Add(new Vector2(x + randomSectionSize.x - 2, y + 1));          // Bottom Right
-                    enemySpawnCornerPos.Add(new Vector2(x + 1, y + randomSectionSize.y - 2));          // Top Left
-                    enemySpawnCornerPos.Add(new Vector2(x + randomSectionSize.x - 2, y + randomSectionSize.y - 2));         // Top Right
+                    List<Vector2> enemySpawnCornerPos = new List<Vector2>
+                    {
+                        new Vector2(x + 1, y + 1),                                                      // Bottom Left
+                        new Vector2(x + randomSectionSize.x - 2, y + 1),                                // Bottom Right
+                        new Vector2(x + 1, y + randomSectionSize.y - 2),                                // Top Left
+                        new Vector2(x + randomSectionSize.x - 2, y + randomSectionSize.y - 2)           // Top Right
+                    };
 
+                    int numEnemiesInThisSection = 0;
                     for (int j = y; j < (y + randomSectionSize.y); j++)
                     {
                         for (int i = x; i < (x + randomSectionSize.x); i++)
@@ -198,7 +202,7 @@ public class MapGenerator : MonoBehaviour
                             if (!marked[i, j])
                             {
                                 int enemyTilePosIndex = IsEnemyGenerationTile(new Vector2(i, j), ref enemySpawnCornerPos);
-                                if (enemyTilePosIndex != -1)
+                                if (enemyTilePosIndex != -1 && CanSpawnMoreEnemiesInThisSection(numEnemiesInThisSection, randomSectionSize, roomIndex.y))
                                 {
                                     //Debug.Log("Enemy generation tile pos.");
                                     //Debug.Log(i + ", " + j);
@@ -211,7 +215,13 @@ public class MapGenerator : MonoBehaviour
                                     //{
                                     //    Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity);
                                     //}
-                                    Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity);
+                                    GameObject enemyGameobject = Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity);
+                                    List<Vector2> patrolWaypoints = new List<Vector2>();
+                                    patrolWaypoints = PatrolingWayPointsListGenerator(enemyTilePosIndex, offsetInTiles, ref enemySpawnCornerPos);
+                                    Enemy_Movement enemyMovementComponent = enemyGameobject.GetComponent<Enemy_Movement>();
+                                    enemyMovementComponent.patrollingWayPoints = patrolWaypoints;
+
+                                    numEnemiesInThisSection++;
                                 }
 
                                 marked[i, j] = true;
@@ -263,6 +273,23 @@ public class MapGenerator : MonoBehaviour
         instantiatedEnemy.transform.position = new Vector3(position.x, position.y, 0.0f);
     }
 
+    private bool CanSpawnMoreEnemiesInThisSection(int numberOfEnemiesSpawned, Vector2 randomSectionSize, int roomY)
+    {
+        int difficultyBuffer = 2;
+        int minimumOneDimensionOffsetFromMinSectionSize = 3;
+        if((randomSectionSize.x > minimumSectionSize.x + minimumOneDimensionOffsetFromMinSectionSize && randomSectionSize.y > minimumSectionSize.y) ||
+            (randomSectionSize.x > minimumSectionSize.x && randomSectionSize.y > minimumSectionSize.y + minimumOneDimensionOffsetFromMinSectionSize))
+        {
+            return Random.Range(0, 10) >= mapSizeInRooms.y - roomY - difficultyBuffer;
+        }
+        else if(randomSectionSize.x == minimumSectionSize.x || randomSectionSize.y == minimumSectionSize.y)
+        {
+            return numberOfEnemiesSpawned < 2 && Random.Range(0, 10) >= mapSizeInRooms.y - roomY - difficultyBuffer;
+        }
+
+        return false;
+    }
+
     private int IsEnemyGenerationTile(Vector2 tilePosIndex, ref List<Vector2> enemyGenerationTileIndices)
     {
         for (int i = 0; i < enemyGenerationTileIndices.Count; i++)
@@ -274,5 +301,33 @@ public class MapGenerator : MonoBehaviour
         }
 
         return -1;
+    }
+
+    private List<Vector2> PatrolingWayPointsListGenerator(int curCornerIndex, Vector2 offsetInTiles, ref List<Vector2> corners)
+    {
+        List<Vector2> patrolingWayPointsList = new List<Vector2>();
+
+        if(curCornerIndex == 0)
+        {
+            patrolingWayPointsList.Add(offsetInTiles + corners[0] + new Vector2(0.5f, 0.5f));
+            patrolingWayPointsList.Add(offsetInTiles + corners[2] + new Vector2(0.5f, 0.5f));
+        }
+        else if(curCornerIndex == 1)
+        {
+            patrolingWayPointsList.Add(offsetInTiles + corners[0] + new Vector2(0.5f, 0.5f));
+            patrolingWayPointsList.Add(offsetInTiles + corners[1] + new Vector2(0.5f, 0.5f));
+        }
+        else if(curCornerIndex == 2)
+        {
+            patrolingWayPointsList.Add(offsetInTiles + corners[2] + new Vector2(0.5f, 0.5f));
+            patrolingWayPointsList.Add(offsetInTiles + corners[3] + new Vector2(0.5f, 0.5f));
+        }
+        else if(curCornerIndex == 3)
+        {
+            patrolingWayPointsList.Add(offsetInTiles + corners[3] + new Vector2(0.5f, 0.5f));
+            patrolingWayPointsList.Add(offsetInTiles + corners[1] + new Vector2(0.5f, 0.5f));
+        }
+
+        return patrolingWayPointsList;
     }
 }

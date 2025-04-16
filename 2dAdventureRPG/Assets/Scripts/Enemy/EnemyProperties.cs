@@ -24,5 +24,5 @@ public class EnemyProperties : MonoBehaviour
     public float personalDamageTextTime = 7.5f;
     public int numDamageFlashLoops = 5;
 
-
+    public float wayPointStoppingDistance = 0.1f;
 }

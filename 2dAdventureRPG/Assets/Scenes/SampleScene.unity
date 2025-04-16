@@ -15727,6 +15727,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy(TorchGoblin)
       objectReference: {fileID: 0}
+    - target: {fileID: 6897299781908151801, guid: c2d6ec4f72573f6418b8cbeb05cd1f31, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,6 +10,8 @@ using UnityEngine;
 public class Enemy_Movement : MonoBehaviour
 {
 
+    public List<Vector2> patrollingWayPoints;
+
     private Rigidbody2D rb2d;
     private CircleCollider2D detectorCircle;
     private CharacterStates characterStates;
@@ -17,6 +21,8 @@ public class Enemy_Movement : MonoBehaviour
 
     private bool playerWasDetected = false;
 
+    private int curWaypointIndex = 1;
+    private bool switchingToNextWayPoint = false;
 
     private void Awake()
     {
@@ -84,10 +90,30 @@ public class Enemy_Movement : MonoBehaviour
             else
             {
                 playerWasDetected = false;
-                rb2d.linearVelocity = Vector2.zero;
 
-                characterStates.isMoving = false;
-                characterStates.isIdling = true;
+                Vector2 displacementBetweenCurWayPointAndEnemy = patrollingWayPoints[curWaypointIndex] - new Vector2(transform.position.x, transform.position.y);
+                float distanceToWaypoint = displacementBetweenCurWayPointAndEnemy.magnitude;
+                if (distanceToWaypoint > s_EnemyProperties.wayPointStoppingDistance)
+                {
+                    rb2d.linearVelocity = displacementBetweenCurWayPointAndEnemy.normalized * s_EnemyProperties.speed;
+
+                    characterStates.isMoving = true;
+                    characterStates.isIdling = false;
+                }
+                else
+                {
+                    rb2d.linearVelocity = Vector2.zero;
+
+                    characterStates.isMoving = false;
+                    characterStates.isIdling = true;
+
+                    if (!switchingToNextWayPoint)
+                    {
+                        switchingToNextWayPoint = true;
+                        StartCoroutine(SwitchToNextWayPointAfterWaiting());
+                    }
+                }
+
             }
         }
     }
@@ -98,6 +124,25 @@ public class Enemy_Movement : MonoBehaviour
 
         Vector3 knockbackForce = knockbackDirection * knockbackForceValue;
         rb2d.AddForce(knockbackForce, ForceMode2D.Impulse);
+    }
+
+    IEnumerator SwitchToNextWayPointAfterWaiting()
+    {
+        yield return new WaitForSeconds(5.0f);
+        curWaypointIndex = GetNextWayPointIndex(curWaypointIndex);
+        switchingToNextWayPoint = false;
+    }
+
+    private int GetNextWayPointIndex(int curWayPointIndex)
+    {
+        if (curWayPointIndex + 1 < patrollingWayPoints.Count)
+        {
+            return curWayPointIndex + 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
 }
