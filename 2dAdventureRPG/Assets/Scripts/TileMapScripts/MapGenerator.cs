@@ -37,6 +37,8 @@ public class Room
     public List<Section> sections = new List<Section>();
 
     public List<Vector2Int> connectedRooms = new List<Vector2Int>();
+
+    public List<int> entryExitSectionIndex = new List<int>();
 }
 
 [System.Serializable]
@@ -52,7 +54,7 @@ public class Connection
     public Vector2Int b;
 }
 
-public class ConnectionEntryExitTiles
+public class ConnectionTiles
 {
     public Vector3Int worldTileA;
     public Vector3Int worldTileB;
@@ -188,8 +190,8 @@ public class MapGenerator : MonoBehaviour
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, MakeConnectionsForRoomVisibleOnMap);
 
-        //roomsSeen.Clear();
-        //TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, );
+        roomsSeen.Clear();
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, FormConnectionsBetweenSectionsInRoom);
 
         roomsThatHaveBeenCreated.Clear();
         foreach (KeyValuePair<Vector2Int, Room> roomData in roomIndexAndRoom)
@@ -213,6 +215,9 @@ public class MapGenerator : MonoBehaviour
 
             roomsSeen.Clear();
             TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, DrawAllPossibleConnectionsBetweenSectionsInRoom);
+
+            //roomsSeen.Clear();
+            //TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, PaintRoomEntryExitSections);
         }
     }
 
@@ -247,22 +252,62 @@ public class MapGenerator : MonoBehaviour
         return true;
     }
 
+    private bool FormConnectionsBetweenSectionsInRoom(Vector2Int curRoomIndex)
+    {
+        Room curRoom = roomIndexAndRoom[curRoomIndex];
+        Vector3 roomOffset = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
+
+        //int baseNumberOfConnectionsSectionsCanForm = 2;
+        //int minNumberOfConnectionsEntryExitSectionsCanForm = 2;
+
+        List<int> numConnectionsPerSection = new List<int>();
+        for (int i = 0; i < curRoom.sections.Count; i++)
+        {
+            //int numConnectionsSectionACanForm = curRoom.entryExitSectionIndex.Contains(i) ? minNumberOfConnectionsEntryExitSectionsCanForm : baseNumberOfConnectionsSectionsCanForm;
+            for (int j = i; j < curRoom.sections.Count; j++)
+            {
+                //int numConnectionsSectionBCanForm = curRoom.entryExitSectionIndex.Contains(i) ? minNumberOfConnectionsEntryExitSectionsCanForm : baseNumberOfConnectionsSectionsCanForm;
+                List<ConnectionTiles> connectionTiles = new List<ConnectionTiles>();
+                if (CanSectionsBeConnected(curRoom.sections[i], curRoom.sections[j], new Vector3Int((int)roomOffset.x, (int)roomOffset.y, 0), ref connectionTiles))
+                {
+                    //Vector3 sectionACentred = new Vector3(curRoom.sections[i].bottomLeft.x + curRoom.sections[i].size.x / 2, curRoom.sections[i].bottomLeft.y + curRoom.sections[i].size.y / 2, 0.0f);
+                    //Vector3 sectionBCentred = new Vector3(curRoom.sections[j].bottomLeft.x + curRoom.sections[j].size.x / 2, curRoom.sections[j].bottomLeft.y + curRoom.sections[j].size.y / 2, 0.0f);
+
+                    //sectionACentred += roomOffset;
+                    //sectionBCentred += roomOffset;
+
+                    //Gizmos.color = Color.red;
+                    //Gizmos.DrawLine(sectionACentred, sectionBCentred);
+                }
+
+                for (int k = 0; k < connectionTiles.Count; k++)
+                {
+                    groundTileMap.SetTile(connectionTiles[k].worldTileA, groundTileDrySand);
+                    groundTileMap.SetTile(connectionTiles[k].worldTileB, groundTileDrySand);
+                }
+            }
+        }
+
+        return true;
+    }
+
     private bool DrawAllPossibleConnectionsBetweenSectionsInRoom(Vector2Int curRoomIndex)
     {
         Room curRoom = roomIndexAndRoom[curRoomIndex];
-        Vector3 curRoomPos = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
+        Vector3 roomOffset = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
 
         for (int i = 0; i < curRoom.sections.Count; i++)
         {
             for (int j = i; j < curRoom.sections.Count; j++)
             {
-                if (CanSectionsBeConnected(curRoom.sections[i], curRoom.sections[j]))
+                List<ConnectionTiles> connectionTiles = new List<ConnectionTiles>();
+                if (CanSectionsBeConnected(curRoom.sections[i], curRoom.sections[j], new Vector3Int((int)roomOffset.x, (int)roomOffset.y, 0), ref connectionTiles))
                 {
                     Vector3 sectionACentred = new Vector3(curRoom.sections[i].bottomLeft.x + curRoom.sections[i].size.x / 2, curRoom.sections[i].bottomLeft.y + curRoom.sections[i].size.y / 2, 0.0f);
                     Vector3 sectionBCentred = new Vector3(curRoom.sections[j].bottomLeft.x + curRoom.sections[j].size.x / 2, curRoom.sections[j].bottomLeft.y + curRoom.sections[j].size.y / 2, 0.0f);
 
-                    sectionACentred += curRoomPos;
-                    sectionBCentred += curRoomPos;
+                    sectionACentred += roomOffset;
+                    sectionBCentred += roomOffset;
 
                     Gizmos.color = Color.red;
                     Gizmos.DrawLine(sectionACentred, sectionBCentred);
@@ -273,41 +318,44 @@ public class MapGenerator : MonoBehaviour
         return true;
     }
 
-    private bool CanSectionsBeConnected(Section a, Section b)
+    private bool CanSectionsBeConnected(Section a, Section b, Vector3Int roomOffset, ref List<ConnectionTiles> connectionTiles)
     {
-        return (SectionsShareAHorizontalBorder(a, b) > 0) || (SectionsShareAVerticalBorder(a, b) > 0);
+        return (SectionsShareAHorizontalBorder(a, b, roomOffset, ref connectionTiles) > 0) || (SectionsShareAVerticalBorder(a, b, roomOffset, ref connectionTiles) > 0);
     }
 
-    private int SectionsShareAVerticalBorder(Section a, Section b)
+    private int SectionsShareAVerticalBorder(Section a, Section b, Vector3Int roomOffset, ref List<ConnectionTiles> connectionTiles)
     {
         Vector2 bottomLeftA = a.bottomLeft;
-        Vector2 topLeftA = bottomLeftA + Vector2.up * a.size.y;
-        Vector2 bottomRightA = a.bottomLeft + Vector2.right * a.size.x;
-        Vector2 topRightA = bottomRightA + Vector2.up * a.size.y;
+        Vector2 topLeftA = a.bottomLeft + Vector2.up * a.size.y + Vector2.down;
+        Vector2 bottomRightA = a.bottomLeft + Vector2.right * a.size.x + Vector2.left;
+        Vector2 topRightA = a.bottomLeft + a.size + Vector2.one * -1.0f;
 
         Vector2 bottomLeftB = b.bottomLeft;
-        Vector2 topLeftB = bottomLeftB + Vector2.up * b.size.y;
-        Vector2 bottomRightB = b.bottomLeft + Vector2.right * b.size.x;
-        Vector2 topRightB = bottomRightB + Vector2.up * b.size.y;
+        Vector2 topLeftB = b.bottomLeft + Vector2.up * b.size.y + Vector2.down;
+        Vector2 bottomRightB = b.bottomLeft + Vector2.right * b.size.x + Vector2.left;
+        Vector2 topRightB = b.bottomLeft + b.size + Vector2.down * -1.0f;
 
 
-        if (bottomRightA.x == bottomLeftB.x)
+        if (Mathf.Abs(bottomRightA.x - bottomLeftB.x) == 1)
         {
             if((bottomRightA.y >= bottomLeftB.y) && (bottomRightA.y <= topLeftB.y)
                 || (topRightA.y >= bottomLeftB.y) && (topRightA.y <= topLeftB.y))
             {
+                NeighbouringTilesForSectionsVerticalBorder(topRightA, bottomRightA, topLeftB, bottomLeftB, roomOffset, ref connectionTiles);
                 return 1;
             }
             else
             {
                 return -1;
             }
-        } 
-        else if (bottomLeftA.x == bottomRightB.x)
+        }
+
+        if (Mathf.Abs(bottomLeftA.x - bottomRightB.x) == 1)
         {
             if ((bottomLeftA.y >= bottomRightB.y) && (bottomLeftA.y <= topRightB.y)
                 || (topLeftA.y >= bottomRightB.y) && (topLeftA.y <= topRightB.y))
             {
+                NeighbouringTilesForSectionsVerticalBorder(topLeftA, bottomLeftA, topRightB, bottomRightB, roomOffset, ref connectionTiles);
                 return 2;
             }
             else
@@ -315,53 +363,89 @@ public class MapGenerator : MonoBehaviour
                 return -2;
             }
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 
-    private int SectionsShareAHorizontalBorder(Section a, Section b)
+    private int SectionsShareAHorizontalBorder(Section a, Section b, Vector3Int roomOffset, ref List<ConnectionTiles> connectionTiles)
     {
         Vector2 bottomLeftA = a.bottomLeft;
-        Vector2 topLeftA = bottomLeftA + Vector2.up * a.size.y;
-        Vector2 bottomRightA = a.bottomLeft + Vector2.right * a.size.x;
-        Vector2 topRightA = bottomRightA + Vector2.up * a.size.y;
+        Vector2 topLeftA = a.bottomLeft + Vector2.up * a.size.y + Vector2.down;
+        Vector2 bottomRightA = a.bottomLeft + Vector2.right * a.size.x + Vector2.left;
+        Vector2 topRightA = a.bottomLeft + a.size + Vector2.one * -1.0f;
 
         Vector2 bottomLeftB = b.bottomLeft;
-        Vector2 topLeftB = bottomLeftB + Vector2.up * b.size.y;
-        Vector2 bottomRightB = b.bottomLeft + Vector2.right * b.size.x;
-        Vector2 topRightB = bottomRightB + Vector2.up * b.size.y;
+        Vector2 topLeftB = b.bottomLeft + Vector2.up * b.size.y + Vector2.down;
+        Vector2 bottomRightB = b.bottomLeft + Vector2.right * b.size.x + Vector2.left;
+        Vector2 topRightB = b.bottomLeft + b.size + Vector2.down * -1.0f;
 
-        if (topLeftA.y == bottomLeftB.y)
+        if (Mathf.Abs(topLeftA.y - bottomLeftB.y) == 1)
         {
             if ((topRightA.x >= bottomLeftB.x) && (topRightA.x <= bottomRightB.x)
                 || (topLeftA.x >= bottomLeftB.x) && (topLeftA.x <= bottomRightB.x))
             {
+                NeighbouringTilesForSectionsHorizontalBorder(topLeftA, topRightA, bottomLeftB, bottomRightB, roomOffset, ref connectionTiles);
                 return 1;
             }
             else
             {
                 return -1;
             }
+
         }
-        if (bottomLeftA.y == topLeftB.y)
+
+        if (Mathf.Abs(bottomLeftA.y - topLeftB.y) == 1)
         {
             if ((bottomRightA.x >= topLeftB.x) && (bottomRightA.x <= topRightB.x)
                 || (bottomLeftA.x >= topLeftB.x) && (bottomLeftA.x <= topRightB.x))
             {
+                NeighbouringTilesForSectionsHorizontalBorder(bottomLeftA, bottomRightA, topLeftB, topRightA, roomOffset, ref connectionTiles);
                 return 2;
             }
             else
             {
                 return -2;
             }
+
         }
-        else
+
+        return 0;
+    }
+
+    private void NeighbouringTilesForSectionsVerticalBorder(Vector2 topA, Vector2 bottomA, Vector2 topB, Vector2 bottomB, Vector3Int roomOffset, ref List<ConnectionTiles> tilesThatAllowConnection)
+    {
+        int minimumTopY = (int)Mathf.Min(topA.y, topB.y);
+        int maximumBottomY = (int)Mathf.Max(bottomA.y, bottomB.y);
+
+        for (int i = maximumBottomY; i <= minimumTopY; i++)
         {
-            return 0;
+            ConnectionTiles curConnectionTile = new ConnectionTiles();
+            curConnectionTile.worldTileA = new Vector3Int((int)bottomA.x, i, 0) + roomOffset;
+            curConnectionTile.worldTileB = new Vector3Int((int)bottomB.x, i, 0) + roomOffset;
+
+            tilesThatAllowConnection.Add(curConnectionTile);
+            //groundTileMap.SetTile(new Vector3Int((int)bottomA.x, i, 0) + roomAOffset, groundTileDrySand);
+            //groundTileMap.SetTile(new Vector3Int((int)bottomB.x, i, 0) + roomBOffset, groundTileDrySand);
         }
     }
+
+    private void NeighbouringTilesForSectionsHorizontalBorder(Vector2 topLeftA, Vector2 topRightA, Vector2 bottomLeftB, Vector2 bottomRightB, Vector3Int roomOffset, ref List<ConnectionTiles> tilesThatAllowConnection)
+    {
+        int minimumRightX = (int)Mathf.Min(topRightA.x, bottomRightB.x);
+        int maximumLeftX = (int)Mathf.Max(topLeftA.x, bottomLeftB.x);
+
+        for (int i = maximumLeftX; i <= minimumRightX; i++)
+        {
+            ConnectionTiles curConnectionTile = new ConnectionTiles();
+            curConnectionTile.worldTileA = new Vector3Int(i, (int)topLeftA.y, 0) + roomOffset;
+            curConnectionTile.worldTileB = new Vector3Int(i, (int)bottomLeftB.y, 0) + roomOffset;
+
+            tilesThatAllowConnection.Add(curConnectionTile);
+            //groundTileMap.SetTile(new Vector3Int(i, (int)topLeftA.y, 0) + roomAOffset, groundTileDrySand);
+            //groundTileMap.SetTile(new Vector3Int(i, (int)bottomLeftB.y, 0) + roomBOffset, groundTileDrySand);
+        }
+    }
+
 
     private bool MakeConnectionsForRoomVisibleOnMap(Vector2Int currentRoomIndex)
     {
@@ -448,6 +532,16 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    private bool PaintRoomEntryExitSections(Vector2Int currentRoomIndex)
+    {
+        Room currentRoom = roomIndexAndRoom[currentRoomIndex];
+        for (int i = 0; i < currentRoom.entryExitSectionIndex.Count; i++)
+        {
+            PaintSectionToSand(currentRoomIndex, currentRoom.sections[currentRoom.entryExitSectionIndex[i]]);
+        }
+        return true;
+    }
+
     private void TilesThatConnectInSectionLists(Vector2Int roomAIndex, Vector2Int roomBIndex, int curConnectedRoomIsLeftRightUp, List<int> sectionsATouchingB, List<int> sectionsBTouchingA)
     {
         Room roomA = roomIndexAndRoom[roomAIndex];
@@ -456,7 +550,7 @@ public class MapGenerator : MonoBehaviour
         Vector3Int roomAOffset = new Vector3Int(roomAIndex.x * numTilesInRooms.x, roomAIndex.y * numTilesInRooms.y, 0);
         Vector3Int roomBOffset = new Vector3Int(roomBIndex.x * numTilesInRooms.x, roomBIndex.y * numTilesInRooms.y, 0);
 
-        List<ConnectionEntryExitTiles> tilesThatAllowConnection = new List<ConnectionEntryExitTiles>();
+        List<ConnectionTiles> tilesThatAllowConnection = new List<ConnectionTiles>();
 
         for (int i = 0; i < sectionsATouchingB.Count; i++)
         {
@@ -471,14 +565,46 @@ public class MapGenerator : MonoBehaviour
 
         int randConnectionTile = Random.Range(0, tilesThatAllowConnection.Count);
 
-        groundTileMap.SetTile(tilesThatAllowConnection[randConnectionTile].worldTileA, groundTileDrySand);
-        groundTileMap.SetTile(tilesThatAllowConnection[randConnectionTile].worldTileB, groundTileDrySand);
+        Vector3Int tileA = tilesThatAllowConnection[randConnectionTile].worldTileA;
+        Vector3Int tileB = tilesThatAllowConnection[randConnectionTile].worldTileB;
+
+        groundTileMap.SetTile(tileA, groundTileDrySand);
+        groundTileMap.SetTile(tileB, groundTileDrySand);
+
+        for (int i = 0; i < sectionsATouchingB.Count; i++)
+        {
+            Section curSectionA = roomA.sections[sectionsATouchingB[i]];
+            if (TileBelongsToSection(tileA, curSectionA, roomAOffset))
+            {
+                roomA.entryExitSectionIndex.Add(sectionsATouchingB[i]);
+            }
+        }
+
+        for (int i = 0; i < sectionsBTouchingA.Count; i++)
+        {
+            Section curSectionB = roomB.sections[sectionsBTouchingA[i]];
+            if (TileBelongsToSection(tileB, curSectionB, roomBOffset))
+            {
+                roomB.entryExitSectionIndex.Add(sectionsBTouchingA[i]);
+            }
+        }
 
         //groundTileMap.SetTile(tilesThatAllowConnection[randConnectionTile].worldTileA, groundTileGrassMM);
         //groundTileMap.SetTile(tilesThatAllowConnection[randConnectionTile].worldTileB, groundTileGrassMM);
     }
 
-    private void ConnectingTilesOfTwoSections(Section a, Section b, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp, ref List<ConnectionEntryExitTiles> tilesThatAllowConnection)
+    private bool TileBelongsToSection(Vector3Int currentTileIndexWorld, Section curSection, Vector3Int currentRoomOffset)
+    {
+        Vector3Int currentSectionBottomLeftWorldPos = new Vector3Int((int)curSection.bottomLeft.x + currentRoomOffset.x, (int)curSection.bottomLeft.y + currentRoomOffset.y, 0);
+
+        return (currentTileIndexWorld.x >= currentSectionBottomLeftWorldPos.x
+            && currentTileIndexWorld.x <= currentSectionBottomLeftWorldPos.x + curSection.size.x
+            && currentTileIndexWorld.y >= currentSectionBottomLeftWorldPos.y
+            && currentTileIndexWorld.y <= currentSectionBottomLeftWorldPos.y + curSection.size.y);
+    }
+
+
+    private void ConnectingTilesOfTwoSections(Section a, Section b, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp, ref List<ConnectionTiles> tilesThatAllowConnection)
     {
         // Why adding an offset of Vector2.left to the code below works? Hell if I know. But it does. So I won't touch it. Ah...its the tile that becomes a wall and the fafct that size is one greater than that?
 
@@ -514,7 +640,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void NeighbouringTilesLR(Vector3 topA, Vector3 bottomA, Vector3 topB, Vector3 bottomB, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp, ref List<ConnectionEntryExitTiles> tilesThatAllowConnection)
+    private void NeighbouringTilesLR(Vector3 topA, Vector3 bottomA, Vector3 topB, Vector3 bottomB, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp, ref List<ConnectionTiles> tilesThatAllowConnection)
     {
         if(curConnectedRoomIsLeftRightUp == left || curConnectedRoomIsLeftRightUp == right)
         {
@@ -523,7 +649,7 @@ public class MapGenerator : MonoBehaviour
 
             for (int i = maximumBottomY; i <= minimumTopY; i++)
             {
-                ConnectionEntryExitTiles curConnectionTile = new ConnectionEntryExitTiles();
+                ConnectionTiles curConnectionTile = new ConnectionTiles();
                 curConnectionTile.worldTileA = new Vector3Int((int)bottomA.x, i, 0) + roomAOffset;
                 curConnectionTile.worldTileB = new Vector3Int((int)bottomB.x, i, 0) + roomBOffset;
 
@@ -534,7 +660,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void NeighbouringTilesU(Vector3 topLeftA, Vector3 topRightA, Vector3 bottomLeftB, Vector3 bottomRightB, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp, ref List<ConnectionEntryExitTiles> tilesThatAllowConnection)
+    private void NeighbouringTilesU(Vector3 topLeftA, Vector3 topRightA, Vector3 bottomLeftB, Vector3 bottomRightB, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp, ref List<ConnectionTiles> tilesThatAllowConnection)
     {
         if (curConnectedRoomIsLeftRightUp == up)
         {
@@ -543,7 +669,7 @@ public class MapGenerator : MonoBehaviour
 
             for (int i = maximumLeftX; i <= minimumRightX; i++)
             {
-                ConnectionEntryExitTiles curConnectionTile = new ConnectionEntryExitTiles();
+                ConnectionTiles curConnectionTile = new ConnectionTiles();
                 curConnectionTile.worldTileA = new Vector3Int(i, (int)topLeftA.y, 0) + roomAOffset;
                 curConnectionTile.worldTileB = new Vector3Int(i, (int)bottomLeftB.y, 0) + roomBOffset;
 
