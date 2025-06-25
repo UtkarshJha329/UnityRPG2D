@@ -293,7 +293,10 @@ public class MapGenerator : MonoBehaviour
         }
         else if(curConnectedRoomIsLeftRightUp == up)
         {
+            List<int> sectionsOfRoomAFacingB = SectionsWithRoomWallOfSide(roomAIndex, SectionBorderingWallType.Top);
+            List<int> sectionsOfRoomBFacingA = SectionsWithRoomWallOfSide(roomBIndex, SectionBorderingWallType.Bottom);
 
+            TilesThatConnectInSectionLists(roomAIndex, roomBIndex, curConnectedRoomIsLeftRightUp, sectionsOfRoomAFacingB, sectionsOfRoomBFacingA);
         }
     }
 
@@ -333,7 +336,7 @@ public class MapGenerator : MonoBehaviour
 
     private void ConnectingTilesOfTwoSections(Section a, Section b, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp)
     {
-        // Why adding an offset of Vector2.left to the code below works? Hell if I know. But it does. So I won't touch it.
+        // Why adding an offset of Vector2.left to the code below works? Hell if I know. But it does. So I won't touch it. Ah...its the tile that becomes a wall and the fafct that size is one greater than that?
 
         if (curConnectedRoomIsLeftRightUp == left)
         {
@@ -343,7 +346,7 @@ public class MapGenerator : MonoBehaviour
             Vector3 bottomRightB = b.bottomLeft + new Vector2(b.size.x, 0.0f) + Vector2.up;                             // Trim bottom most row since it can't be connected as it is entirely stone
             Vector3 topRightB = b.bottomLeft + b.size + Vector2.down + Vector2.down;                                                   // Trim top most row since it can't be connected as it is entirely stone
 
-            NeighbouringTiles(topLeftA, bottomLeftA, topRightB, bottomRightB, roomAOffset, roomBOffset, curConnectedRoomIsLeftRightUp);
+            NeighbouringTilesLR(topLeftA, bottomLeftA, topRightB, bottomRightB, roomAOffset, roomBOffset, curConnectedRoomIsLeftRightUp);
         }
         else if (curConnectedRoomIsLeftRightUp == right)
         {
@@ -353,15 +356,21 @@ public class MapGenerator : MonoBehaviour
             Vector3 bottomLeftB = b.bottomLeft + Vector2.up;                                                            // Trim bottom most row since it can't be connected as it is entirely stone
             Vector3 topLeftB = b.bottomLeft + new Vector2(0.0f, b.size.y) + Vector2.down + Vector2.down;                               // Trim top most row since it can't be connected as it is entirely stone
 
-            NeighbouringTiles(topRightA, bottomRightA, topLeftB, bottomLeftB, roomAOffset, roomBOffset, curConnectedRoomIsLeftRightUp);
+            NeighbouringTilesLR(topRightA, bottomRightA, topLeftB, bottomLeftB, roomAOffset, roomBOffset, curConnectedRoomIsLeftRightUp);
         }
         else if (curConnectedRoomIsLeftRightUp == up)
         {
+            Vector3 topLeftA = a.bottomLeft + new Vector2(0.0f, a.size.y) + Vector2.down + Vector2.right;                             // Trim bottom most row since it can't be connected as it is entirely stone
+            Vector3 topRightA = a.bottomLeft + a.size + Vector2.down + Vector2.left + Vector2.left;                                                   // Trim top most row since it can't be connected as it is entirely stone
 
+            Vector3 bottomLeftB = b.bottomLeft + Vector2.right;                                                            // Trim bottom most row since it can't be connected as it is entirely stone
+            Vector3 bottomRightB = b.bottomLeft + new Vector2(b.size.x, 0.0f) + Vector2.left + Vector2.left;                               // Trim top most row since it can't be connected as it is entirely stone
+
+            NeighbouringTilesU(topLeftA, topRightA, bottomLeftB, bottomRightB, roomAOffset, roomBOffset, curConnectedRoomIsLeftRightUp);
         }
     }
 
-    private void NeighbouringTiles(Vector3 topA, Vector3 bottomA, Vector3 topB, Vector3 bottomB, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp)
+    private void NeighbouringTilesLR(Vector3 topA, Vector3 bottomA, Vector3 topB, Vector3 bottomB, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp)
     {
         if(curConnectedRoomIsLeftRightUp == left || curConnectedRoomIsLeftRightUp == right)
         {
@@ -374,9 +383,20 @@ public class MapGenerator : MonoBehaviour
                 groundTileMap.SetTile(new Vector3Int((int)bottomB.x, i, 0) + roomBOffset, groundTileDrySand);
             }
         }
-        else if(curConnectedRoomIsLeftRightUp == up)
-        {
+    }
 
+    private void NeighbouringTilesU(Vector3 topLeftA, Vector3 topRightA, Vector3 bottomLeftB, Vector3 bottomRightB, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp)
+    {
+        if (curConnectedRoomIsLeftRightUp == up)
+        {
+            int minimumRightX = (int)Mathf.Min(topRightA.x, bottomRightB.x);
+            int maximumLeftX = (int)Mathf.Max(topLeftA.x, bottomLeftB.x);
+
+            for (int i = maximumLeftX; i <= minimumRightX; i++)
+            {
+                groundTileMap.SetTile(new Vector3Int(i, (int)topLeftA.y, 0) + roomAOffset, groundTileDrySand);
+                groundTileMap.SetTile(new Vector3Int(i, (int)bottomLeftB.y, 0) + roomBOffset, groundTileDrySand);
+            }
         }
     }
 
