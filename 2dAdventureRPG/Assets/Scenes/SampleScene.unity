@@ -1021,7 +1021,7 @@ MonoBehaviour:
   torchGoblinEnemy: {fileID: 6897299781908151801, guid: c2d6ec4f72573f6418b8cbeb05cd1f31, type: 3}
   randomPrefabEnemy: {fileID: 1315554930631228887, guid: 501b275d2785fa34583f0e218c1aa989, type: 3}
   mapSizeInRooms: {x: 3, y: 10}
-  numTilesInRooms: {x: 18, y: 10}
+  numTilesInRooms: {x: 30, y: 20}
   minimumSectionSize: {x: 4, y: 4}
   playerSpawnRoom: {x: 0, y: 0}
   playerSpawnTile: {x: 0, y: 0}
@@ -1047,6 +1047,7 @@ MonoBehaviour:
   currentRoomBoundaryObject: {fileID: 5922302738048870979, guid: 416241a9ef47efb408760005a0bd0df9, type: 3}
   debugStringVisitedRooms: 
   debugStringUntouchedRooms: 
+  roomsThatHaveBeenCreated: []
 --- !u!1 &2029640632
 GameObject:
   m_ObjectHideFlags: 0

@@ -188,9 +188,11 @@ public class MapGenerator : MonoBehaviour
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, MakeConnectionsForRoomVisibleOnMap);
 
+        //roomsSeen.Clear();
+        //TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, );
 
         roomsThatHaveBeenCreated.Clear();
-        foreach(KeyValuePair<Vector2Int, Room> roomData in roomIndexAndRoom)
+        foreach (KeyValuePair<Vector2Int, Room> roomData in roomIndexAndRoom)
         {
             DebugRoom dRoom = new DebugRoom();
             dRoom.roomIndex = roomData.Key;
@@ -201,13 +203,16 @@ public class MapGenerator : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if(roomIndexAndRoom.Count > 0)
+        if (roomIndexAndRoom.Count > 0)
         {
             List<Vector2Int> roomsSeen = new List<Vector2Int>();
             TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, DrawRoomConnectionsGizmos);
             //TraverseRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, DrawSectionConnectionToRoomCentreGizmos);
             roomsSeen.Clear();
             TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, DrawSectionsGizmos);
+
+            roomsSeen.Clear();
+            TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, DrawAllPossibleConnectionsBetweenSectionsInRoom);
         }
     }
 
@@ -232,6 +237,129 @@ public class MapGenerator : MonoBehaviour
                     TraverseUniqueRoomsThroughConnections(curConnectedRoom, roomWhoseChildrenNeedToBeTraversed, ref roomsAlreadySeen, FunctionToRunUponReacingARoom);
                 }
             }
+        }
+    }
+
+    private bool ConnectSectionsWithRoom(Vector2Int curRoomIndex)
+    {
+        Room curRoom = roomIndexAndRoom[curRoomIndex];
+
+        return true;
+    }
+
+    private bool DrawAllPossibleConnectionsBetweenSectionsInRoom(Vector2Int curRoomIndex)
+    {
+        Room curRoom = roomIndexAndRoom[curRoomIndex];
+        Vector3 curRoomPos = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
+
+        for (int i = 0; i < curRoom.sections.Count; i++)
+        {
+            for (int j = i; j < curRoom.sections.Count; j++)
+            {
+                if (CanSectionsBeConnected(curRoom.sections[i], curRoom.sections[j]))
+                {
+                    Vector3 sectionACentred = new Vector3(curRoom.sections[i].bottomLeft.x + curRoom.sections[i].size.x / 2, curRoom.sections[i].bottomLeft.y + curRoom.sections[i].size.y / 2, 0.0f);
+                    Vector3 sectionBCentred = new Vector3(curRoom.sections[j].bottomLeft.x + curRoom.sections[j].size.x / 2, curRoom.sections[j].bottomLeft.y + curRoom.sections[j].size.y / 2, 0.0f);
+
+                    sectionACentred += curRoomPos;
+                    sectionBCentred += curRoomPos;
+
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawLine(sectionACentred, sectionBCentred);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private bool CanSectionsBeConnected(Section a, Section b)
+    {
+        return (SectionsShareAHorizontalBorder(a, b) > 0) || (SectionsShareAVerticalBorder(a, b) > 0);
+    }
+
+    private int SectionsShareAVerticalBorder(Section a, Section b)
+    {
+        Vector2 bottomLeftA = a.bottomLeft;
+        Vector2 topLeftA = bottomLeftA + Vector2.up * a.size.y;
+        Vector2 bottomRightA = a.bottomLeft + Vector2.right * a.size.x;
+        Vector2 topRightA = bottomRightA + Vector2.up * a.size.y;
+
+        Vector2 bottomLeftB = b.bottomLeft;
+        Vector2 topLeftB = bottomLeftB + Vector2.up * b.size.y;
+        Vector2 bottomRightB = b.bottomLeft + Vector2.right * b.size.x;
+        Vector2 topRightB = bottomRightB + Vector2.up * b.size.y;
+
+
+        if (bottomRightA.x == bottomLeftB.x)
+        {
+            if((bottomRightA.y >= bottomLeftB.y) && (bottomRightA.y <= topLeftB.y)
+                || (topRightA.y >= bottomLeftB.y) && (topRightA.y <= topLeftB.y))
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        } 
+        else if (bottomLeftA.x == bottomRightB.x)
+        {
+            if ((bottomLeftA.y >= bottomRightB.y) && (bottomLeftA.y <= topRightB.y)
+                || (topLeftA.y >= bottomRightB.y) && (topLeftA.y <= topRightB.y))
+            {
+                return 2;
+            }
+            else
+            {
+                return -2;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    private int SectionsShareAHorizontalBorder(Section a, Section b)
+    {
+        Vector2 bottomLeftA = a.bottomLeft;
+        Vector2 topLeftA = bottomLeftA + Vector2.up * a.size.y;
+        Vector2 bottomRightA = a.bottomLeft + Vector2.right * a.size.x;
+        Vector2 topRightA = bottomRightA + Vector2.up * a.size.y;
+
+        Vector2 bottomLeftB = b.bottomLeft;
+        Vector2 topLeftB = bottomLeftB + Vector2.up * b.size.y;
+        Vector2 bottomRightB = b.bottomLeft + Vector2.right * b.size.x;
+        Vector2 topRightB = bottomRightB + Vector2.up * b.size.y;
+
+        if (topLeftA.y == bottomLeftB.y)
+        {
+            if ((topRightA.x >= bottomLeftB.x) && (topRightA.x <= bottomRightB.x)
+                || (topLeftA.x >= bottomLeftB.x) && (topLeftA.x <= bottomRightB.x))
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        if (bottomLeftA.y == topLeftB.y)
+        {
+            if ((bottomRightA.x >= topLeftB.x) && (bottomRightA.x <= topRightB.x)
+                || (bottomLeftA.x >= topLeftB.x) && (bottomLeftA.x <= topRightB.x))
+            {
+                return 2;
+            }
+            else
+            {
+                return -2;
+            }
+        }
+        else
+        {
+            return 0;
         }
     }
 
@@ -345,6 +473,7 @@ public class MapGenerator : MonoBehaviour
 
         groundTileMap.SetTile(tilesThatAllowConnection[randConnectionTile].worldTileA, groundTileDrySand);
         groundTileMap.SetTile(tilesThatAllowConnection[randConnectionTile].worldTileB, groundTileDrySand);
+
         //groundTileMap.SetTile(tilesThatAllowConnection[randConnectionTile].worldTileA, groundTileGrassMM);
         //groundTileMap.SetTile(tilesThatAllowConnection[randConnectionTile].worldTileB, groundTileGrassMM);
     }
