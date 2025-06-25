@@ -52,7 +52,7 @@ public class Enemy_Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!characterStates.isKnockbacked && !characterStates.isDead)
+        if (!characterStates.isKnockbacked && !characterStates.isDead && patrollingWayPoints.Count > 0)
         {
             if (detectorCircle.OverlapPoint(playerTransform.position))
             {
