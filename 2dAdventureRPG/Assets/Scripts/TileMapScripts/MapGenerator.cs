@@ -29,6 +29,9 @@ public class Section
     public Vector2 bottomLeft;
     public Vector2 size;
 
+    public bool mineSection = false;
+
+    public List<int> connectedSectionsInThisRoom = new List<int>();
     public List<SectionBorderingWallType> borderingWallTypes = new List<SectionBorderingWallType>();
 }
 
@@ -105,6 +108,8 @@ public class MapGenerator : MonoBehaviour
 
     [SerializeField] private GameObject emptyRoomPrefab;
     [SerializeField] private GameObject playerPrefab;
+
+    [SerializeField] private GameObject minesObjectPrefab;
 
     [Header("Room Camera Generator Data")]
     [SerializeField] private CinemachineCamera cineCamera;
@@ -188,7 +193,7 @@ public class MapGenerator : MonoBehaviour
         }
 
         List<Vector2Int> roomsSeen = new List<Vector2Int>();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateConnections);
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateConnectionsBetweenRooms);
 
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateSectionsInCurrentRoom);
@@ -197,16 +202,16 @@ public class MapGenerator : MonoBehaviour
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, DrawSectionsToTileMaps);
 
         roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateEnemiesForRoom);
-
-        roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, MakeConnectionsForRoomVisibleOnMap);
-
-        roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, FormConnectionsBetweenSectionsInRoom);
 
         roomsSeen.Clear();
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, MakeConnectionsBetweenRoomsVisibleOnMap);
+
+        roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateResourcesInSmallRooms);
+
+        roomsSeen.Clear();
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateEnemiesForRoom);
 
         roomsThatHaveBeenCreated.Clear();
         foreach (KeyValuePair<Vector2Int, Room> roomData in roomIndexAndRoom)
@@ -270,6 +275,7 @@ public class MapGenerator : MonoBehaviour
     private bool CreateResourcesInSmallRooms(Vector2Int currentRoomIndex)
     {
         Room curRoom = roomIndexAndRoom[currentRoomIndex];
+        Vector3 roomOffset = new Vector3(currentRoomIndex.x * numTilesInRooms.x, currentRoomIndex.y * numTilesInRooms.y, 0.0f);
 
         for (int i = 0; i < curRoom.sections.Count; i++)
         {
@@ -277,7 +283,11 @@ public class MapGenerator : MonoBehaviour
             {
                 if (curRoom.sections[i].size.x * curRoom.sections[i].size.y <= maxNumTilesForResourceRooms)
                 {
-                    PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
+                    curRoom.sections[i].mineSection = true;
+                    Vector3 curSectionCentre = curRoom.sections[i].bottomLeft + curRoom.sections[i].size * 0.5f;
+
+                    GameObject mineObject = Instantiate(minesObjectPrefab, curSectionCentre + roomOffset, Quaternion.identity, gameObject.transform);
+                    //PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
                 }
             }
         }
@@ -309,6 +319,9 @@ public class MapGenerator : MonoBehaviour
                         int randomTileToMakeConnection = Random.Range(0, connectionTiles.Count);
                         groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, groundTileDrySand);
                         groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, groundTileDrySand);
+
+                        curRoom.sections[i].connectedSectionsInThisRoom.Add(j);
+                        curRoom.sections[j].connectedSectionsInThisRoom.Add(i);
 
                         numConnectionsPerSection[i]++;
                         numConnectionsPerSection[j]++;
@@ -508,8 +521,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-
-    private bool MakeConnectionsForRoomVisibleOnMap(Vector2Int currentRoomIndex)
+    private bool MakeConnectionsBetweenRoomsVisibleOnMap(Vector2Int currentRoomIndex)
     {
         Room curRoom = roomIndexAndRoom[currentRoomIndex];
 
@@ -664,7 +676,6 @@ public class MapGenerator : MonoBehaviour
             && currentTileIndexWorld.y >= currentSectionBottomLeftWorldPos.y
             && currentTileIndexWorld.y <= currentSectionBottomLeftWorldPos.y + curSection.size.y);
     }
-
 
     private void ConnectingTilesOfTwoSections(Section a, Section b, Vector3Int roomAOffset, Vector3Int roomBOffset, int curConnectedRoomIsLeftRightUp, ref List<ConnectionTiles> tilesThatAllowConnection)
     {
@@ -840,6 +851,23 @@ public class MapGenerator : MonoBehaviour
                 patrolWaypoints = PatrolingWayPointsListGenerator(i, curRoomPos, ref enemySpawnCornerPos);
                 Enemy_Movement enemyMovementComponent = enemyGameobject.GetComponent<Enemy_Movement>();
                 enemyMovementComponent.patrollingWayPoints = patrolWaypoints;
+
+                if (curSection.mineSection)
+                {
+                    EnemyProperties s_EnemyProperties = enemyGameobject.GetComponent<EnemyProperties>();
+                    s_EnemyProperties.mineGuard = true;
+                }
+                else
+                {
+                    for (int k = 0; k < curSection.connectedSectionsInThisRoom.Count; k++)
+                    {
+                        if (roomIndexAndRoom[curRoomIndex].sections[curSection.connectedSectionsInThisRoom[k]].mineSection)
+                        {
+                            EnemyProperties s_EnemyProperties = enemyGameobject.GetComponent<EnemyProperties>();
+                            s_EnemyProperties.connectedToMineGuardSection = true;
+                        }
+                    }
+                }
 
                 numEnemiesInThisSection++;
             }
@@ -1101,7 +1129,7 @@ public class MapGenerator : MonoBehaviour
         return roomIndexAndRoom[a].connectedRooms.Contains(b) || roomIndexAndRoom[b].connectedRooms.Contains(a);
     }
 
-    private bool CreateConnections(Vector2Int currentRoomIndex)
+    private bool CreateConnectionsBetweenRooms(Vector2Int currentRoomIndex)
     {
         Room curRoom = roomIndexAndRoom[currentRoomIndex];
         curRoom.connectedRooms.Clear();
@@ -1156,86 +1184,6 @@ public class MapGenerator : MonoBehaviour
 
     private bool CreateSectionsInCurrentRoom(Vector2Int currentRoomIndex)
     {
-        //Room currentRoom = roomIndexAndRoom[currentRoomIndex];
-        //currentRoom.sections.Clear();
-
-        //bool[,] marked = new bool[numTilesInRooms.x, numTilesInRooms.y];
-
-        //for (int y = 0; y < numTilesInRooms.y; y++)
-        //{
-        //    for (int x = 0; x < numTilesInRooms.x; x++)
-        //    {
-        //        if (!marked[x, y])
-        //        {
-        //            int widthRemainingTiles = numTilesInRooms.x - x;
-        //            int heightRemainingTiles = numTilesInRooms.y - y;
-
-        //            int maxWidth = Mathf.Min(widthRemainingTiles, maximumSectionSize.x);
-        //            int maxHeight = Mathf.Min(heightRemainingTiles, maximumSectionSize.y);
-
-        //            for (int i = 0; i < maxWidth; i++)
-        //            {
-        //                if (marked[i + x, y])
-        //                {
-        //                    maxWidth = i + 1;
-        //                    break;
-        //                }
-        //            }
-
-        //            int randomSizeX = Random.Range(minimumSectionSize.x, maxWidth);
-        //            int randomSizeY = Random.Range(minimumSectionSize.y, maxHeight);
-        //            Vector2Int randomSectionSize = new Vector2Int(randomSizeX, randomSizeY);
-
-        //            int remainingTilesX = widthRemainingTiles - randomSectionSize.x;
-        //            if (remainingTilesX <= minimumSectionSize.x)
-        //            {
-        //                randomSectionSize.x += remainingTilesX;
-        //            }
-
-        //            int remainingTilesY = heightRemainingTiles - randomSectionSize.y;
-        //            if (remainingTilesY <= minimumSectionSize.y)
-        //            {
-        //                randomSectionSize.y += remainingTilesY;
-        //            }
-
-        //            Section curSection = new Section();
-
-        //            curSection.bottomLeft = new Vector2Int(x, y);
-        //            curSection.size = randomSectionSize;
-
-        //            if (x == 0)
-        //            {
-        //                curSection.borderingWallTypes.Add(SectionBorderingWallType.Left);
-        //            }
-
-        //            if (y == 0)
-        //            {
-        //                curSection.borderingWallTypes.Add(SectionBorderingWallType.Bottom);
-        //            }
-
-        //            if (x + randomSectionSize.x >= numTilesInRooms.x)
-        //            {
-        //                curSection.borderingWallTypes.Add(SectionBorderingWallType.Right);
-        //            }
-
-        //            if (y + randomSectionSize.y >= numTilesInRooms.y)
-        //            {
-        //                curSection.borderingWallTypes.Add(SectionBorderingWallType.Top);
-        //            }
-
-        //            currentRoom.sections.Add(curSection);
-
-        //            for (int j = y; j < (y + randomSectionSize.y); j++)
-        //            {
-        //                for (int i = x; i < (x + randomSectionSize.x); i++)
-        //                {
-        //                    marked[i, j] = true;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
         Room currentRoom = roomIndexAndRoom[currentRoomIndex];
         currentRoom.sections.Clear();
 
@@ -1254,7 +1202,7 @@ public class MapGenerator : MonoBehaviour
                     {
                         if (marked[i + x, y])
                         {
-                            widthRemainingTiles = i + 1;
+                            widthRemainingTiles = i;
                             break;
                         }
                     }

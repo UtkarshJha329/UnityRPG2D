@@ -1046,6 +1046,7 @@ MonoBehaviour:
   enemiesParentPrefab: {fileID: 7440292970780342147, guid: e95229b859cb7c044b8ff2b6ca860b33, type: 3}
   emptyRoomPrefab: {fileID: 8206293764243112620, guid: 0cfc1b7086dce034188a0a55b9ceab53, type: 3}
   playerPrefab: {fileID: 368669901408580950, guid: f6162fca450d872459e8993a76b96029, type: 3}
+  minesObjectPrefab: {fileID: 2188781144886451970, guid: f5b5a71845ff90b41ba07cefff026d8e, type: 3}
   cineCamera: {fileID: 680040132}
   currentRoomBoundaryObject: {fileID: 5922302738048870979, guid: 416241a9ef47efb408760005a0bd0df9, type: 3}
   debugStringVisitedRooms: 

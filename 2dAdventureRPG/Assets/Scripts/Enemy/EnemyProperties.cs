@@ -25,4 +25,7 @@ public class EnemyProperties : MonoBehaviour
     public int numDamageFlashLoops = 5;
 
     public float wayPointStoppingDistance = 0.1f;
+
+    public bool mineGuard = false;
+    public bool connectedToMineGuardSection = false;
 }
