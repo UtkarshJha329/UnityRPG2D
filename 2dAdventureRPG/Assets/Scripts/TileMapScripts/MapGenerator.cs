@@ -79,10 +79,12 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private Vector2Int playerSpawnTile;
     [SerializeField] private Vector2Int castleSpawnRoom;
 
+    [Header("Resource Section Properties")]
     [SerializeField] private Vector2Int dimsForRecourceRooms = new Vector2Int(5, 5);
     [SerializeField] private int maxNumTilesForResourceRooms = 35;
-
-    //[SerializeField] private Vector2Int maximumSectionSize = new Vector2Int(5, 5);
+    [SerializeField] private int minYForResourceRooms = 3;
+    [SerializeField] private int minYForTeleportationRooms = 7;
+    [SerializeField] private float probabilityOfSpecialSection = 0.15f;
 
     [Header("Map Generator Tiles Data")]
     [SerializeField] private Tilemap groundTileMap;
@@ -105,11 +107,12 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private Transform mapParent;
     [SerializeField] private Transform roomsParent;
     [SerializeField] private GameObject enemiesParentPrefab;
-
+    [SerializeField] private GameObject goldMinesParentPrefab;
     [SerializeField] private GameObject emptyRoomPrefab;
     [SerializeField] private GameObject playerPrefab;
 
     [SerializeField] private GameObject minesObjectPrefab;
+    private Dictionary<Vector2Int, GameObject> roomObjectDictionary = new Dictionary<Vector2Int, GameObject>();
 
     [Header("Room Camera Generator Data")]
     [SerializeField] private CinemachineCamera cineCamera;
@@ -148,6 +151,8 @@ public class MapGenerator : MonoBehaviour
     void Start()
     {
         maximumSectionSize = new Vector2Int((2 * numTilesInRooms.x) / 3, (2 * numTilesInRooms.y) / 3);
+        minYForResourceRooms = mapSizeInRooms.y / 3;
+        minYForTeleportationRooms = 2 * mapSizeInRooms.y / 3;
 
         mapSizeInTiles = mapSizeInRooms * numTilesInRooms;
 
@@ -206,6 +211,10 @@ public class MapGenerator : MonoBehaviour
 
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, MakeConnectionsBetweenRoomsVisibleOnMap);
+
+
+        roomsSeen.Clear();
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateRoomGameObject);
 
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateResourcesInSmallRooms);
@@ -283,10 +292,20 @@ public class MapGenerator : MonoBehaviour
             {
                 if (curRoom.sections[i].size.x * curRoom.sections[i].size.y <= maxNumTilesForResourceRooms)
                 {
+                    Transform goldMinesParentGameObjectTransform;
+                    if (roomObjectDictionary[currentRoomIndex].transform.childCount == 0)
+                    {
+                        goldMinesParentGameObjectTransform = Instantiate(goldMinesParentPrefab, roomObjectDictionary[currentRoomIndex].transform).transform;
+                    }
+                    else
+                    {
+                        goldMinesParentGameObjectTransform = roomObjectDictionary[currentRoomIndex].transform.GetChild(0);
+                    }
+
                     curRoom.sections[i].mineSection = true;
                     Vector3 curSectionCentre = curRoom.sections[i].bottomLeft + curRoom.sections[i].size * 0.5f;
 
-                    GameObject mineObject = Instantiate(minesObjectPrefab, curSectionCentre + roomOffset, Quaternion.identity, gameObject.transform);
+                    GameObject mineObject = Instantiate(minesObjectPrefab, curSectionCentre + roomOffset, Quaternion.identity, goldMinesParentGameObjectTransform);
                     //PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
                 }
             }
@@ -786,27 +805,33 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private bool GenerateEnemiesForRoom(Vector2Int curRoomIndex)
+    private bool GenerateRoomGameObject(Vector2Int currentRoomIndex)
     {
         GameObject room = Instantiate(emptyRoomPrefab, roomsParent);
-        room.name = "Room " + "(" + curRoomIndex.x + ", " + curRoomIndex.y + ")";
-        room.transform.position = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0);
+        room.name = "Room " + "(" + currentRoomIndex.x + ", " + currentRoomIndex.y + ")";
+        room.transform.position = new Vector3(currentRoomIndex.x * numTilesInRooms.x, currentRoomIndex.y * numTilesInRooms.y, 0);
         room.transform.position += new Vector3(numTilesInRooms.x / 2, numTilesInRooms.y / 2, 0);
+        roomObjectDictionary.Add(currentRoomIndex, room);
 
-        GameObject enemiesParentGameObject = Instantiate(enemiesParentPrefab, room.transform);
+        return true;
+    }
 
-        GameObject curRoomBoundaryObject = Instantiate(currentRoomBoundaryObject, room.transform);
+    private bool GenerateEnemiesForRoom(Vector2Int currentRoomIndex)
+    {
+        GameObject enemiesParentGameObject = Instantiate(enemiesParentPrefab, roomObjectDictionary[currentRoomIndex].transform);
+
+        GameObject curRoomBoundaryObject = Instantiate(currentRoomBoundaryObject, roomObjectDictionary[currentRoomIndex].transform);
         CameraTargetManager cameraTargetManager = curRoomBoundaryObject.GetComponent<CameraTargetManager>();
         cameraTargetManager.cineCamera = cineCamera;
         cameraTargetManager.enemiesParent = enemiesParentGameObject.transform;
 
 
-        Room curRoom = roomIndexAndRoom[curRoomIndex];
+        Room curRoom = roomIndexAndRoom[currentRoomIndex];
         for (int i = 0; i < curRoom.sections.Count; i++)
         {
             Section curSection = curRoom.sections[i];
 
-            GenerateEnemiesForSection(curRoomIndex, curSection, ref enemiesParentGameObject);
+            GenerateEnemiesForSection(currentRoomIndex, curSection, ref enemiesParentGameObject);
             //Debug.Log("Spawned enemies for section.");
         }
 
@@ -1188,6 +1213,12 @@ public class MapGenerator : MonoBehaviour
         currentRoom.sections.Clear();
 
         bool[,] marked = new bool[numTilesInRooms.x, numTilesInRooms.y];
+        Vector2Int _minimumSectionSize = minimumSectionSize;
+
+        if(currentRoomIndex.y >= minYForResourceRooms)
+        {
+            _minimumSectionSize = dimsForRecourceRooms;
+        }
 
         for (int y = 0; y < numTilesInRooms.y; y++)
         {
@@ -1210,18 +1241,24 @@ public class MapGenerator : MonoBehaviour
                     int maxWidth = Mathf.Min(widthRemainingTiles, maximumSectionSize.x);
                     int maxHeight = Mathf.Min(heightRemainingTiles, maximumSectionSize.y);
 
-                    int randomSizeX = Random.Range(minimumSectionSize.x, maxWidth);
-                    int randomSizeY = Random.Range(minimumSectionSize.y, maxHeight);
+                    int randomSizeX = Random.Range(_minimumSectionSize.x, maxWidth);
+                    int randomSizeY = Random.Range(_minimumSectionSize.y, maxHeight);
                     Vector2Int randomSectionSize = new Vector2Int(randomSizeX, randomSizeY);
 
+                    // Check to create a resource or tel room.
+                    if(Random.Range(0.0f, 1.0f) <= probabilityOfSpecialSection)
+                    {
+                        randomSectionSize = new Vector2Int(_minimumSectionSize.x, _minimumSectionSize.y);
+                    }
+
                     int remainingTilesX = widthRemainingTiles - randomSectionSize.x;
-                    if (remainingTilesX <= minimumSectionSize.x)
+                    if (remainingTilesX <= _minimumSectionSize.x)
                     {
                         randomSectionSize.x += remainingTilesX;
                     }
 
                     int remainingTilesY = heightRemainingTiles - randomSectionSize.y;
-                    if (remainingTilesY <= minimumSectionSize.y)
+                    if (remainingTilesY <= _minimumSectionSize.y)
                     {
                         randomSectionSize.y += remainingTilesY;
                     }

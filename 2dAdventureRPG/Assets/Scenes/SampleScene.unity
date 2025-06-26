@@ -1022,13 +1022,16 @@ MonoBehaviour:
   randomPrefabEnemy: {fileID: 1315554930631228887, guid: 501b275d2785fa34583f0e218c1aa989, type: 3}
   mapSizeInRooms: {x: 3, y: 10}
   numTilesInRooms: {x: 30, y: 20}
-  minimumSectionSize: {x: 5, y: 5}
+  minimumSectionSize: {x: 6, y: 6}
   maximumSectionSize: {x: 0, y: 0}
   playerSpawnRoom: {x: 0, y: 0}
   playerSpawnTile: {x: 0, y: 0}
   castleSpawnRoom: {x: 1, y: 0}
   dimsForRecourceRooms: {x: 5, y: 5}
   maxNumTilesForResourceRooms: 35
+  minYForResourceRooms: 3
+  minYForTeleportationRooms: 7
+  probabilityOfSpecialSection: 0.15
   groundTileMap: {fileID: 846549900}
   groundTileGrassTL: {fileID: 11400000, guid: 588d45008e403ea478b2c3c885be86c2, type: 2}
   groundTileGrassTM: {fileID: 11400000, guid: de0e8d7b782de924fbd07f450da88a8f, type: 2}
@@ -1044,6 +1047,7 @@ MonoBehaviour:
   mapParent: {fileID: 136942374}
   roomsParent: {fileID: 511013145}
   enemiesParentPrefab: {fileID: 7440292970780342147, guid: e95229b859cb7c044b8ff2b6ca860b33, type: 3}
+  goldMinesParentPrefab: {fileID: 7982349784399902092, guid: 04c42f6c2755f5b4d8f9ed16eb0d654b, type: 3}
   emptyRoomPrefab: {fileID: 8206293764243112620, guid: 0cfc1b7086dce034188a0a55b9ceab53, type: 3}
   playerPrefab: {fileID: 368669901408580950, guid: f6162fca450d872459e8993a76b96029, type: 3}
   minesObjectPrefab: {fileID: 2188781144886451970, guid: f5b5a71845ff90b41ba07cefff026d8e, type: 3}
