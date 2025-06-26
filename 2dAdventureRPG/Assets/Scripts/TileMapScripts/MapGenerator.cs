@@ -70,13 +70,14 @@ public class MapGenerator : MonoBehaviour
     [Header("Map Generator Data")]
     [SerializeField] private Vector2Int mapSizeInRooms;
     [SerializeField] private Vector2Int numTilesInRooms;
-    [SerializeField] private Vector2Int minimumSectionSize = new Vector2Int(6, 6);
+    [SerializeField] private Vector2Int minimumSectionSize = new Vector2Int(5, 5);
     [SerializeField] private Vector2Int maximumSectionSize = Vector2Int.zero;
     [SerializeField] private Vector2Int playerSpawnRoom;
     [SerializeField] private Vector2Int playerSpawnTile;
     [SerializeField] private Vector2Int castleSpawnRoom;
-    [SerializeField] private int maxNumConnectionsPerNormalSection = 2;
-    [SerializeField] private int minNumConnectionsPerEntryExitSection = 2;
+
+    [SerializeField] private Vector2Int dimsForRecourceRooms = new Vector2Int(5, 5);
+    [SerializeField] private int maxNumTilesForResourceRooms = 35;
 
     //[SerializeField] private Vector2Int maximumSectionSize = new Vector2Int(5, 5);
 
@@ -128,6 +129,8 @@ public class MapGenerator : MonoBehaviour
 
     private int borderInset = 1;
 
+
+
     private void Awake()
     {
         if (groundTileMap == null)
@@ -175,6 +178,9 @@ public class MapGenerator : MonoBehaviour
 
     private void MakeMap()
     {
+        //curSeed = (int)Time.time;
+        //Random.InitState(curSeed);
+
         groundTileMap.ClearAllTiles();
         for (int i = 0; i < roomsParent.childCount; i++)
         {
@@ -198,6 +204,9 @@ public class MapGenerator : MonoBehaviour
 
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, FormConnectionsBetweenSectionsInRoom);
+
+        roomsSeen.Clear();
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateResourcesInSmallRooms);
 
         roomsThatHaveBeenCreated.Clear();
         foreach (KeyValuePair<Vector2Int, Room> roomData in roomIndexAndRoom)
@@ -254,6 +263,24 @@ public class MapGenerator : MonoBehaviour
     private bool ConnectSectionsWithRoom(Vector2Int curRoomIndex)
     {
         Room curRoom = roomIndexAndRoom[curRoomIndex];
+
+        return true;
+    }
+
+    private bool CreateResourcesInSmallRooms(Vector2Int currentRoomIndex)
+    {
+        Room curRoom = roomIndexAndRoom[currentRoomIndex];
+
+        for (int i = 0; i < curRoom.sections.Count; i++)
+        {
+            if (curRoom.sections[i].size.x <= dimsForRecourceRooms.x || curRoom.sections[i].size.y <= dimsForRecourceRooms.y)
+            {
+                if (curRoom.sections[i].size.x * curRoom.sections[i].size.y <= maxNumTilesForResourceRooms)
+                {
+                    PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
+                }
+            }
+        }
 
         return true;
     }
@@ -1129,6 +1156,86 @@ public class MapGenerator : MonoBehaviour
 
     private bool CreateSectionsInCurrentRoom(Vector2Int currentRoomIndex)
     {
+        //Room currentRoom = roomIndexAndRoom[currentRoomIndex];
+        //currentRoom.sections.Clear();
+
+        //bool[,] marked = new bool[numTilesInRooms.x, numTilesInRooms.y];
+
+        //for (int y = 0; y < numTilesInRooms.y; y++)
+        //{
+        //    for (int x = 0; x < numTilesInRooms.x; x++)
+        //    {
+        //        if (!marked[x, y])
+        //        {
+        //            int widthRemainingTiles = numTilesInRooms.x - x;
+        //            int heightRemainingTiles = numTilesInRooms.y - y;
+
+        //            int maxWidth = Mathf.Min(widthRemainingTiles, maximumSectionSize.x);
+        //            int maxHeight = Mathf.Min(heightRemainingTiles, maximumSectionSize.y);
+
+        //            for (int i = 0; i < maxWidth; i++)
+        //            {
+        //                if (marked[i + x, y])
+        //                {
+        //                    maxWidth = i + 1;
+        //                    break;
+        //                }
+        //            }
+
+        //            int randomSizeX = Random.Range(minimumSectionSize.x, maxWidth);
+        //            int randomSizeY = Random.Range(minimumSectionSize.y, maxHeight);
+        //            Vector2Int randomSectionSize = new Vector2Int(randomSizeX, randomSizeY);
+
+        //            int remainingTilesX = widthRemainingTiles - randomSectionSize.x;
+        //            if (remainingTilesX <= minimumSectionSize.x)
+        //            {
+        //                randomSectionSize.x += remainingTilesX;
+        //            }
+
+        //            int remainingTilesY = heightRemainingTiles - randomSectionSize.y;
+        //            if (remainingTilesY <= minimumSectionSize.y)
+        //            {
+        //                randomSectionSize.y += remainingTilesY;
+        //            }
+
+        //            Section curSection = new Section();
+
+        //            curSection.bottomLeft = new Vector2Int(x, y);
+        //            curSection.size = randomSectionSize;
+
+        //            if (x == 0)
+        //            {
+        //                curSection.borderingWallTypes.Add(SectionBorderingWallType.Left);
+        //            }
+
+        //            if (y == 0)
+        //            {
+        //                curSection.borderingWallTypes.Add(SectionBorderingWallType.Bottom);
+        //            }
+
+        //            if (x + randomSectionSize.x >= numTilesInRooms.x)
+        //            {
+        //                curSection.borderingWallTypes.Add(SectionBorderingWallType.Right);
+        //            }
+
+        //            if (y + randomSectionSize.y >= numTilesInRooms.y)
+        //            {
+        //                curSection.borderingWallTypes.Add(SectionBorderingWallType.Top);
+        //            }
+
+        //            currentRoom.sections.Add(curSection);
+
+        //            for (int j = y; j < (y + randomSectionSize.y); j++)
+        //            {
+        //                for (int i = x; i < (x + randomSectionSize.x); i++)
+        //                {
+        //                    marked[i, j] = true;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
         Room currentRoom = roomIndexAndRoom[currentRoomIndex];
         currentRoom.sections.Clear();
 
@@ -1140,44 +1247,36 @@ public class MapGenerator : MonoBehaviour
             {
                 if (!marked[x, y])
                 {
-                    int maxWidth = Mathf.Min(numTilesInRooms.x - x, maximumSectionSize.x);
-                    int maxHeight = Mathf.Min(numTilesInRooms.y - y, maximumSectionSize.y);
+                    int widthRemainingTiles = numTilesInRooms.x - x;
+                    int heightRemainingTiles = numTilesInRooms.y - y;
 
-                    for (int i = 0; i < maxWidth; i++)
+                    for (int i = 0; i < widthRemainingTiles; i++)
                     {
                         if (marked[i + x, y])
                         {
-                            maxWidth = i + 1;
+                            widthRemainingTiles = i + 1;
                             break;
                         }
                     }
+
+                    int maxWidth = Mathf.Min(widthRemainingTiles, maximumSectionSize.x);
+                    int maxHeight = Mathf.Min(heightRemainingTiles, maximumSectionSize.y);
 
                     int randomSizeX = Random.Range(minimumSectionSize.x, maxWidth);
                     int randomSizeY = Random.Range(minimumSectionSize.y, maxHeight);
                     Vector2Int randomSectionSize = new Vector2Int(randomSizeX, randomSizeY);
 
-                    int remainingTilesX = maxWidth - randomSectionSize.x;
-                    //Vector2Int added = new Vector2Int(0, 0);
+                    int remainingTilesX = widthRemainingTiles - randomSectionSize.x;
                     if (remainingTilesX <= minimumSectionSize.x)
                     {
-                        //added.x = remainingTilesX;
                         randomSectionSize.x += remainingTilesX;
                     }
 
-                    int remainingTilesY = numTilesInRooms.y - y - randomSectionSize.y;
+                    int remainingTilesY = heightRemainingTiles - randomSectionSize.y;
                     if (remainingTilesY <= minimumSectionSize.y)
                     {
-                        //added.y = remainingTilesY;
                         randomSectionSize.y += remainingTilesY;
                     }
-
-                    List<Vector2> enemySpawnCornerPos = new List<Vector2>
-                    {
-                        new Vector2(x + 1, y + 1),                                                      // Bottom Left
-                        new Vector2(x + randomSectionSize.x - 2, y + 1),                                // Bottom Right
-                        new Vector2(x + 1, y + randomSectionSize.y - 2),                                // Top Left
-                        new Vector2(x + randomSectionSize.x - 2, y + randomSectionSize.y - 2)           // Top Right
-                    };
 
                     Section curSection = new Section();
 
@@ -1216,6 +1315,7 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+
 
         return true;
     }
