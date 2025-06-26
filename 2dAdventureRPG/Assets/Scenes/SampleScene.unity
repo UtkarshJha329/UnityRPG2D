@@ -1022,10 +1022,12 @@ MonoBehaviour:
   randomPrefabEnemy: {fileID: 1315554930631228887, guid: 501b275d2785fa34583f0e218c1aa989, type: 3}
   mapSizeInRooms: {x: 3, y: 10}
   numTilesInRooms: {x: 30, y: 20}
-  minimumSectionSize: {x: 4, y: 4}
+  minimumSectionSize: {x: 6, y: 6}
   playerSpawnRoom: {x: 0, y: 0}
   playerSpawnTile: {x: 0, y: 0}
   castleSpawnRoom: {x: 1, y: 0}
+  maxNumConnectionsPerNormalSection: 0
+  minNumConnectionsPerEntryExitSection: 2
   groundTileMap: {fileID: 846549900}
   groundTileGrassTL: {fileID: 11400000, guid: 588d45008e403ea478b2c3c885be86c2, type: 2}
   groundTileGrassTM: {fileID: 11400000, guid: de0e8d7b782de924fbd07f450da88a8f, type: 2}

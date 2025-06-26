@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
@@ -69,10 +70,13 @@ public class MapGenerator : MonoBehaviour
     [Header("Map Generator Data")]
     [SerializeField] private Vector2Int mapSizeInRooms;
     [SerializeField] private Vector2Int numTilesInRooms;
-    [SerializeField] private Vector2Int minimumSectionSize = new Vector2Int(3, 3);
+    [SerializeField] private Vector2Int minimumSectionSize = new Vector2Int(6, 6);
+    [SerializeField] private Vector2Int maximumSectionSize = Vector2Int.zero;
     [SerializeField] private Vector2Int playerSpawnRoom;
     [SerializeField] private Vector2Int playerSpawnTile;
     [SerializeField] private Vector2Int castleSpawnRoom;
+    [SerializeField] private int maxNumConnectionsPerNormalSection = 2;
+    [SerializeField] private int minNumConnectionsPerEntryExitSection = 2;
 
     //[SerializeField] private Vector2Int maximumSectionSize = new Vector2Int(5, 5);
 
@@ -135,6 +139,8 @@ public class MapGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        maximumSectionSize = new Vector2Int((2 * numTilesInRooms.x) / 3, (2 * numTilesInRooms.y) / 3);
+
         mapSizeInTiles = mapSizeInRooms * numTilesInRooms;
 
         playerSpawnRoom = new Vector2Int(mapSizeInRooms.x / 2, 0);
@@ -257,38 +263,36 @@ public class MapGenerator : MonoBehaviour
         Room curRoom = roomIndexAndRoom[curRoomIndex];
         Vector3 roomOffset = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
 
-        //int baseNumberOfConnectionsSectionsCanForm = 2;
-        //int minNumberOfConnectionsEntryExitSectionsCanForm = 2;
-
+        // Init section connections count to 0.
         List<int> numConnectionsPerSection = new List<int>();
         for (int i = 0; i < curRoom.sections.Count; i++)
         {
-            //int numConnectionsSectionACanForm = curRoom.entryExitSectionIndex.Contains(i) ? minNumberOfConnectionsEntryExitSectionsCanForm : baseNumberOfConnectionsSectionsCanForm;
-            for (int j = i; j < curRoom.sections.Count; j++)
+            numConnectionsPerSection.Add(0);
+        }
+
+        for (int i = 0; i < curRoom.sections.Count; i++)
+        {
+            //if ((curRoom.entryExitSectionIndex.Contains(i)) || (Random.Range(0, 2) == 0) || (numConnectionsPerSection[i] <= maxNumConnectionsPerNormalSection) || true)
             {
-                //int numConnectionsSectionBCanForm = curRoom.entryExitSectionIndex.Contains(i) ? minNumberOfConnectionsEntryExitSectionsCanForm : baseNumberOfConnectionsSectionsCanForm;
-                List<ConnectionTiles> connectionTiles = new List<ConnectionTiles>();
-                if (CanSectionsBeConnected(curRoom.sections[i], curRoom.sections[j], new Vector3Int((int)roomOffset.x, (int)roomOffset.y, 0), ref connectionTiles) && connectionTiles.Count > 0)
+                for (int j = i + 1; j < curRoom.sections.Count; j++)
                 {
-                    //Vector3 sectionACentred = new Vector3(curRoom.sections[i].bottomLeft.x + curRoom.sections[i].size.x / 2, curRoom.sections[i].bottomLeft.y + curRoom.sections[i].size.y / 2, 0.0f);
-                    //Vector3 sectionBCentred = new Vector3(curRoom.sections[j].bottomLeft.x + curRoom.sections[j].size.x / 2, curRoom.sections[j].bottomLeft.y + curRoom.sections[j].size.y / 2, 0.0f);
+                    List<ConnectionTiles> connectionTiles = new List<ConnectionTiles>();
+                    if (CanSectionsBeConnected(curRoom.sections[i], curRoom.sections[j], new Vector3Int((int)roomOffset.x, (int)roomOffset.y, 0), ref connectionTiles) && connectionTiles.Count > 0)
+                    {
+                        int randomTileToMakeConnection = Random.Range(0, connectionTiles.Count);
+                        groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, groundTileDrySand);
+                        groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, groundTileDrySand);
 
-                    //sectionACentred += roomOffset;
-                    //sectionBCentred += roomOffset;
+                        numConnectionsPerSection[i]++;
+                        numConnectionsPerSection[j]++;
+                    }
 
-                    //Gizmos.color = Color.red;
-                    //Gizmos.DrawLine(sectionACentred, sectionBCentred);
-
-                    int randomTileToMakeConnection = Random.Range(0, connectionTiles.Count);
-                    groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, groundTileDrySand);
-                    groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, groundTileDrySand);
+                    //for (int k = 0; k < connectionTiles.Count; k++)
+                    //{
+                    //    groundTileMap.SetTile(connectionTiles[k].worldTileA, groundTileDrySand);
+                    //    groundTileMap.SetTile(connectionTiles[k].worldTileB, groundTileDrySand);
+                    //}
                 }
-
-                //for (int k = 0; k < connectionTiles.Count; k++)
-                //{
-                //    groundTileMap.SetTile(connectionTiles[k].worldTileA, groundTileDrySand);
-                //    groundTileMap.SetTile(connectionTiles[k].worldTileB, groundTileDrySand);
-                //}
             }
         }
 
@@ -1136,8 +1140,8 @@ public class MapGenerator : MonoBehaviour
             {
                 if (!marked[x, y])
                 {
-                    int maxWidth = numTilesInRooms.x - x;
-                    int maxHeight = numTilesInRooms.y - y;
+                    int maxWidth = Mathf.Min(numTilesInRooms.x - x, maximumSectionSize.x);
+                    int maxHeight = Mathf.Min(numTilesInRooms.y - y, maximumSectionSize.y);
 
                     for (int i = 0; i < maxWidth; i++)
                     {
