@@ -18,5 +18,4 @@ public class PlayerProperties : MonoBehaviour
     public Vector2Int facingDirection;
     public Vector2 currentMovementInput = Vector2.zero;
     public Vector2 lastMovementInput = Vector2.zero;
-
 }

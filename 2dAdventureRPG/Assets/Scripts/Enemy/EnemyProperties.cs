@@ -24,8 +24,12 @@ public class EnemyProperties : MonoBehaviour
     public float personalDamageTextTime = 7.5f;
     public int numDamageFlashLoops = 5;
 
-    public float wayPointStoppingDistance = 0.1f;
+    public float patrolingWayPointStoppingDistance = 0.1f;
+    public float wanderWayPointStoppingDistance = 0.5f;
 
     public bool mineGuard = false;
     public bool connectedToMineGuardSection = false;
+
+    public int sectionIndex = -1;
+    public Vector2Int roomIndex = new Vector2Int(-1, -1);
 }

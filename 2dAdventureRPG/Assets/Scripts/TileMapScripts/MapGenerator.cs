@@ -33,6 +33,9 @@ public class Section
 
     public List<int> connectedSectionsInThisRoom = new List<int>();
     public List<SectionBorderingWallType> borderingWallTypes = new List<SectionBorderingWallType>();
+
+    public List<Vector2> patrolPoints = new List<Vector2>();
+    public List<bool> patrolPointsOccupied = new List<bool>();
 }
 
 [System.Serializable]
@@ -69,6 +72,7 @@ public class MapGenerator : MonoBehaviour
     [Header("Enemy Instantiating Data")]
     [SerializeField] private GameObject torchGoblinEnemy;
     [SerializeField] private GameObject randomPrefabEnemy;
+    [SerializeField] private bool debugEnemy = false;
 
     [Header("Map Generator Data")]
     [SerializeField] private Vector2Int mapSizeInRooms;
@@ -122,7 +126,7 @@ public class MapGenerator : MonoBehaviour
 
     private List<Vector3> enemyPositions = new List<Vector3>();
 
-    private Dictionary<Vector2Int, Room> roomIndexAndRoom = new Dictionary<Vector2Int, Room>();
+    public Dictionary<Vector2Int, Room> roomIndexAndRoom = new Dictionary<Vector2Int, Room>();
 
     [SerializeField] string debugStringVisitedRooms = "";
     [SerializeField] string debugStringUntouchedRooms = "";
@@ -180,7 +184,7 @@ public class MapGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             MakeMap();
         }
@@ -293,13 +297,13 @@ public class MapGenerator : MonoBehaviour
                 if (curRoom.sections[i].size.x * curRoom.sections[i].size.y <= maxNumTilesForResourceRooms)
                 {
                     Transform goldMinesParentGameObjectTransform;
-                    if (roomObjectDictionary[currentRoomIndex].transform.childCount == 0)
+                    if (roomObjectDictionary[currentRoomIndex].transform.childCount == 1)
                     {
                         goldMinesParentGameObjectTransform = Instantiate(goldMinesParentPrefab, roomObjectDictionary[currentRoomIndex].transform).transform;
                     }
                     else
                     {
-                        goldMinesParentGameObjectTransform = roomObjectDictionary[currentRoomIndex].transform.GetChild(0);
+                        goldMinesParentGameObjectTransform = roomObjectDictionary[currentRoomIndex].transform.GetChild(1);
                     }
 
                     curRoom.sections[i].mineSection = true;
@@ -477,6 +481,42 @@ public class MapGenerator : MonoBehaviour
         }
 
         return 0;
+    }
+
+    public bool SectionContainsPointPadded(Vector2Int currentRoomIndex, int sectionIndex, Vector2 point)
+    {
+        Vector2 roomOffset = new Vector2(currentRoomIndex.x * numTilesInRooms.x, currentRoomIndex.y * numTilesInRooms.y);
+        Room curRoom = roomIndexAndRoom[currentRoomIndex];
+        Section currentSection = curRoom.sections[sectionIndex];
+
+        Vector2 bottomLeft = currentSection.bottomLeft + Vector2.one;
+        //Vector2 topLeft = currentSection.bottomLeft + Vector2.up * currentSection.size.y + Vector2.down;
+        //Vector2 bottomRight = currentSection.bottomLeft + Vector2.right * currentSection.size.x + Vector2.left;
+        Vector2 topRight = currentSection.bottomLeft + currentSection.size + Vector2.one * -2.0f;
+
+        bottomLeft += roomOffset;
+        topRight += roomOffset;
+
+        return point.x >= bottomLeft.x && point.x <= topRight.x && point.y >= bottomLeft.y && point.y <= topRight.y;
+    }
+
+    //public Vector2Int ReturnRandomTileInSectionPaddedAwayFrom
+
+    public Vector2Int ReturnRandomTileInSectionPadded(Vector2Int currentRoomIndex, int sectionIndex)
+    {
+        Vector2 roomOffset = new Vector2(currentRoomIndex.x * numTilesInRooms.x, currentRoomIndex.y * numTilesInRooms.y);
+        Room curRoom = roomIndexAndRoom[currentRoomIndex];
+        Section currentSection = curRoom.sections[sectionIndex];
+
+        Vector2 bottomLeft = currentSection.bottomLeft + Vector2.one * 2.0f;
+        //Vector2 topLeft = currentSection.bottomLeft + Vector2.up * currentSection.size.y + Vector2.down;
+        //Vector2 bottomRight = currentSection.bottomLeft + Vector2.right * currentSection.size.x + Vector2.left;
+        Vector2 topRight = currentSection.bottomLeft + currentSection.size + Vector2.one * -2.0f;
+
+        bottomLeft += roomOffset;
+        topRight += roomOffset;
+
+        return new Vector2Int(Random.Range((int)bottomLeft.x, (int)topRight.x), Random.Range((int)bottomLeft.y, (int)topRight.y));
     }
 
     private bool IsTileACornerTileInSection(Section currentSection, Vector3Int tileToCheck)
@@ -811,8 +851,15 @@ public class MapGenerator : MonoBehaviour
         room.name = "Room " + "(" + currentRoomIndex.x + ", " + currentRoomIndex.y + ")";
         room.transform.position = new Vector3(currentRoomIndex.x * numTilesInRooms.x, currentRoomIndex.y * numTilesInRooms.y, 0);
         room.transform.position += new Vector3(numTilesInRooms.x / 2, numTilesInRooms.y / 2, 0);
+        room.transform.position += new Vector3(0.0f, 0.5f, 0.0f);
         roomObjectDictionary.Add(currentRoomIndex, room);
 
+        GameObject curRoomBoundaryObject = Instantiate(currentRoomBoundaryObject, roomObjectDictionary[currentRoomIndex].transform);
+        CameraTargetManager cameraTargetManager = curRoomBoundaryObject.GetComponent<CameraTargetManager>();
+        cameraTargetManager.cineCamera = cineCamera;
+
+        BoxCollider2D roomBoundaryCollider = curRoomBoundaryObject.GetComponent<BoxCollider2D>();
+        roomBoundaryCollider.size = numTilesInRooms;
         return true;
     }
 
@@ -820,47 +867,37 @@ public class MapGenerator : MonoBehaviour
     {
         GameObject enemiesParentGameObject = Instantiate(enemiesParentPrefab, roomObjectDictionary[currentRoomIndex].transform);
 
-        GameObject curRoomBoundaryObject = Instantiate(currentRoomBoundaryObject, roomObjectDictionary[currentRoomIndex].transform);
-        CameraTargetManager cameraTargetManager = curRoomBoundaryObject.GetComponent<CameraTargetManager>();
-        cameraTargetManager.cineCamera = cineCamera;
-        cameraTargetManager.enemiesParent = enemiesParentGameObject.transform;
-
-
         Room curRoom = roomIndexAndRoom[currentRoomIndex];
         for (int i = 0; i < curRoom.sections.Count; i++)
         {
             Section curSection = curRoom.sections[i];
 
-            GenerateEnemiesForSection(currentRoomIndex, curSection, ref enemiesParentGameObject);
+            GenerateEnemiesForSection(currentRoomIndex, i, curSection, ref enemiesParentGameObject);
             //Debug.Log("Spawned enemies for section.");
         }
+
+        Transform currentRoomBoundaryTransform = roomObjectDictionary[currentRoomIndex].transform.GetChild(0);
+        CameraTargetManager curCameraTargetManager = currentRoomBoundaryTransform.GetComponent<CameraTargetManager>();
+        curCameraTargetManager.enemiesParent = enemiesParentGameObject.transform;
 
         return true;
     }
 
-    private void GenerateEnemiesForSection(Vector2Int curRoomIndex, Section curSection, ref GameObject enemiesParentGameObject)
+    private void GenerateEnemiesForSection(Vector2Int curRoomIndex, int sectionIndex, Section curSection, ref GameObject enemiesParentGameObject)
     {
-        Vector3 curRoomPos = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
-        List<Vector2> enemySpawnCornerPos = new List<Vector2>
-        {
-            new Vector2(curSection.bottomLeft.x + 1, curSection.bottomLeft.y + 1),                                                      // Bottom Left
-            new Vector2(curSection.bottomLeft.x + curSection.size.x - borderInset - 1, curSection.bottomLeft.y + 1),                                  // Bottom Right
-            new Vector2(curSection.bottomLeft.x + 1, curSection.bottomLeft.y + curSection.size.y - borderInset - 1),                                  // Top Left
-            new Vector2(curSection.bottomLeft.x + curSection.size.x - borderInset - 1, curSection.bottomLeft.y + curSection.size.y - borderInset - 1)               // Top Right
-        };
+        Vector3 roomOffset = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
 
         int numEnemiesInThisSection = 0;
-        for (int i = 0; CanSpawnMoreEnemiesInThisSection(numEnemiesInThisSection, curSection.size, curRoomIndex.y) && i < enemySpawnCornerPos.Count; i++)
+        for (int i = 0; CanSpawnMoreEnemiesInThisSection(numEnemiesInThisSection, curSection.size, curRoomIndex.y) && i < curSection.patrolPoints.Count; i++)
         {
             //Debug.Log("Spawned enemies in section at corner.");
 
-            Vector3 curEnemyPos = new Vector3(enemySpawnCornerPos[i].x, enemySpawnCornerPos[i].y, 0.0f) + curRoomPos;
+            Vector3 curEnemyPos = new Vector3(curSection.patrolPoints[i].x, curSection.patrolPoints[i].y, 0.0f);
             curEnemyPos.x += 0.5f;
             curEnemyPos.y += 0.5f;
 
             //enemyPositions.Add(curEnemyPos);
-            bool debug = true;
-            if (debug)
+            if (debugEnemy)
             {
                 GameObject enemyGameobject = Instantiate(randomPrefabEnemy, curEnemyPos, Quaternion.identity, enemiesParentGameObject.transform);
                 numEnemiesSpawned++;
@@ -872,14 +909,15 @@ public class MapGenerator : MonoBehaviour
                 numEnemiesSpawned++;
                 //GameObject enemyGameobject = Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity, gameObject.transform);
 
-                List<Vector2> patrolWaypoints = new List<Vector2>();
-                patrolWaypoints = PatrolingWayPointsListGenerator(i, curRoomPos, ref enemySpawnCornerPos);
                 Enemy_Movement enemyMovementComponent = enemyGameobject.GetComponent<Enemy_Movement>();
-                enemyMovementComponent.patrollingWayPoints = patrolWaypoints;
+                enemyMovementComponent.currentWayPointIndex = i;
+
+                EnemyProperties s_EnemyProperties = enemyGameobject.GetComponent<EnemyProperties>();
+                s_EnemyProperties.sectionIndex = sectionIndex;
+                s_EnemyProperties.roomIndex = curRoomIndex;
 
                 if (curSection.mineSection)
                 {
-                    EnemyProperties s_EnemyProperties = enemyGameobject.GetComponent<EnemyProperties>();
                     s_EnemyProperties.mineGuard = true;
                 }
                 else
@@ -888,11 +926,12 @@ public class MapGenerator : MonoBehaviour
                     {
                         if (roomIndexAndRoom[curRoomIndex].sections[curSection.connectedSectionsInThisRoom[k]].mineSection)
                         {
-                            EnemyProperties s_EnemyProperties = enemyGameobject.GetComponent<EnemyProperties>();
                             s_EnemyProperties.connectedToMineGuardSection = true;
                         }
                     }
                 }
+
+                enemyGameobject.SetActive(false);
 
                 numEnemiesInThisSection++;
             }
@@ -1288,6 +1327,8 @@ public class MapGenerator : MonoBehaviour
                         curSection.borderingWallTypes.Add(SectionBorderingWallType.Top);
                     }
 
+                    FillSectionWithPatrollingWayPoints(currentRoomIndex, curSection);
+
                     currentRoom.sections.Add(curSection);
 
                     for (int j = y; j < (y + randomSectionSize.y); j++)
@@ -1346,31 +1387,65 @@ public class MapGenerator : MonoBehaviour
         return numberOfEnemiesSpawned < maxNumberOfEnemiesForXTiles;
     }
 
-    private List<Vector2> PatrolingWayPointsListGenerator(int curCornerIndex, Vector2 offsetInTiles, ref List<Vector2> corners)
+    private void FillSectionWithPatrollingWayPoints(Vector2 currentRoomIndex, Section currentSection)
     {
-        List<Vector2> patrolingWayPointsList = new List<Vector2>();
+        Vector2 roomOffset = new Vector2(currentRoomIndex.x * numTilesInRooms.x, currentRoomIndex.y * numTilesInRooms.y);
 
-        if(curCornerIndex == 0)
+        List<Vector2> corners = new List<Vector2>
         {
-            patrolingWayPointsList.Add(offsetInTiles + corners[0] + new Vector2(0.5f, 0.5f));
-            patrolingWayPointsList.Add(offsetInTiles + corners[2] + new Vector2(0.5f, 0.5f));
-        }
-        else if(curCornerIndex == 1)
-        {
-            patrolingWayPointsList.Add(offsetInTiles + corners[0] + new Vector2(0.5f, 0.5f));
-            patrolingWayPointsList.Add(offsetInTiles + corners[1] + new Vector2(0.5f, 0.5f));
-        }
-        else if(curCornerIndex == 2)
-        {
-            patrolingWayPointsList.Add(offsetInTiles + corners[2] + new Vector2(0.5f, 0.5f));
-            patrolingWayPointsList.Add(offsetInTiles + corners[3] + new Vector2(0.5f, 0.5f));
-        }
-        else if(curCornerIndex == 3)
-        {
-            patrolingWayPointsList.Add(offsetInTiles + corners[3] + new Vector2(0.5f, 0.5f));
-            patrolingWayPointsList.Add(offsetInTiles + corners[1] + new Vector2(0.5f, 0.5f));
-        }
+            new Vector2(currentSection.bottomLeft.x + 1, currentSection.bottomLeft.y + 1),                                                          // bottom left
+            new Vector2(currentSection.bottomLeft.x + 1, currentSection.bottomLeft.y + currentSection.size.y - 1 - 1),                              // top left
+            new Vector2(currentSection.bottomLeft.x + currentSection.size.x - 1 - 1, currentSection.bottomLeft.y + currentSection.size.y - 1 - 1),  // top right
+            new Vector2(currentSection.bottomLeft.x + currentSection.size.x - 1 - 1, currentSection.bottomLeft.y + 1)                               // bottom right
+        };
 
-        return patrolingWayPointsList;
+        List<Vector2> midPoints = new List<Vector2>
+        {
+            (corners[0] + corners[1]) / 2,
+            (corners[1] + corners[2]) / 2,
+            (corners[2] + corners[3]) / 2,
+            (corners[3] + corners[0]) / 2
+        };
+
+        //currentSection.patrolPoints.Add(roomOffset + corners[0] + new Vector2(0.5f, 0.5f));
+        //currentSection.patrolPoints.Add(roomOffset + corners[1] + new Vector2(0.5f, 0.5f));
+        //currentSection.patrolPoints.Add(roomOffset + corners[2] + new Vector2(0.5f, 0.5f));
+        //currentSection.patrolPoints.Add(roomOffset + corners[3] + new Vector2(0.5f, 0.5f));
+
+        currentSection.patrolPoints.Add(roomOffset + midPoints[0] + new Vector2(0.5f, 0.5f));
+        currentSection.patrolPoints.Add(roomOffset + midPoints[1] + new Vector2(0.5f, 0.5f));
+        currentSection.patrolPoints.Add(roomOffset + midPoints[2] + new Vector2(0.5f, 0.5f));
+        currentSection.patrolPoints.Add(roomOffset + midPoints[3] + new Vector2(0.5f, 0.5f));
+
+        currentSection.patrolPointsOccupied.Add(false);
+        currentSection.patrolPointsOccupied.Add(false);
+        currentSection.patrolPointsOccupied.Add(false);
+        currentSection.patrolPointsOccupied.Add(false);
     }
+
+    public Vector2 GetNextPatrolWayPointPosition(Vector2Int currentRoomIndex, int currentSectionIndex, ref int currentWayPointIndex)
+    {
+        Room currentRoom = roomIndexAndRoom[currentRoomIndex];
+        Section currentSection = currentRoom.sections[currentSectionIndex];
+
+        if(currentWayPointIndex + 1 < currentSection.patrolPoints.Count)
+        {
+            currentWayPointIndex++;
+        }
+        else
+        {
+            currentWayPointIndex = 0;
+        }
+
+        return currentSection.patrolPoints[currentWayPointIndex];
+    }
+
+    public void SetPatrolPointOccupancyInSection(Vector2Int currentRoomIndex, int currentSectionIndex, bool valueToSetTo, int currentWayPointIndex)
+    {
+        Room currentRoom = roomIndexAndRoom[currentRoomIndex];
+        Section currentSection = currentRoom.sections[currentSectionIndex];
+
+        currentSection.patrolPointsOccupied[currentWayPointIndex] = valueToSetTo;
+    }
+
 }

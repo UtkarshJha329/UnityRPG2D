@@ -11,7 +11,9 @@ public class CameraTargetManager : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             cineCamera.Follow = transform;
+
             enemiesParent.gameObject.SetActive(true);
+            enemiesParent.GetComponent<ActivateAllChildrenEnemy>().SetAllChildrenEnemies(true);
         }
     }
 
@@ -20,6 +22,7 @@ public class CameraTargetManager : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             enemiesParent.gameObject.SetActive(false);
+            enemiesParent.GetComponent<ActivateAllChildrenEnemy>().SetAllChildrenEnemies(false);
         }
     }
 }

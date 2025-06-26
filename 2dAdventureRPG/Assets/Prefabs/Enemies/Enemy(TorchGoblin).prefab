@@ -225,7 +225,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: be87464e6c724d04da8470cfd2921b4f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -319,6 +319,12 @@ MonoBehaviour:
   personalDamageFlashTime: 0.0625
   personalDamageTextTime: 7.5
   numDamageFlashLoops: 5
+  patrolingWayPointStoppingDistance: 0.1
+  wanderWayPointStoppingDistance: 1.5
+  mineGuard: 0
+  connectedToMineGuardSection: 0
+  sectionIndex: -1
+  roomIndex: {x: -1, y: -1}
 --- !u!114 &6646084242993171397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,6 +351,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d554f3891a91c644863a232661f3e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  patrollingWayPoints: []
+  patrollingWayPointIndex: 
 --- !u!114 &9008648374589221489
 MonoBehaviour:
   m_ObjectHideFlags: 0

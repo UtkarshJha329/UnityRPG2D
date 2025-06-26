@@ -17,6 +17,12 @@ public class PlayerHealth : MonoBehaviour
         s_PlayerHealthUIManager = GetComponent<PlayerHealthUIManager>();
     }
 
+    private void Start()
+    {
+        currentHealth = 1000000;
+        maxHealth = 10000000;
+    }
+
     public bool ChangeHealth(float changeAmmount)
     {
         if(!characterStates.isKnockbacked)
