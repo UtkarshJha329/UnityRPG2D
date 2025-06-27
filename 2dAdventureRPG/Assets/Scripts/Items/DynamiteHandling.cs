@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -24,6 +25,10 @@ public class DynamiteHandling : MonoBehaviour
     public GameObject shadowSpriteObjectToSpawn;
     public Transform shadowSpriteTransform;
 
+    public GameObject explosionRadiusIndicator;
+    public float explosionRadiusIndicatorFlickerRate = 4;
+    private float nextTimeToFlicker = 0.0f;
+
     public Transform dynamiteSpriteTransform;
 
     public float fakeHeightToReach = 1.5f;
@@ -44,6 +49,10 @@ public class DynamiteHandling : MonoBehaviour
         if(explosionObjectPrefabToSummonBeforeDestroying  == null)
         {
             Debug.LogError("explosionObjectPrefabToSummonBeforeDestroying reference is missing in Dynamite Handling script.");
+        }
+        if (explosionRadiusIndicator == null)
+        {
+            Debug.LogError("explosionRadiusIndicator reference is missing in Dynamite Handling script.");
         }
 
         shadowSpriteTransform = Instantiate(shadowSpriteObjectToSpawn, transform.position, Quaternion.identity).transform;
@@ -69,6 +78,11 @@ public class DynamiteHandling : MonoBehaviour
             }
             else if (travellingTimer > timeToReachTarget)
             {
+                if(nextTimeToFlicker <= Time.time)
+                {
+                    explosionRadiusIndicator.SetActive(!explosionRadiusIndicator.activeInHierarchy);
+                    nextTimeToFlicker = Time.time + 1.0f / explosionRadiusIndicatorFlickerRate;
+                }
                 moveSpeedDirect = 0.0f;
             }
             else if(travellingTimer < timeToReachTarget - 0.25f || moveSpeedDirect == 0.0f)
