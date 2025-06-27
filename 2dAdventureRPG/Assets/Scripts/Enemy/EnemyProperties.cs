@@ -43,4 +43,6 @@ public class EnemyProperties : MonoBehaviour
 
     public Vector3 dynamiteSpawnPosition = Vector3.zero;
     public GameObject dynamiteSpawnObject;
+
+    public bool canAttack = false;
 }

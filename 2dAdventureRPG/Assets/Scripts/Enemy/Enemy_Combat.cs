@@ -23,6 +23,8 @@ public class Enemy_Combat : MonoBehaviour
     private int[][] directionalAttackCollisionPointPairs = new int[4][] { new int[2] {0, 3 }, new int[2] {1, 3 }, new int[2] {2, 1 }, new int[] {3, 0, 1 } };
     private List<List<Collider2D>> colliderPairs = new List<List<Collider2D>>();
 
+    private MapGenerator mapGenerator;
+
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
@@ -38,6 +40,8 @@ public class Enemy_Combat : MonoBehaviour
         {
             Debug.LogError("Dynamite spawn object is missing or not assigned!!!");
         }
+
+        mapGenerator = GameObject.FindGameObjectWithTag("MapTileGrid").GetComponent<MapGenerator>();
     }
 
     private void Start()
@@ -56,34 +60,56 @@ public class Enemy_Combat : MonoBehaviour
 
     private void Update()
     {
-        if((playerTransform.position - transform.position).magnitude <= s_EnemyProperties.attackRange)
+        if (s_EnemyProperties.enemyType == EnemyType.TorchGoblin)
         {
-            if (nextTimeToAttack <= Time.time)
+            if ((playerTransform.position - transform.position).magnitude <= s_EnemyProperties.attackRange)
             {
-                //Debug.Log("Attacking Player.");
-                float horizontalDistanceToPlayer = playerTransform.position.x - transform.position.x;
-                float verticalDistanceToPlayer = (playerTransform.position.y - transform.position.y);
-                if (Mathf.Abs(horizontalDistanceToPlayer) < s_EnemyProperties.attakcingDownOffset.x && verticalDistanceToPlayer < s_EnemyProperties.attakcingDownOffset.y)
+                if (nextTimeToAttack <= Time.time)
                 {
-                    characterStates.isAttackingDown = true;
-                }
-                else if (Mathf.Abs(horizontalDistanceToPlayer) < s_EnemyProperties.attakcingUpOffset.x && verticalDistanceToPlayer > s_EnemyProperties.attakcingUpOffset.y)
-                {
-                    characterStates.isAttackingUp = true;
-                }
-                else
-                {
-                    characterStates.isAttackingSide = true;
-                }
+                    //Debug.Log("Attacking Player.");
+                    float horizontalDistanceToPlayer = playerTransform.position.x - transform.position.x;
+                    float verticalDistanceToPlayer = (playerTransform.position.y - transform.position.y);
+                    if (Mathf.Abs(horizontalDistanceToPlayer) < s_EnemyProperties.attakcingDownOffset.x && verticalDistanceToPlayer < s_EnemyProperties.attakcingDownOffset.y)
+                    {
+                        characterStates.isAttackingDown = true;
+                    }
+                    else if (Mathf.Abs(horizontalDistanceToPlayer) < s_EnemyProperties.attakcingUpOffset.x && verticalDistanceToPlayer > s_EnemyProperties.attakcingUpOffset.y)
+                    {
+                        characterStates.isAttackingUp = true;
+                    }
+                    else
+                    {
+                        characterStates.isAttackingSide = true;
+                    }
 
-                characterStates.isMoving = false;
-                characterStates.isIdling = false;
-                nextTimeToAttack = Time.time + s_EnemyProperties.delayTimeToAttackAfterPreviousAttack;
+                    characterStates.isMoving = false;
+                    characterStates.isIdling = false;
+                    nextTimeToAttack = Time.time + s_EnemyProperties.delayTimeToAttackAfterPreviousAttack;
+                }
+            }
+            else
+            {
+                nextTimeToAttack = Time.time + s_EnemyProperties.delayTimeToAttackAfterPlayerDetection;
             }
         }
-        else
+        else if(s_EnemyProperties.enemyType == EnemyType.BombGoblin)
         {
-            nextTimeToAttack = Time.time + s_EnemyProperties.delayTimeToAttackAfterPlayerDetection;
+            if (PlayerIsWithinTheSameSection(playerTransform.position) && Vector3.Distance(playerTransform.position, transform.position) <= s_EnemyProperties.attackRange)
+            {
+                //Debug.Log("Player is within attacking range!!!!");
+                if (nextTimeToAttack <= Time.time)
+                {
+                    //Debug.Log("Attacking side!");
+
+                    //characterStates.isAttackingDown = true;
+                    //characterStates.isAttackingUp = true;
+                    characterStates.isAttackingSide = true;
+
+                    characterStates.isMoving = false;
+                    characterStates.isIdling = false;
+                    nextTimeToAttack = Time.time + s_EnemyProperties.delayTimeToAttackAfterPreviousAttack;
+                }
+            }
         }
 
         if (characterStates.attackEvent)
@@ -91,6 +117,13 @@ public class Enemy_Combat : MonoBehaviour
             AttackPlayer();
             characterStates.attackEvent = false;
         }
+    }
+
+    public bool PlayerIsWithinTheSameSection(Vector2 playerPosition)
+    {
+        //Debug.Log("Player is within the same section!");
+        //Debug.Log("Enemy in room index := " + s_EnemyProperties.roomIndex.ToString() + " and section : " + s_EnemyProperties.sectionIndex + " checking if player at := " + playerPosition.ToString() + " is in the same section.");
+        return mapGenerator.SectionContainsPointPadded(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, playerPosition);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -149,9 +182,20 @@ public class Enemy_Combat : MonoBehaviour
     {
         Vector3 directionTowardsPlayer = playerTransform.position - transform.position;
 
-        GameObject dynamiteGameObject = Instantiate(s_EnemyProperties.dynamiteSpawnObject, s_EnemyProperties.dynamiteSpawnPosition, Quaternion.identity, transform);
+        GameObject dynamiteGameObject = Instantiate(s_EnemyProperties.dynamiteSpawnObject, transform.position + s_EnemyProperties.dynamiteSpawnPosition, Quaternion.identity);
+
         DynamiteHandling dynamiteHandling = dynamiteGameObject.GetComponent<DynamiteHandling>();
         dynamiteHandling.moveDirection = directionTowardsPlayer.normalized;
+
+        dynamiteHandling.timeToReachTarget = Vector3.Distance(playerTransform.position, transform.position) / dynamiteHandling.moveSpeedDirect;
+        dynamiteHandling.explosionAtTime = dynamiteHandling.timeInWhichDynamiteDetonates; // buffer time to explosion after bomb lands.
+        dynamiteHandling.explosionAtTime += (dynamiteHandling.timeToReachTarget + Time.time);
+
+        dynamiteHandling.verticalSpeed = (2.0f * dynamiteHandling.fakeHeightToReach) / dynamiteHandling.timeToReachTarget;
+
+
+        dynamiteHandling.s_PlayerMovement = s_PlayerMovement;
+        dynamiteHandling.playerHealthManager = playerHealthManager;
     }
 
     private void AttackPlayerUsingColliders(List<Collider2D> colliderPairsToCheck)

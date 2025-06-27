@@ -159,6 +159,37 @@ CapsuleCollider2D:
   m_Offset: {x: -0.9, y: 0.1}
   m_Size: {x: 0.75, y: 1.4}
   m_Direction: 0
+--- !u!1 &6566615108128965447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5550249052863701541}
+  m_Layer: 0
+  m_Name: DynamiteSpawnPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5550249052863701541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6566615108128965447}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.3, y: 0.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2687869119229514654}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6897299781908151801
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,6 +237,7 @@ Transform:
   - {fileID: 3515740554314339328}
   - {fileID: 5131062832757193368}
   - {fileID: 1689637882927626468}
+  - {fileID: 5550249052863701541}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &630675684909581477
@@ -361,8 +393,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 8, y: 0}
-  m_Radius: 9
+  m_Offset: {x: 4.5, y: 0}
+  m_Radius: 5
 --- !u!114 &3263087752073865792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,12 +428,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  attackRange: 9
-  detectorCircleOffset: 2.5
+  attackRange: 4.5
+  detectorCircleOffset: 5
   detectorCircleRadius: 9
   damage: -1
-  delayTimeToAttackAfterPlayerDetection: 1.5
-  delayTimeToAttackAfterPreviousAttack: 1.5
+  delayTimeToAttackAfterPlayerDetection: 2.5
+  delayTimeToAttackAfterPreviousAttack: 5
   attakcingDownOffset: {x: 1, y: -0.75}
   attakcingUpOffset: {x: 1, y: 0.75}
   facingDirection: {x: 1, y: 1, z: 1}
@@ -416,9 +448,10 @@ MonoBehaviour:
   connectedToMineGuardSection: 0
   sectionIndex: -1
   roomIndex: {x: -1, y: -1}
-  enemyType: 0
-  dynamiteSpawnPosition: {x: 0, y: 0, z: 0}
-  dynamiteSpawnObject: {fileID: 0}
+  enemyType: 1
+  dynamiteSpawnPosition: {x: 0.3, y: 0.3, z: 0}
+  dynamiteSpawnObject: {fileID: 6601381294115529561, guid: 0eb8edb88d40e41469549d47efefb841, type: 3}
+  canAttack: 0
 --- !u!114 &6646084242993171397
 MonoBehaviour:
   m_ObjectHideFlags: 0
