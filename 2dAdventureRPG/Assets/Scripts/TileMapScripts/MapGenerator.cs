@@ -36,6 +36,9 @@ public class Section
 
     public List<Vector2> patrolPoints = new List<Vector2>();
     public List<bool> patrolPointsOccupied = new List<bool>();
+
+    public List<EnemyProperties> enemiesPropertyComponentList = new List<EnemyProperties>();
+    public List<Enemy_Movement> enemiesMovementComponentList = new List<Enemy_Movement>();
 }
 
 [System.Serializable]
@@ -194,7 +197,7 @@ public class MapGenerator : MonoBehaviour
     {
         //curSeed = (int)Time.time;
         //Random.InitState(curSeed);
-
+        roomObjectDictionary.Clear();
         groundTileMap.ClearAllTiles();
         for (int i = 0; i < roomsParent.childCount; i++)
         {
@@ -887,12 +890,20 @@ public class MapGenerator : MonoBehaviour
     {
         Vector3 roomOffset = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
 
+        int patrolStartPointIndex = 1;
+        if(curSection.size.x <= 6.0f || curSection.size.y <= 6.0f)
+        {
+            patrolStartPointIndex = 0;
+        }
+
         int numEnemiesInThisSection = 0;
         for (int i = 0; CanSpawnMoreEnemiesInThisSection(numEnemiesInThisSection, curSection.size, curRoomIndex.y) && i < curSection.patrolPoints.Count; i++)
         {
             //Debug.Log("Spawned enemies in section at corner.");
 
-            Vector3 curEnemyPos = new Vector3(curSection.patrolPoints[i].x, curSection.patrolPoints[i].y, 0.0f);
+            int currentWayPointIndex = patrolStartPointIndex + i * 2;
+
+            Vector3 curEnemyPos = new Vector3(curSection.patrolPoints[currentWayPointIndex].x, curSection.patrolPoints[currentWayPointIndex].y, 0.0f);
             curEnemyPos.x += 0.5f;
             curEnemyPos.y += 0.5f;
 
@@ -910,7 +921,7 @@ public class MapGenerator : MonoBehaviour
                 //GameObject enemyGameobject = Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity, gameObject.transform);
 
                 Enemy_Movement enemyMovementComponent = enemyGameobject.GetComponent<Enemy_Movement>();
-                enemyMovementComponent.currentWayPointIndex = i;
+                enemyMovementComponent.currentWayPointIndex = currentWayPointIndex;
 
                 EnemyProperties s_EnemyProperties = enemyGameobject.GetComponent<EnemyProperties>();
                 s_EnemyProperties.sectionIndex = sectionIndex;
@@ -933,9 +944,52 @@ public class MapGenerator : MonoBehaviour
 
                 enemyGameobject.SetActive(false);
 
+                curSection.enemiesPropertyComponentList.Add(s_EnemyProperties);
+                curSection.enemiesMovementComponentList.Add(enemyMovementComponent);
+
                 numEnemiesInThisSection++;
             }
         }
+    }
+
+    public bool IsCurrentWayPointEmpty(Vector2Int currentRoomIndex, int currentSectionIndex, int wayPointIndex)
+    {
+        return roomIndexAndRoom[currentRoomIndex].sections[currentSectionIndex].patrolPointsOccupied[wayPointIndex];
+    }
+
+    public bool EmptyApproachingWayPoint(Vector2Int currentRoomIndex, int currentSectionIndex, int wayPointIndex, bool usingAllWayPoints, bool usingCorners)
+    {
+        usingCorners = usingAllWayPoints ? true : usingCorners;
+
+        Room currentRoom = roomIndexAndRoom[currentRoomIndex];
+        Section currentSection = currentRoom.sections[currentSectionIndex];
+
+        int numPatrolPointsOccupied = 0;
+        int offset = usingCorners ? 0 : 1;
+        int iteration = usingAllWayPoints ? 1 : 2;
+        for (int i = offset; i < currentSection.patrolPointsOccupied.Count; i += iteration)
+        {
+            if (currentSection.patrolPointsOccupied[i])
+            {
+                numPatrolPointsOccupied++;
+            }
+        }
+
+        int totalNumberOfPatrolPoints = usingAllWayPoints ? currentSection.patrolPointsOccupied.Count : currentSection.patrolPointsOccupied.Count / 2;
+        if(numPatrolPointsOccupied > totalNumberOfPatrolPoints / 2)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < currentSection.enemiesMovementComponentList.Count; i++)
+        {
+            if (currentSection.enemiesMovementComponentList[i].currentWayPointIndex == wayPointIndex)
+            {
+                currentSection.enemiesMovementComponentList[i].SwitchToNextWayPointImmediately();
+            }
+        }
+
+        return true;
     }
 
     private bool DrawSectionsToTileMaps(Vector2Int currentRoomIndex)
@@ -1412,32 +1466,80 @@ public class MapGenerator : MonoBehaviour
         //currentSection.patrolPoints.Add(roomOffset + corners[2] + new Vector2(0.5f, 0.5f));
         //currentSection.patrolPoints.Add(roomOffset + corners[3] + new Vector2(0.5f, 0.5f));
 
-        currentSection.patrolPoints.Add(roomOffset + midPoints[0] + new Vector2(0.5f, 0.5f));
-        currentSection.patrolPoints.Add(roomOffset + midPoints[1] + new Vector2(0.5f, 0.5f));
-        currentSection.patrolPoints.Add(roomOffset + midPoints[2] + new Vector2(0.5f, 0.5f));
-        currentSection.patrolPoints.Add(roomOffset + midPoints[3] + new Vector2(0.5f, 0.5f));
+        currentSection.patrolPoints.Add(roomOffset + corners[0] + new Vector2(0.5f, 0.5f));
+            currentSection.patrolPoints.Add(roomOffset + midPoints[0] + new Vector2(0.5f, 0.5f));
+        currentSection.patrolPoints.Add(roomOffset + corners[1] + new Vector2(0.5f, 0.5f));
+            currentSection.patrolPoints.Add(roomOffset + midPoints[1] + new Vector2(0.5f, 0.5f));
+        currentSection.patrolPoints.Add(roomOffset + corners[2] + new Vector2(0.5f, 0.5f));
+            currentSection.patrolPoints.Add(roomOffset + midPoints[2] + new Vector2(0.5f, 0.5f));
+        currentSection.patrolPoints.Add(roomOffset + corners[3] + new Vector2(0.5f, 0.5f));
+            currentSection.patrolPoints.Add(roomOffset + midPoints[3] + new Vector2(0.5f, 0.5f));
 
+
+        currentSection.patrolPointsOccupied.Add(false);
+        currentSection.patrolPointsOccupied.Add(false);
+        currentSection.patrolPointsOccupied.Add(false);
+        currentSection.patrolPointsOccupied.Add(false);
         currentSection.patrolPointsOccupied.Add(false);
         currentSection.patrolPointsOccupied.Add(false);
         currentSection.patrolPointsOccupied.Add(false);
         currentSection.patrolPointsOccupied.Add(false);
     }
 
-    public Vector2 GetNextPatrolWayPointPosition(Vector2Int currentRoomIndex, int currentSectionIndex, ref int currentWayPointIndex)
+    private bool AnotherEnemyInSectionHasSameWayPointIndex(Vector2Int currentRoomIndex, int currentSectionIndex, int currentWayPointIndex)
     {
         Room currentRoom = roomIndexAndRoom[currentRoomIndex];
         Section currentSection = currentRoom.sections[currentSectionIndex];
 
-        if(currentWayPointIndex + 1 < currentSection.patrolPoints.Count)
+        for (int i = 0; i < currentSection.enemiesMovementComponentList.Count; i++)
         {
-            currentWayPointIndex++;
+            if (currentSection.enemiesMovementComponentList[i].currentWayPointIndex == currentWayPointIndex)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Vector2 GetNextPatrolWayPointPosition(Vector2Int currentRoomIndex, int currentSectionIndex, ref int currentWayPointIndex, bool corners, bool useAllPatrolPoints)
+    {
+        Room currentRoom = roomIndexAndRoom[currentRoomIndex];
+        Section currentSection = currentRoom.sections[currentSectionIndex];
+
+        int offset = useAllPatrolPoints ? 1 : 2;
+        corners = useAllPatrolPoints ? true : corners;
+        int starting = corners ? 0 : 1;
+
+        int curWPIndex = currentWayPointIndex;
+
+        //while (currentSection.patrolPointsOccupied[currentWayPointIndex] && )
+        if (curWPIndex + offset < currentSection.patrolPoints.Count)
+        {
+            curWPIndex += offset;
         }
         else
         {
-            currentWayPointIndex = 0;
+            curWPIndex = starting;
         }
 
-        return currentSection.patrolPoints[currentWayPointIndex];
+        if (AnotherEnemyInSectionHasSameWayPointIndex(currentRoomIndex, currentSectionIndex, curWPIndex))
+        {
+            if(currentWayPointIndex + 1 < currentSection.patrolPoints.Count)
+            {
+                return currentSection.patrolPoints[currentWayPointIndex + 1];
+            }
+            else
+            {
+                return currentSection.patrolPoints[0];
+            }
+        }
+        else
+        {
+            currentWayPointIndex = curWPIndex;
+            return currentSection.patrolPoints[currentWayPointIndex];
+        }
+
     }
 
     public void SetPatrolPointOccupancyInSection(Vector2Int currentRoomIndex, int currentSectionIndex, bool valueToSetTo, int currentWayPointIndex)

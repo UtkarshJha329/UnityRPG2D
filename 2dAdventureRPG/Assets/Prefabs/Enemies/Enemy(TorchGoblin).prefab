@@ -1,5 +1,95 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &494521855898141445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1689637882927626468}
+  - component: {fileID: 1324331725674898431}
+  - component: {fileID: 373581244485425992}
+  m_Layer: 6
+  m_Name: EnemyAvoidance
+  m_TagString: EnemyAvoidance
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1689637882927626468
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494521855898141445}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2687869119229514654}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1324331725674898431
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494521855898141445}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
+--- !u!114 &373581244485425992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494521855898141445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee87a27fe30c88848801e29ac0221d9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb2d: {fileID: 2867828210317724896}
+  detectionCollider2D: {fileID: 1324331725674898431}
+  s_EnemyProperties: {fileID: 4972848056196173158}
+  s_EnemyMovement: {fileID: 5756919600229708024}
+  nearbyEnemyDetectionRange: 2.5
+  avoidanceSpeed: 5
+  enemiesNearby: []
+  enemiesNearbyEnemyProperties: []
+  enemiesNearbyRigidbody2D: []
 --- !u!1 &6234893164568859361
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,6 +205,7 @@ Transform:
   - {fileID: 3800702566230257296}
   - {fileID: 3515740554314339328}
   - {fileID: 5131062832757193368}
+  - {fileID: 1689637882927626468}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &630675684909581477
@@ -351,8 +442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d554f3891a91c644863a232661f3e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrollingWayPoints: []
-  patrollingWayPointIndex: 
+  currentWayPointIndex: -1
 --- !u!114 &9008648374589221489
 MonoBehaviour:
   m_ObjectHideFlags: 0

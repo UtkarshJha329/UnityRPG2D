@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - DamageTextUIHandler
   - MapTileGrid
+  - EnemyAvoidance
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - EnemyAvoidance
   - 
   - 
   - 

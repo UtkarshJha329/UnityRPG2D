@@ -28,8 +28,14 @@ public class Enemy_Movement : MonoBehaviour
     private Vector2 pointCloseToCurrentPatrolWayPointPosition = Vector2.zero;
 
     private float wanderRadius = 0.75f;
+    private bool wander = true;
 
     private bool alreadySeenPlayer = false;
+
+    private bool useCornersForMovingAround = true;
+    private bool useAllPatrolPoints = true;
+
+    private float emptyApproachingWayPointDistance = 1.5f;
 
     private void Awake()
     {
@@ -49,7 +55,15 @@ public class Enemy_Movement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentPatrolWayPointPosition = mapGenerator.GetNextPatrolWayPointPosition(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, ref currentWayPointIndex);
+        if (mapGenerator.roomIndexAndRoom[s_EnemyProperties.roomIndex].sections[s_EnemyProperties.sectionIndex].size.x <= 6.0f
+                        || mapGenerator.roomIndexAndRoom[s_EnemyProperties.roomIndex].sections[s_EnemyProperties.sectionIndex].size.y <= 6.0f)
+        {
+            //wanderRadius = 0.5f;
+            wander = false;
+            useAllPatrolPoints = false;
+        }
+
+        currentPatrolWayPointPosition = mapGenerator.GetNextPatrolWayPointPosition(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, ref currentWayPointIndex, useCornersForMovingAround, useAllPatrolPoints);
         pointCloseToCurrentPatrolWayPointPosition = PointCloseToCurrentWayPointPosition(wanderRadius);
     }
 
@@ -115,18 +129,21 @@ public class Enemy_Movement : MonoBehaviour
             {
                 playerWasDetected = false;
 
-                if(s_EnemyProperties.mineGuard || s_EnemyProperties.connectedToMineGuardSection)
+                if(s_EnemyProperties.mineGuard || s_EnemyProperties.connectedToMineGuardSection || !wander)
                 {
-                    Debug.Log("Am trying to move as a patrolin.");
-                    Vector2 displacementBetweenCurWayPointAndEnemy = currentPatrolWayPointPosition - new Vector2(transform.position.x, transform.position.y);
+                    Vector2 displacementBetweenCurWayPointAndEnemy = (currentPatrolWayPointPosition) - new Vector2(transform.position.x, transform.position.y);
                     float distanceToWaypoint = displacementBetweenCurWayPointAndEnemy.magnitude;
                     if (distanceToWaypoint > s_EnemyProperties.patrolingWayPointStoppingDistance)
                     {
-                        mapGenerator.SetPatrolPointOccupancyInSection(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, false, currentWayPointIndex);
                         rb2d.linearVelocity = displacementBetweenCurWayPointAndEnemy.normalized * s_EnemyProperties.speed;
 
                         characterStates.isMoving = true;
                         characterStates.isIdling = false;
+
+                        //if (distanceToWaypoint < emptyApproachingWayPointDistance && !mapGenerator.IsCurrentWayPointEmpty(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex))
+                        //{
+                        //    mapGenerator.EmptyApproachingWayPoint(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex, useAllPatrolPoints, useCornersForMovingAround);
+                        //}
                     }
                     else
                     {
@@ -147,7 +164,7 @@ public class Enemy_Movement : MonoBehaviour
                 {
                     //Debug.Log("Random wandering.");
 
-                    Vector2 displaceBetweenCurRandomPointAndEnemy = pointCloseToCurrentPatrolWayPointPosition - new Vector2(transform.position.x, transform.position.y);
+                    Vector2 displaceBetweenCurRandomPointAndEnemy = (pointCloseToCurrentPatrolWayPointPosition) - new Vector2(transform.position.x, transform.position.y);
 
                     float distanceToWaypoint = displaceBetweenCurRandomPointAndEnemy.magnitude;
                     if (distanceToWaypoint > s_EnemyProperties.wanderWayPointStoppingDistance)
@@ -157,6 +174,11 @@ public class Enemy_Movement : MonoBehaviour
 
                         characterStates.isMoving = true;
                         characterStates.isIdling = false;
+
+                        //if (distanceToWaypoint < emptyApproachingWayPointDistance && !mapGenerator.IsCurrentWayPointEmpty(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex))
+                        //{
+                        //    mapGenerator.EmptyApproachingWayPoint(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex, useAllPatrolPoints, useCornersForMovingAround);
+                        //}
                     }
                     else
                     {
@@ -171,6 +193,7 @@ public class Enemy_Movement : MonoBehaviour
                         {
                             //Debug.Log("Wanderling has ordered a new destination.");
                             switchingToNextWayPoint = true;
+                            mapGenerator.SetPatrolPointOccupancyInSection(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, true, currentWayPointIndex);
                             StartCoroutine(SwitchToNextWayPointAfterWaiting());
                         }
                         else
@@ -212,11 +235,20 @@ public class Enemy_Movement : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
 
-        currentPatrolWayPointPosition = mapGenerator.GetNextPatrolWayPointPosition(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, ref currentWayPointIndex);
+        SwitchToNextWayPointImmediately();
+    }
+
+    public void SwitchToNextWayPointImmediately()
+    {
+        mapGenerator.SetPatrolPointOccupancyInSection(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, false, currentWayPointIndex);
+
+        currentPatrolWayPointPosition = mapGenerator.GetNextPatrolWayPointPosition(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, ref currentWayPointIndex, useCornersForMovingAround, useAllPatrolPoints);
 
         pointCloseToCurrentPatrolWayPointPosition = PointCloseToCurrentWayPointPosition(wanderRadius);
 
         switchingToNextWayPoint = false;
+
+        StopAllCoroutines();
     }
 
 }
