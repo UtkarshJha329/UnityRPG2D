@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 4246228756998997651}
   - component: {fileID: 4713862790925913648}
   - component: {fileID: 7078589675244104900}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5074411202865836258}
   - component: {fileID: 905118263469602079}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LeftSideAttackAttackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -412,7 +412,7 @@ GameObject:
   m_Component:
   - component: {fileID: 13678235475009158}
   - component: {fileID: 4931314638311361010}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RightSideAttackAttackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -481,7 +481,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1701737712218647695}
   - component: {fileID: 2261924634144907493}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: UpAttackAttackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -550,7 +550,7 @@ GameObject:
   m_Component:
   - component: {fileID: 887865282112399524}
   - component: {fileID: 4110013312634716381}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DownAttackAttackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

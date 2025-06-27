@@ -112,7 +112,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -126,7 +126,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -150,7 +150,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -191,10 +191,10 @@ TextureImporter:
       name: Barrel_Blue_0
       rect:
         serializedVersion: 2
-        x: 38
-        y: 668
-        width: 52
-        height: 72
+        x: 0
+        y: 640
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: Barrel_Blue_1
       rect:
         serializedVersion: 2
-        x: 34
-        y: 540
-        width: 60
-        height: 64
+        x: 0
+        y: 512
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -235,10 +235,10 @@ TextureImporter:
       name: Barrel_Blue_2
       rect:
         serializedVersion: 2
-        x: 170
-        y: 536
-        width: 44
-        height: 86
+        x: 128
+        y: 512
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -257,10 +257,10 @@ TextureImporter:
       name: Barrel_Blue_3
       rect:
         serializedVersion: 2
-        x: 294
-        y: 536
-        width: 52
-        height: 95
+        x: 256
+        y: 512
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -279,10 +279,10 @@ TextureImporter:
       name: Barrel_Blue_4
       rect:
         serializedVersion: 2
-        x: 420
-        y: 537
-        width: 56
-        height: 69
+        x: 384
+        y: 512
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -301,10 +301,10 @@ TextureImporter:
       name: Barrel_Blue_5
       rect:
         serializedVersion: 2
-        x: 550
-        y: 537
-        width: 52
-        height: 82
+        x: 512
+        y: 512
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -323,10 +323,10 @@ TextureImporter:
       name: Barrel_Blue_6
       rect:
         serializedVersion: 2
-        x: 678
-        y: 537
-        width: 52
-        height: 85
+        x: 640
+        y: 512
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -345,10 +345,10 @@ TextureImporter:
       name: Barrel_Blue_7
       rect:
         serializedVersion: 2
-        x: 38
-        y: 409
-        width: 52
-        height: 85
+        x: 0
+        y: 384
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -367,10 +367,10 @@ TextureImporter:
       name: Barrel_Blue_8
       rect:
         serializedVersion: 2
-        x: 36
-        y: 281
-        width: 56
-        height: 69
+        x: 0
+        y: 256
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -389,10 +389,10 @@ TextureImporter:
       name: Barrel_Blue_9
       rect:
         serializedVersion: 2
-        x: 166
-        y: 294
-        width: 52
-        height: 77
+        x: 128
+        y: 256
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -411,10 +411,10 @@ TextureImporter:
       name: Barrel_Blue_10
       rect:
         serializedVersion: 2
-        x: 173
-        y: 280
-        width: 35
-        height: 16
+        x: 256
+        y: 256
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -433,10 +433,10 @@ TextureImporter:
       name: Barrel_Blue_11
       rect:
         serializedVersion: 2
-        x: 298
-        y: 280
-        width: 44
-        height: 97
+        x: 384
+        y: 256
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -455,10 +455,10 @@ TextureImporter:
       name: Barrel_Blue_12
       rect:
         serializedVersion: 2
-        x: 418
-        y: 284
-        width: 60
-        height: 64
+        x: 512
+        y: 256
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -477,10 +477,10 @@ TextureImporter:
       name: Barrel_Blue_13
       rect:
         serializedVersion: 2
-        x: 552
-        y: 284
-        width: 47
-        height: 78
+        x: 640
+        y: 256
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -499,10 +499,10 @@ TextureImporter:
       name: Barrel_Blue_14
       rect:
         serializedVersion: 2
-        x: 678
-        y: 284
-        width: 52
-        height: 72
+        x: 0
+        y: 128
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -521,10 +521,10 @@ TextureImporter:
       name: Barrel_Blue_15
       rect:
         serializedVersion: 2
-        x: 36
-        y: 153
-        width: 56
-        height: 69
+        x: 128
+        y: 128
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -543,10 +543,10 @@ TextureImporter:
       name: Barrel_Blue_16
       rect:
         serializedVersion: 2
-        x: 166
-        y: 152
-        width: 52
-        height: 86
+        x: 256
+        y: 128
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -565,10 +565,10 @@ TextureImporter:
       name: Barrel_Blue_17
       rect:
         serializedVersion: 2
-        x: 295
-        y: 152
-        width: 50
-        height: 88
+        x: 0
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -587,10 +587,10 @@ TextureImporter:
       name: Barrel_Blue_18
       rect:
         serializedVersion: 2
-        x: 56
-        y: 87
-        width: 10
-        height: 18
+        x: 128
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -609,10 +609,10 @@ TextureImporter:
       name: Barrel_Blue_19
       rect:
         serializedVersion: 2
-        x: 168
-        y: 28
-        width: 48
-        height: 75
+        x: 256
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -627,143 +627,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Barrel_Blue_20
-      rect:
-        serializedVersion: 2
-        x: 184
-        y: 103
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d95e9dae0a55b96d0800000000000000
-      internalID: -2982696178579544675
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Barrel_Blue_21
-      rect:
-        serializedVersion: 2
-        x: 294
-        y: 28
-        width: 52
-        height: 81
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d8300e69f6605dca0800000000000000
-      internalID: -5992876652804177011
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Barrel_Blue_22
-      rect:
-        serializedVersion: 2
-        x: 52
-        y: 85
-        width: 8
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0b54173459600fa40800000000000000
-      internalID: 5399823191368615344
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Barrel_Blue_23
-      rect:
-        serializedVersion: 2
-        x: 70
-        y: 80
-        width: 14
-        height: 19
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b74be83372d0d2d00800000000000000
-      internalID: 949429558464918651
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Barrel_Blue_24
-      rect:
-        serializedVersion: 2
-        x: 332
-        y: 96
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 83009888ca3a21d90800000000000000
-      internalID: -7128455298753691592
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Barrel_Blue_25
-      rect:
-        serializedVersion: 2
-        x: 34
-        y: 28
-        width: 59
-        height: 61
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d73ab09c44e5a98a0800000000000000
-      internalID: -6297617479400447107
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: b227e43968c31924b98c43b6e33be7b0
     internalID: 0
     vertices: []
     indices: 
@@ -772,7 +640,27 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Barrel_Blue_0: 6045454254259307398
+      Barrel_Blue_1: -2423285488819419956
+      Barrel_Blue_10: -5857065392324598592
+      Barrel_Blue_11: 2225278828217939072
+      Barrel_Blue_12: -1052690004320940063
+      Barrel_Blue_13: 871457715994819015
+      Barrel_Blue_14: 4239719258015043117
+      Barrel_Blue_15: 7818603063236946399
+      Barrel_Blue_16: 5120929411463067236
+      Barrel_Blue_17: -2206129326550140029
+      Barrel_Blue_18: -6284387523198709842
+      Barrel_Blue_19: -5411486139309320545
+      Barrel_Blue_2: -5010189232691514005
+      Barrel_Blue_3: -5390116343607681507
+      Barrel_Blue_4: -7627501968969996973
+      Barrel_Blue_5: 3007210723233672673
+      Barrel_Blue_6: -2718406118890799503
+      Barrel_Blue_7: 1908858404467654192
+      Barrel_Blue_8: 1519025819761848976
+      Barrel_Blue_9: -4532171271299795306
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

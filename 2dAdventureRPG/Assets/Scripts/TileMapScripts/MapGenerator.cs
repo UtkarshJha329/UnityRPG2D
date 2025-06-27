@@ -74,8 +74,11 @@ public class MapGenerator : MonoBehaviour
 {
     [Header("Enemy Instantiating Data")]
     [SerializeField] private GameObject torchGoblinEnemy;
+    [SerializeField] private GameObject bombGoblinEnemy;
     [SerializeField] private GameObject randomPrefabEnemy;
     [SerializeField] private bool debugEnemy = false;
+
+    private GameObject goblinToSpawn;
 
     [Header("Map Generator Data")]
     [SerializeField] private Vector2Int mapSizeInRooms;
@@ -157,6 +160,8 @@ public class MapGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        goblinToSpawn = bombGoblinEnemy;
+
         maximumSectionSize = new Vector2Int((2 * numTilesInRooms.x) / 3, (2 * numTilesInRooms.y) / 3);
         minYForResourceRooms = mapSizeInRooms.y / 3;
         minYForTeleportationRooms = 2 * mapSizeInRooms.y / 3;
@@ -916,7 +921,7 @@ public class MapGenerator : MonoBehaviour
             }
             else
             {
-                GameObject enemyGameobject = Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity, enemiesParentGameObject.transform);
+                GameObject enemyGameobject = Instantiate(goblinToSpawn, curEnemyPos, Quaternion.identity, enemiesParentGameObject.transform);
                 numEnemiesSpawned++;
                 //GameObject enemyGameobject = Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity, gameObject.transform);
 

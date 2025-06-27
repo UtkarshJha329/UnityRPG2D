@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum EnemyType
+{
+    TorchGoblin,
+    BombGoblin
+}
+
 public class EnemyProperties : MonoBehaviour
 {
     public float speed = 3.0f;
@@ -32,4 +38,9 @@ public class EnemyProperties : MonoBehaviour
 
     public int sectionIndex = -1;
     public Vector2Int roomIndex = new Vector2Int(-1, -1);
+
+    public EnemyType enemyType = EnemyType.TorchGoblin;
+
+    public Vector3 dynamiteSpawnPosition = Vector3.zero;
+    public GameObject dynamiteSpawnObject;
 }

@@ -33,6 +33,11 @@ public class Enemy_Combat : MonoBehaviour
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         playerHealthManager = playerTransform.GetComponent<PlayerHealth>();
         s_PlayerMovement = playerTransform.GetComponent<PlayerMovement>();
+
+        if(s_EnemyProperties.dynamiteSpawnObject == null)
+        {
+            Debug.LogError("Dynamite spawn object is missing or not assigned!!!");
+        }
     }
 
     private void Start()
@@ -99,13 +104,33 @@ public class Enemy_Combat : MonoBehaviour
 
     private void AttackPlayer()
     {
+        if(s_EnemyProperties.enemyType == EnemyType.TorchGoblin)
+        {
+            AttackMelee();
+        }
+        else if(s_EnemyProperties.enemyType == EnemyType.BombGoblin)
+        {
+            AttackByThrowingBomb();
+        }
+    }
+
+    private void AttackByThrowingBomb()
+    {
+        if (characterStates.isAttackingSide || characterStates.isAttackingUp || characterStates.isAttackingDown)
+        {
+            AttackPlayerByThrowingBomb();
+        }
+    }
+
+    private void AttackMelee()
+    {
         if (characterStates.isAttackingSide)
         {
-            if(s_EnemyProperties.facingDirection.x > 0.0f)
+            if (s_EnemyProperties.facingDirection.x > 0.0f)
             {
                 AttackPlayerUsingColliders(colliderPairs[0]);
             }
-            else if(s_EnemyProperties.facingDirection.x < 0.0f)
+            else if (s_EnemyProperties.facingDirection.x < 0.0f)
             {
                 AttackPlayerUsingColliders(colliderPairs[0]);
             }
@@ -118,7 +143,15 @@ public class Enemy_Combat : MonoBehaviour
         {
             AttackPlayerUsingColliders(colliderPairs[3]);
         }
+    }
 
+    private void AttackPlayerByThrowingBomb()
+    {
+        Vector3 directionTowardsPlayer = playerTransform.position - transform.position;
+
+        GameObject dynamiteGameObject = Instantiate(s_EnemyProperties.dynamiteSpawnObject, s_EnemyProperties.dynamiteSpawnPosition, Quaternion.identity, transform);
+        DynamiteHandling dynamiteHandling = dynamiteGameObject.GetComponent<DynamiteHandling>();
+        dynamiteHandling.moveDirection = directionTowardsPlayer.normalized;
     }
 
     private void AttackPlayerUsingColliders(List<Collider2D> colliderPairsToCheck)

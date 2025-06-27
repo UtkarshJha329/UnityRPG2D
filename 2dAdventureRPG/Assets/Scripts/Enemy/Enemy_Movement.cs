@@ -76,8 +76,11 @@ public class Enemy_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        s_EnemyProperties.facingDirection = new Vector3(rb2d.linearVelocity.x != 0.0f ? Mathf.Sign(rb2d.linearVelocity.x) : s_EnemyProperties.facingDirection.x, 1.0f, 0.0f);
-        transform.localScale = new Vector3(s_EnemyProperties.facingDirection.x, s_EnemyProperties.facingDirection.y, 0.0f);
+        if (!characterStates.isKnockbacked)
+        {
+            s_EnemyProperties.facingDirection = new Vector3(rb2d.linearVelocity.x != 0.0f ? Mathf.Sign(rb2d.linearVelocity.x) : s_EnemyProperties.facingDirection.x, 1.0f, 0.0f);
+            transform.localScale = new Vector3(s_EnemyProperties.facingDirection.x, s_EnemyProperties.facingDirection.y, 0.0f);
+        }
     }
 
     private void FixedUpdate()
