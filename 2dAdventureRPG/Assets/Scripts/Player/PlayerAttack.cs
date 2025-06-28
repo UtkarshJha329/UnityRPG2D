@@ -121,6 +121,10 @@ public class PlayerAttack : MonoBehaviour
 
                     Vector3 knockbackDirection = enemyHealthManager.transform.position - transform.position;
                     enemyMovemnetManager.KnockbackEnemy(s_PlayerProperties.knockbackEnemyWithForce, knockbackDirection);
+
+                    s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.enemyHitTimeStopTime, s_PlayerProperties.enemyHitTimeStopTimeScale);
+                    s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(knockbackDirection.normalized * 0.05f);
+
                 }
             }
         }

@@ -78,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
     {
         characterStates.isKnockbacked = true;
 
+        s_PlayerProperties.knockBackDirection = knockbackDirection;
         Vector3 knockbackForce = knockbackDirection * knockbackForceValue;
         rb2d.AddForce(knockbackForce, ForceMode2D.Impulse);
 

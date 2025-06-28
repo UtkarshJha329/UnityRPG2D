@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
@@ -20,6 +21,12 @@ public class PlayerAnimation : MonoBehaviour
 
     private bool waitingToResetKnockback = false;
 
+    private float nextFlashAtSecond = 0.0f;
+    private int numTimesDamageFlashed = 6;
+    private float minGapBetweenDamageFlashes = 0.0f;
+
+    private Color originalSpriteColor;
+
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -32,6 +39,8 @@ public class PlayerAnimation : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        minGapBetweenDamageFlashes = s_PlayerProperties.damageFlashTime / s_PlayerProperties.numDamageFlashLoops;
+        originalSpriteColor = currentPlayerSpriteRenderer.color;
     }
 
     // Update is called once per frame
@@ -73,9 +82,21 @@ public class PlayerAnimation : MonoBehaviour
 
         if (characterStates.isKnockbacked && !waitingToResetKnockback)
         {
-            DamageFlash();
+            s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.knockedBackTimeStopTime, s_PlayerProperties.knockedBackTimeStopTimeScale);      // Hit stop while taking a hit.
+
+            numTimesDamageFlashed = 0;
+            s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(s_PlayerProperties.knockBackDirection.normalized * 0.2f);
             StartCoroutine(KnockbackResetTime());
             waitingToResetKnockback = true;
+        }
+
+        if (numTimesDamageFlashed < s_PlayerProperties.numDamageFlashLoops)
+        {
+            CustomDamageFlash();
+        }
+        else
+        {
+            currentPlayerSpriteRenderer.color = originalSpriteColor;
         }
     }
 
@@ -89,13 +110,24 @@ public class PlayerAnimation : MonoBehaviour
     }
     private void DamageFlash()
     {
-        Color originalSpriteColor = currentPlayerSpriteRenderer.color;
 
         Sequence damageFlashSequence = DOTween.Sequence();
         damageFlashSequence.Append(currentPlayerSpriteRenderer.DOColor(Color.red, s_PlayerProperties.personalDamageFlashTime).SetEase(Ease.OutElastic));
         damageFlashSequence.Append(currentPlayerSpriteRenderer.DOColor(originalSpriteColor, s_PlayerProperties.personalDamageFlashTime).SetEase(Ease.OutElastic));
 
         damageFlashSequence.SetLoops(s_PlayerProperties.numDamageFlashLoops);
+    }
+
+    private void CustomDamageFlash()
+    {
+        if (nextFlashAtSecond <= Time.time)
+        {
+            //Debug.Log("Flashing from damage.");
+            currentPlayerSpriteRenderer.color = currentPlayerSpriteRenderer.color == originalSpriteColor ? Color.red : originalSpriteColor;
+
+            numTimesDamageFlashed++;
+            nextFlashAtSecond = Time.time + minGapBetweenDamageFlashes;
+        }
     }
 
 }

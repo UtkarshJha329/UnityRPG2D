@@ -10,6 +10,7 @@ TagManager:
   - MapTileGrid
   - EnemyAvoidance
   - Dynamite
+  - HitStopManager
   layers:
   - Default
   - TransparentFX
