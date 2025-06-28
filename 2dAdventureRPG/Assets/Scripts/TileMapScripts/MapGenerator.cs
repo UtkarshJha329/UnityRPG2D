@@ -500,7 +500,7 @@ public class MapGenerator : MonoBehaviour
         Vector2 bottomLeft = currentSection.bottomLeft + Vector2.one;
         //Vector2 topLeft = currentSection.bottomLeft + Vector2.up * currentSection.size.y + Vector2.down;
         //Vector2 bottomRight = currentSection.bottomLeft + Vector2.right * currentSection.size.x + Vector2.left;
-        Vector2 topRight = currentSection.bottomLeft + currentSection.size + Vector2.one * -2.0f;
+        Vector2 topRight = currentSection.bottomLeft + currentSection.size + Vector2.one * -1.0f;
 
         bottomLeft += roomOffset;
         topRight += roomOffset;

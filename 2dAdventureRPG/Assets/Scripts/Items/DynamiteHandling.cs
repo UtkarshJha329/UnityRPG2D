@@ -70,7 +70,8 @@ public class DynamiteHandling : MonoBehaviour
             travellingTimer += Time.deltaTime;
             transform.position += moveDirection * moveSpeedDirect * Time.deltaTime;
 
-            if (travellingTimer < timeToReachTarget * 0.5f && moveSpeedDirect != 0.0f)
+            bool arcBomb = (timeToReachTarget > timeInWhichDynamiteDetonates * 0.65f);
+            if (arcBomb && (travellingTimer < timeToReachTarget * 0.5f && moveSpeedDirect != 0.0f))
             {
                 //Debug.Log("Travelling. Vertical speed is < 0 ? " + (verticalSpeed < 0.0f));
                 dynamiteSpriteTransform.localPosition += Vector3.up * verticalSpeed * Time.deltaTime;
@@ -85,8 +86,9 @@ public class DynamiteHandling : MonoBehaviour
                 }
                 moveSpeedDirect = 0.0f;
             }
-            else if(travellingTimer < timeToReachTarget - 0.25f || moveSpeedDirect == 0.0f)
+            else if(arcBomb && travellingTimer < timeToReachTarget)
             {
+                //  || moveSpeedDirect == 0.0f
                 dynamiteSpriteTransform.localPosition += Vector3.down * verticalSpeed * Time.deltaTime;
             }
 
