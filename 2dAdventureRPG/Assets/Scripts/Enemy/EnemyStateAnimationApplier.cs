@@ -45,7 +45,7 @@ public class EnemyStateAnimationApplier : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(characterStates.IsAttacking())
+        if(characterStates.IsAttacking() && s_EnemyProperties.enemyType != EnemyType.TNTBarrelGoblin)
         {
             int numLoops = (int)animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             float fractionalPart = animator.GetCurrentAnimatorStateInfo(0).normalizedTime - numLoops;

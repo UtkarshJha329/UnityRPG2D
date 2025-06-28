@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,6 +25,8 @@ public class Enemy_Combat : MonoBehaviour
     private List<List<Collider2D>> colliderPairs = new List<List<Collider2D>>();
 
     private MapGenerator mapGenerator;
+
+    private bool alreadyExploded = false;
 
     private void Awake()
     {
@@ -111,11 +114,42 @@ public class Enemy_Combat : MonoBehaviour
                 }
             }
         }
+        else if (s_EnemyProperties.enemyType == EnemyType.TNTBarrelGoblin)
+        {
+            if ((playerTransform.position - transform.position).magnitude <= s_EnemyProperties.attackRange)
+            {
+                if (nextTimeToAttack <= Time.time)
+                {
+                    characterStates.isAttackingSide = true;
+
+                    characterStates.isMoving = false;
+                    characterStates.isIdling = false;
+
+                    nextTimeToAttack = Time.time + s_EnemyProperties.delayTimeToAttackAfterPreviousAttack;
+                }
+            }
+            else
+            {
+                nextTimeToAttack = Time.time + s_EnemyProperties.delayTimeToAttackAfterPlayerDetection;
+            }
+        }
 
         if (characterStates.attackEvent)
         {
-            AttackPlayer();
-            characterStates.attackEvent = false;
+            if(s_EnemyProperties.enemyType != EnemyType.TNTBarrelGoblin)
+            {
+                AttackPlayer();
+                characterStates.attackEvent = false;
+            }
+            else
+            {
+                if (!alreadyExploded)
+                {
+                    AttackPlayer();
+                    characterStates.attackEvent = false;
+                    alreadyExploded = true;
+                }
+            }
         }
     }
 
@@ -145,6 +179,33 @@ public class Enemy_Combat : MonoBehaviour
         {
             AttackByThrowingBomb();
         }
+        else if(s_EnemyProperties.enemyType == EnemyType.TNTBarrelGoblin)
+        {
+            AttackPlayerByExploding();
+        }
+    }
+
+    private void AttackPlayerByExploding()
+    {
+        GameObject dynamiteGameObject = Instantiate(s_EnemyProperties.dynamiteSpawnObject, transform.position, Quaternion.identity);
+
+        DynamiteHandling dynamiteHandling = dynamiteGameObject.GetComponent<DynamiteHandling>();
+
+        dynamiteHandling.tntGoblinEnemyParent = transform;
+        dynamiteHandling.showDynamiteSprite = false;
+
+        dynamiteHandling.timeInWhichDynamiteDetonates = 0.75f;
+        dynamiteHandling.explosionRangeCollider.radius = 5.0f;
+        dynamiteHandling.explosionAtTime = dynamiteHandling.timeInWhichDynamiteDetonates; // buffer time to explosion after bomb lands.
+        dynamiteHandling.explosionAtTime += Time.time;
+
+        dynamiteHandling.dynamiteShadowsParentTransform = s_EnemyProperties.dynamiteShadowsParentTransform;
+        dynamiteHandling.s_PlayerMovement = s_PlayerMovement;
+        dynamiteHandling.playerHealthManager = playerHealthManager;
+
+        //Debug.Log(gameObject.name + " ;=; Exploding and destroying myself in front of player.");
+
+        Destroy(gameObject, 0.8f);
     }
 
     private void AttackByThrowingBomb()
@@ -194,6 +255,7 @@ public class Enemy_Combat : MonoBehaviour
         dynamiteHandling.verticalSpeed = (2.0f * dynamiteHandling.fakeHeightToReach) / dynamiteHandling.timeToReachTarget;
 
 
+        dynamiteHandling.dynamiteShadowsParentTransform = s_EnemyProperties.dynamiteShadowsParentTransform;
         dynamiteHandling.s_PlayerMovement = s_PlayerMovement;
         dynamiteHandling.playerHealthManager = playerHealthManager;
     }

@@ -22,6 +22,7 @@ public class DynamiteHandling : MonoBehaviour
 
     public GameObject explosionObjectPrefabToSummonBeforeDestroying;
 
+    public Transform dynamiteShadowsParentTransform;
     public GameObject shadowSpriteObjectToSpawn;
     public Transform shadowSpriteTransform;
 
@@ -39,6 +40,9 @@ public class DynamiteHandling : MonoBehaviour
 
     private float travellingTimer = 0.0f;
 
+    public bool showDynamiteSprite = true;
+    public Transform tntGoblinEnemyParent;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -55,17 +59,27 @@ public class DynamiteHandling : MonoBehaviour
             Debug.LogError("explosionRadiusIndicator reference is missing in Dynamite Handling script.");
         }
 
-        shadowSpriteTransform = Instantiate(shadowSpriteObjectToSpawn, transform.position, Quaternion.identity).transform;
+        shadowSpriteTransform = Instantiate(shadowSpriteObjectToSpawn, transform.position, Quaternion.identity, dynamiteShadowsParentTransform).transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(explosionAtTime <= Time.time)
+        if (!showDynamiteSprite)
+        {
+            dynamiteSpriteTransform.gameObject.SetActive(false);
+
+            if (nextTimeToFlicker <= Time.time)
+            {
+                explosionRadiusIndicator.SetActive(!explosionRadiusIndicator.activeInHierarchy);
+                nextTimeToFlicker = Time.time + 1.0f / explosionRadiusIndicatorFlickerRate;
+            }
+        }
+        if (explosionAtTime <= Time.time)
         {
             Explode();
         }
-        else
+        else if(showDynamiteSprite)
         {
             travellingTimer += Time.deltaTime;
             transform.position += moveDirection * moveSpeedDirect * Time.deltaTime;
@@ -113,9 +127,11 @@ public class DynamiteHandling : MonoBehaviour
             }
         }
 
+        if(shadowSpriteTransform == null)
+        {
+            Debug.LogError("shadowSpiritTransform is missing!");
+        }
         Instantiate(explosionObjectPrefabToSummonBeforeDestroying, shadowSpriteTransform.position, Quaternion.identity);
-
         Destroy(gameObject);
-
     }
 }

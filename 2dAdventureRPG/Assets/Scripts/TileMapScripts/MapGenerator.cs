@@ -75,6 +75,7 @@ public class MapGenerator : MonoBehaviour
     [Header("Enemy Instantiating Data")]
     [SerializeField] private GameObject torchGoblinEnemy;
     [SerializeField] private GameObject bombGoblinEnemy;
+    [SerializeField] private GameObject tntGoblinEnemy;
     [SerializeField] private GameObject randomPrefabEnemy;
     [SerializeField] private bool debugEnemy = false;
 
@@ -160,7 +161,9 @@ public class MapGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        goblinToSpawn = bombGoblinEnemy;
+        //goblinToSpawn = torchGoblinEnemy;
+        //goblinToSpawn = bombGoblinEnemy;
+        goblinToSpawn = tntGoblinEnemy;
 
         maximumSectionSize = new Vector2Int((2 * numTilesInRooms.x) / 3, (2 * numTilesInRooms.y) / 3);
         minYForResourceRooms = mapSizeInRooms.y / 3;
@@ -876,22 +879,23 @@ public class MapGenerator : MonoBehaviour
         GameObject enemiesParentGameObject = Instantiate(enemiesParentPrefab, roomObjectDictionary[currentRoomIndex].transform);
 
         Room curRoom = roomIndexAndRoom[currentRoomIndex];
-        for (int i = 0; i < curRoom.sections.Count; i++)
-        {
-            Section curSection = curRoom.sections[i];
-
-            GenerateEnemiesForSection(currentRoomIndex, i, curSection, ref enemiesParentGameObject);
-            //Debug.Log("Spawned enemies for section.");
-        }
 
         Transform currentRoomBoundaryTransform = roomObjectDictionary[currentRoomIndex].transform.GetChild(0);
         CameraTargetManager curCameraTargetManager = currentRoomBoundaryTransform.GetComponent<CameraTargetManager>();
         curCameraTargetManager.enemiesParent = enemiesParentGameObject.transform;
 
+        for (int i = 0; i < curRoom.sections.Count; i++)
+        {
+            Section curSection = curRoom.sections[i];
+
+            GenerateEnemiesForSection(currentRoomIndex, i, curSection, curCameraTargetManager, ref enemiesParentGameObject);
+            //Debug.Log("Spawned enemies for section.");
+        }
+
         return true;
     }
 
-    private void GenerateEnemiesForSection(Vector2Int curRoomIndex, int sectionIndex, Section curSection, ref GameObject enemiesParentGameObject)
+    private void GenerateEnemiesForSection(Vector2Int curRoomIndex, int sectionIndex, Section curSection, CameraTargetManager curCameraTargetManager, ref GameObject enemiesParentGameObject)
     {
         Vector3 roomOffset = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
 
@@ -931,6 +935,8 @@ public class MapGenerator : MonoBehaviour
                 EnemyProperties s_EnemyProperties = enemyGameobject.GetComponent<EnemyProperties>();
                 s_EnemyProperties.sectionIndex = sectionIndex;
                 s_EnemyProperties.roomIndex = curRoomIndex;
+
+                s_EnemyProperties.dynamiteShadowsParentTransform = curCameraTargetManager.dynamiteShadowsParent;
 
                 if (curSection.mineSection)
                 {

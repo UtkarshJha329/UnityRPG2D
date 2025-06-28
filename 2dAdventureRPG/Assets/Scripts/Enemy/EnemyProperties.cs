@@ -3,7 +3,8 @@ using UnityEngine;
 public enum EnemyType
 {
     TorchGoblin,
-    BombGoblin
+    BombGoblin,
+    TNTBarrelGoblin
 }
 
 public class EnemyProperties : MonoBehaviour
@@ -45,4 +46,6 @@ public class EnemyProperties : MonoBehaviour
     public GameObject dynamiteSpawnObject;
 
     public bool canAttack = false;
+
+    public Transform dynamiteShadowsParentTransform;
 }
