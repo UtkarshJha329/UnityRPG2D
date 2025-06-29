@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 9002842744812114729}
   - component: {fileID: 1408986373046643218}
   - component: {fileID: 6514955182221276807}
+  - component: {fileID: 2129231837655999972}
   m_Layer: 0
   m_Name: Enemy(TNTGoblin)
   m_TagString: Enemy
@@ -363,6 +364,7 @@ MonoBehaviour:
   dynamiteSpawnObject: {fileID: 6601381294115529561, guid: 0eb8edb88d40e41469549d47efefb841, type: 3}
   canAttack: 0
   dynamiteShadowsParentTransform: {fileID: 0}
+  dropType: 1
 --- !u!114 &6201999114247976535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,6 +467,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7bdd57464dc36342b0b49df362a65b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathObject: {fileID: 4604655829116352359, guid: 3a70151303b11d447a8429d0580c4e31, type: 3}
+--- !u!114 &2129231837655999972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6064294110579197382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c3daa99acc4d51469c41c7b829ec6aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropPrefab: {fileID: 6333855969259875297, guid: 0af39702b31796f4f9d506b0fcad59dc, type: 3}
 --- !u!1 &6233277934127257519
 GameObject:
   m_ObjectHideFlags: 0

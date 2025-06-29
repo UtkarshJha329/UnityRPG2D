@@ -72,6 +72,8 @@ public class ConnectionTiles
 
 public class MapGenerator : MonoBehaviour
 {
+    public EnemyType spawnEnemyType = EnemyType.TorchGoblin;
+
     [Header("Enemy Instantiating Data")]
     [SerializeField] private GameObject torchGoblinEnemy;
     [SerializeField] private GameObject bombGoblinEnemy;
@@ -149,7 +151,6 @@ public class MapGenerator : MonoBehaviour
     private int borderInset = 1;
 
 
-
     private void Awake()
     {
         if (groundTileMap == null)
@@ -161,9 +162,18 @@ public class MapGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //goblinToSpawn = torchGoblinEnemy;
-        //goblinToSpawn = bombGoblinEnemy;
-        goblinToSpawn = tntGoblinEnemy;
+        if(spawnEnemyType == EnemyType.TorchGoblin)
+        {
+            goblinToSpawn = torchGoblinEnemy;
+        }
+        if(spawnEnemyType == EnemyType.BombGoblin)
+        {
+            goblinToSpawn = bombGoblinEnemy;
+        }
+        if(spawnEnemyType == EnemyType.TNTBarrelGoblin)
+        {
+            goblinToSpawn = tntGoblinEnemy;
+        }
 
         maximumSectionSize = new Vector2Int((2 * numTilesInRooms.x) / 3, (2 * numTilesInRooms.y) / 3);
         minYForResourceRooms = mapSizeInRooms.y / 3;

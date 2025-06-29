@@ -48,4 +48,6 @@ public class EnemyProperties : MonoBehaviour
     public bool canAttack = false;
 
     public Transform dynamiteShadowsParentTransform;
+
+    public DropType dropType;
 }

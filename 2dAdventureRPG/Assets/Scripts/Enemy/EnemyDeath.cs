@@ -1,13 +1,24 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterStates))]
+[RequireComponent(typeof(EnemyProperties))]
+[RequireComponent(typeof(EnemyDropManager))]
 public class EnemyDeath : MonoBehaviour
 {
     private CharacterStates characterStates;
 
+    private EnemyProperties s_EnemyProperties;
+    private EnemyDropManager dropManager;
+
+    public GameObject deathObject;
+
+    private bool droppedItem = false;
+
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
+        s_EnemyProperties = GetComponent<EnemyProperties>();
+        dropManager = GetComponent<EnemyDropManager>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -25,6 +36,15 @@ public class EnemyDeath : MonoBehaviour
     {
         if (characterStates.isDead)
         {
+            if (!droppedItem)
+            {
+                dropManager.DropAppropriateItemAtLocation(transform.position, s_EnemyProperties.dropType, s_EnemyProperties.dynamiteShadowsParentTransform);
+                droppedItem = true;
+
+                GameObject instantiatedDeathObject = Instantiate(deathObject, transform.position, Quaternion.identity);
+                DeathAnimationHandler deathAnimationHandler = instantiatedDeathObject.GetComponent<DeathAnimationHandler>();
+                deathAnimationHandler.BuryInTime(2.5f);
+            }
             gameObject.SetActive(false);
         }
     }

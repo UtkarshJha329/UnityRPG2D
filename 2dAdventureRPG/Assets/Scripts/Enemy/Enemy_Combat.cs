@@ -39,7 +39,7 @@ public class Enemy_Combat : MonoBehaviour
         playerHealthManager = playerTransform.GetComponent<PlayerHealth>();
         s_PlayerMovement = playerTransform.GetComponent<PlayerMovement>();
 
-        if(s_EnemyProperties.dynamiteSpawnObject == null)
+        if(s_EnemyProperties.enemyType != EnemyType.TorchGoblin && s_EnemyProperties.dynamiteSpawnObject == null)
         {
             Debug.LogError("Dynamite spawn object is missing or not assigned!!!");
         }
@@ -195,7 +195,7 @@ public class Enemy_Combat : MonoBehaviour
         dynamiteHandling.showDynamiteSprite = false;
 
         dynamiteHandling.timeInWhichDynamiteDetonates = 0.75f;
-        dynamiteHandling.explosionRangeCollider.radius = 5.0f;
+        //dynamiteHandling.explosionRangeCollider.radius = 2.5f;
         dynamiteHandling.explosionAtTime = dynamiteHandling.timeInWhichDynamiteDetonates; // buffer time to explosion after bomb lands.
         dynamiteHandling.explosionAtTime += Time.time;
 

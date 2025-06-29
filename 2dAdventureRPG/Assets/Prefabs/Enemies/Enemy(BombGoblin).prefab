@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 2626874037556475673}
   - component: {fileID: 8269918054671843715}
   - component: {fileID: 5225682628449209119}
+  - component: {fileID: 5615967836538340462}
   m_Layer: 0
   m_Name: Enemy(BombGoblin)
   m_TagString: Enemy
@@ -452,6 +453,8 @@ MonoBehaviour:
   dynamiteSpawnPosition: {x: 0.3, y: 0.3, z: 0}
   dynamiteSpawnObject: {fileID: 6601381294115529561, guid: 0eb8edb88d40e41469549d47efefb841, type: 3}
   canAttack: 0
+  dynamiteShadowsParentTransform: {fileID: 0}
+  dropType: 2
 --- !u!114 &6646084242993171397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,6 +557,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7bdd57464dc36342b0b49df362a65b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathObject: {fileID: 4604655829116352359, guid: 3a70151303b11d447a8429d0580c4e31, type: 3}
+--- !u!114 &5615967836538340462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6897299781908151801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c3daa99acc4d51469c41c7b829ec6aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropPrefab: {fileID: 6333855969259875297, guid: 0af39702b31796f4f9d506b0fcad59dc, type: 3}
 --- !u!1 &7570984762632781699
 GameObject:
   m_ObjectHideFlags: 0
