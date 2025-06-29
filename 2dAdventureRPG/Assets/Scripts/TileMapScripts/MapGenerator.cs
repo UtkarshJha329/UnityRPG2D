@@ -70,6 +70,24 @@ public class ConnectionTiles
     public Vector3Int worldTileB;
 }
 
+public class EnemyTypeAndPercentageSpawnList
+{
+    public EnemyTypeAndPercentageSpawnList(EnemyType enemyType, float spawnProbability)
+    {
+        enemySpawnTypeAndProbabilityRanges.Add(spawnProbability, enemyType);
+    }
+    public EnemyTypeAndPercentageSpawnList(List<EnemyType> enemyTypes, List<float> spawnProbabilities)
+    {
+        for (int i = 0; i < enemyTypes.Count; i++)
+        {
+            enemySpawnTypeAndProbabilityRanges.Add(spawnProbabilities[i], enemyTypes[i]);
+        }
+    }
+
+    //public Dictionary<EnemyType, float> enemySpawnTypeAndProbability = new Dictionary<EnemyType, float>();
+    public Dictionary<float, EnemyType> enemySpawnTypeAndProbabilityRanges = new Dictionary<float, EnemyType>();
+}
+
 public class MapGenerator : MonoBehaviour
 {
     public EnemyType spawnEnemyType = EnemyType.TorchGoblin;
@@ -101,6 +119,7 @@ public class MapGenerator : MonoBehaviour
 
     [Header("Map Generator Tiles Data")]
     [SerializeField] private Tilemap groundTileMap;
+    [SerializeField] private Tilemap wallsTileMap;
 
     [SerializeField] private Tile groundTileGrassTL;
     [SerializeField] private Tile groundTileGrassTM;
@@ -151,6 +170,9 @@ public class MapGenerator : MonoBehaviour
     private int borderInset = 1;
 
 
+    private Dictionary<int, EnemyTypeAndPercentageSpawnList> spawnTypesBasedOnRoomY = new Dictionary<int, EnemyTypeAndPercentageSpawnList>();
+
+
     private void Awake()
     {
         if (groundTileMap == null)
@@ -162,18 +184,6 @@ public class MapGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if(spawnEnemyType == EnemyType.TorchGoblin)
-        {
-            goblinToSpawn = torchGoblinEnemy;
-        }
-        if(spawnEnemyType == EnemyType.BombGoblin)
-        {
-            goblinToSpawn = bombGoblinEnemy;
-        }
-        if(spawnEnemyType == EnemyType.TNTBarrelGoblin)
-        {
-            goblinToSpawn = tntGoblinEnemy;
-        }
 
         maximumSectionSize = new Vector2Int((2 * numTilesInRooms.x) / 3, (2 * numTilesInRooms.y) / 3);
         minYForResourceRooms = mapSizeInRooms.y / 3;
@@ -182,7 +192,7 @@ public class MapGenerator : MonoBehaviour
         mapSizeInTiles = mapSizeInRooms * numTilesInRooms;
 
         playerSpawnRoom = new Vector2Int(mapSizeInRooms.x / 2, 0);
-        playerSpawnTile = new Vector2Int(numTilesInRooms.x / 2, 1);
+        playerSpawnTile = new Vector2Int(numTilesInRooms.x / 2, 2);
         castleSpawnRoom = new Vector2Int(mapSizeInRooms.x / 2, mapSizeInRooms.y - 1);
 
 
@@ -198,6 +208,38 @@ public class MapGenerator : MonoBehaviour
                 roomIndexAndRoom.Add(new Vector2Int(x, y), curRoom);
             }
         }
+
+
+        spawnTypesBasedOnRoomY[0] = new EnemyTypeAndPercentageSpawnList(EnemyType.TorchGoblin, 1.0f);
+        spawnTypesBasedOnRoomY[1] = new EnemyTypeAndPercentageSpawnList(EnemyType.TorchGoblin, 1.0f);
+        spawnTypesBasedOnRoomY[2] = new EnemyTypeAndPercentageSpawnList(EnemyType.TorchGoblin, 1.0f);
+
+        List<EnemyType> enemyTypesToSpawnOn3 = new List<EnemyType> { EnemyType.TorchGoblin, EnemyType.TNTBarrelGoblin };
+        List<float> enemyTypesToSpawnOn3ProbabilitiesRanges = new List<float> { 0.8f, 1.0f };
+        spawnTypesBasedOnRoomY[3] = new EnemyTypeAndPercentageSpawnList(enemyTypesToSpawnOn3, enemyTypesToSpawnOn3ProbabilitiesRanges);
+
+        List<EnemyType> enemyTypesToSpawnOn4 = new List<EnemyType> { EnemyType.TorchGoblin, EnemyType.TNTBarrelGoblin };
+        List<float> enemyTypesToSpawnOn4ProbabilitiesRanges = new List<float> { 0.65f, 1.0f };
+        spawnTypesBasedOnRoomY[4] = new EnemyTypeAndPercentageSpawnList(enemyTypesToSpawnOn4, enemyTypesToSpawnOn4ProbabilitiesRanges);
+
+        List<EnemyType> enemyTypesToSpawnOn5 = new List<EnemyType> { EnemyType.TorchGoblin, EnemyType.TNTBarrelGoblin };
+        List<float> enemyTypesToSpawnOn5ProbabilitiesRanges = new List<float> { 0.45f, 1.0f };
+        spawnTypesBasedOnRoomY[5] = new EnemyTypeAndPercentageSpawnList(enemyTypesToSpawnOn5, enemyTypesToSpawnOn5ProbabilitiesRanges);
+
+        spawnTypesBasedOnRoomY[6] = new EnemyTypeAndPercentageSpawnList(EnemyType.TNTBarrelGoblin, 1.0f);
+
+        List<EnemyType> enemyTypesToSpawnOn7 = new List<EnemyType> { EnemyType.TorchGoblin, EnemyType.TNTBarrelGoblin, EnemyType.BombGoblin };
+        List<float> enemyTypesToSpawnOn7ProbabilitiesRanges = new List<float> { 0.45f, 0.8f, 1.0f };
+        spawnTypesBasedOnRoomY[7] = new EnemyTypeAndPercentageSpawnList(enemyTypesToSpawnOn7, enemyTypesToSpawnOn7ProbabilitiesRanges);
+
+        List<EnemyType> enemyTypesToSpawnOn8 = new List<EnemyType> { EnemyType.TorchGoblin, EnemyType.TNTBarrelGoblin, EnemyType.BombGoblin };
+        List<float> enemyTypesToSpawnOn8ProbabilitiesRanges = new List<float> { 0.35f, 0.8f, 1.0f };
+        spawnTypesBasedOnRoomY[8] = new EnemyTypeAndPercentageSpawnList(enemyTypesToSpawnOn8, enemyTypesToSpawnOn8ProbabilitiesRanges);
+
+        List<EnemyType> enemyTypesToSpawnOn9 = new List<EnemyType> { EnemyType.TorchGoblin, EnemyType.TNTBarrelGoblin, EnemyType.BombGoblin };
+        List<float> enemyTypesToSpawnOn9ProbabilitiesRanges = new List<float> { 0.1f, 0.55f, 1.0f };
+        spawnTypesBasedOnRoomY[9] = new EnemyTypeAndPercentageSpawnList(enemyTypesToSpawnOn9, enemyTypesToSpawnOn9ProbabilitiesRanges);
+
 
         MakeMap();
     }
@@ -217,6 +259,7 @@ public class MapGenerator : MonoBehaviour
         //Random.InitState(curSeed);
         roomObjectDictionary.Clear();
         groundTileMap.ClearAllTiles();
+        wallsTileMap.ClearAllTiles();
         for (int i = 0; i < roomsParent.childCount; i++)
         {
             GameObject.Destroy(roomsParent.GetChild(i).gameObject);
@@ -363,6 +406,9 @@ public class MapGenerator : MonoBehaviour
                         int randomTileToMakeConnection = Random.Range(0, connectionTiles.Count);
                         groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, groundTileDrySand);
                         groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, groundTileDrySand);
+
+                        wallsTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, null);
+                        wallsTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, null);
 
                         curRoom.sections[i].connectedSectionsInThisRoom.Add(j);
                         curRoom.sections[j].connectedSectionsInThisRoom.Add(i);
@@ -725,6 +771,9 @@ public class MapGenerator : MonoBehaviour
         groundTileMap.SetTile(tileA, groundTileDrySand);
         groundTileMap.SetTile(tileB, groundTileDrySand);
 
+        wallsTileMap.SetTile(tileA, null);
+        wallsTileMap.SetTile(tileB, null);
+
         for (int i = 0; i < sectionsATouchingB.Count; i++)
         {
             Section curSectionA = roomA.sections[sectionsATouchingB[i]];
@@ -907,7 +956,12 @@ public class MapGenerator : MonoBehaviour
 
     private void GenerateEnemiesForSection(Vector2Int curRoomIndex, int sectionIndex, Section curSection, CameraTargetManager curCameraTargetManager, ref GameObject enemiesParentGameObject)
     {
-        Vector3 roomOffset = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
+        //Vector2Int roomOffset = new Vector2Int(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y);
+
+        if (SectionContainsPointPadded(curRoomIndex, sectionIndex, (playerSpawnRoom * numTilesInRooms) + playerSpawnTile))
+        {
+            return;
+        }
 
         int patrolStartPointIndex = 1;
         if(curSection.size.x <= 6.0f || curSection.size.y <= 6.0f)
@@ -916,6 +970,7 @@ public class MapGenerator : MonoBehaviour
         }
 
         int numEnemiesInThisSection = 0;
+        List<EnemyType> enemyTypesInThisSection = new List<EnemyType>();
         for (int i = 0; CanSpawnMoreEnemiesInThisSection(numEnemiesInThisSection, curSection.size, curRoomIndex.y) && i < curSection.patrolPoints.Count; i++)
         {
             //Debug.Log("Spawned enemies in section at corner.");
@@ -935,6 +990,22 @@ public class MapGenerator : MonoBehaviour
             }
             else
             {
+
+                EnemyType curEnemyType = GetEnemyTypeForThisRoom(curRoomIndex);
+
+                if (curEnemyType == EnemyType.TorchGoblin)
+                {
+                    goblinToSpawn = torchGoblinEnemy;
+                }
+                if (curEnemyType == EnemyType.BombGoblin)
+                {
+                    goblinToSpawn = bombGoblinEnemy;
+                }
+                if (curEnemyType == EnemyType.TNTBarrelGoblin)
+                {
+                    goblinToSpawn = tntGoblinEnemy;
+                }
+
                 GameObject enemyGameobject = Instantiate(goblinToSpawn, curEnemyPos, Quaternion.identity, enemiesParentGameObject.transform);
                 numEnemiesSpawned++;
                 //GameObject enemyGameobject = Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity, gameObject.transform);
@@ -968,9 +1039,27 @@ public class MapGenerator : MonoBehaviour
                 curSection.enemiesPropertyComponentList.Add(s_EnemyProperties);
                 curSection.enemiesMovementComponentList.Add(enemyMovementComponent);
 
+                enemyTypesInThisSection.Add(s_EnemyProperties.enemyType);
+
                 numEnemiesInThisSection++;
             }
         }
+    }
+
+    private EnemyType GetEnemyTypeForThisRoom(Vector2Int currentRoomIndex)
+    {
+        float randFloat = Random.Range(0.0f, 1.0f);
+
+        foreach (float probability in spawnTypesBasedOnRoomY[currentRoomIndex.y].enemySpawnTypeAndProbabilityRanges.Keys)
+        {
+            if(probability > randFloat)
+            {
+                return spawnTypesBasedOnRoomY[currentRoomIndex.y].enemySpawnTypeAndProbabilityRanges[probability];
+            }
+        }
+
+        Debug.Log("Failed to get an enemy type, defaulting to torch goblin.");
+        return EnemyType.TorchGoblin;
     }
 
     public bool IsCurrentWayPointEmpty(Vector2Int currentRoomIndex, int currentSectionIndex, int wayPointIndex)
@@ -1032,26 +1121,30 @@ public class MapGenerator : MonoBehaviour
                     if (y == 0)
                     {
                         //Bottom border of the section.
-                        groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
+                        //groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
+                        wallsTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
                         borderTile = true;
                     }
                     else if (y == curSection.size.y - borderInset)
                     {
                         //Top border of the section.
-                        groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
+                        //groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
+                        wallsTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
                         borderTile = true;
                     }
 
                     if (x == 0)
                     {
                         //Left border of the section.
-                        groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
+                        //groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
+                        wallsTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
                         borderTile = true;
                     }
                     else if (x == curSection.size.x - borderInset)
                     {
                         //Right border of the section.
-                        groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
+                        //groundTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
+                        wallsTileMap.SetTile(curTilePosInTileMapGrid, stoneWallTile);
                         borderTile = true;
                     }
 

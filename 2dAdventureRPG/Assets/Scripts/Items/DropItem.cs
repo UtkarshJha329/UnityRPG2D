@@ -106,7 +106,7 @@ public class DropItem : MonoBehaviour
         if (dropItemType == DropType.DamageDrop)
         {
             dropSpriteRenderer.sprite = damageDropSprite;
-            transform.localScale = Vector3.one * 1.25f;
+            transform.localScale = Vector3.one * 1.15f;
         }
         else if (dropItemType == DropType.HealthDrop)
         {

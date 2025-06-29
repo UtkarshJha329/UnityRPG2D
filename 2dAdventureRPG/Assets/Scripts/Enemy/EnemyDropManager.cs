@@ -15,7 +15,7 @@ public class EnemyDropManager : MonoBehaviour
 
     public void DropAppropriateItemAtLocation(Vector3 location, Vector3 directionToOffsetDrop, DropType dropType, Transform dropParent)
     {
-        DropItem dropItem = Instantiate(dropPrefab, location + directionToOffsetDrop * 0.75f, Quaternion.identity, dropParent).GetComponent<DropItem>();
+        DropItem dropItem = Instantiate(dropPrefab, location + directionToOffsetDrop * 0.85f, Quaternion.identity, dropParent).GetComponent<DropItem>();
         dropItem.SetDropTypeAndInitDrop(dropType);
     }
 }
