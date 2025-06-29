@@ -48,12 +48,12 @@ public class DropItem : MonoBehaviour
 
     private void Update()
     {
-        //if(Vector3.Distance(transform.position, s_PlayerProperties.transform.position) <= 2.5f)
-        //{
-        //    transform.position += (s_PlayerProperties.transform.position - transform.position).normalized * 0.15f;
-        //}
+        if (Vector3.Distance(transform.position, s_PlayerProperties.transform.position) <= 5.0f)
+        {
+            transform.position += (s_PlayerProperties.transform.position - transform.position).normalized * 0.25f * Time.deltaTime;
+        }
 
-        if(transform.position.y < s_PlayerHealthManager.transform.position.y)
+        if (transform.position.y < s_PlayerHealthManager.transform.position.y)
         {
             dropSpriteRenderer.sortingOrder = 500;
         }
@@ -91,12 +91,12 @@ public class DropItem : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if(Vector3.Distance(dropSpriteRenderer.transform.position, currentBobToPosition) <= 0.2f)
+        if(Vector3.Distance(dropSpriteRenderer.transform.localPosition, currentBobToPosition) <= 0.2f)
         {
             currentBobToPosition = currentBobToPosition == topBobPosition ? bottomBobPosition : topBobPosition;
         }
 
-        dropSpriteRenderer.transform.position += (currentBobToPosition - dropSpriteRenderer.transform.position).normalized * bobSpeed * Time.deltaTime;
+        dropSpriteRenderer.transform.localPosition += (currentBobToPosition - dropSpriteRenderer.transform.localPosition).normalized * bobSpeed * Time.deltaTime;
     }
 
     public void SetDropTypeAndInitDrop(DropType dropType)
@@ -121,8 +121,9 @@ public class DropItem : MonoBehaviour
 
         //transform.localScale = Vector3.one * 2.0f;
 
-        topBobPosition = transform.position + Vector3.up * bobUpDownDistance;
-        bottomBobPosition = transform.position;
+        //topBobPosition = transform.position + Vector3.up * bobUpDownDistance;
+        topBobPosition = Vector3.up * bobUpDownDistance;
+        bottomBobPosition = dropSpriteRenderer.transform.localPosition;
 
         currentBobToPosition = topBobPosition;
     }
