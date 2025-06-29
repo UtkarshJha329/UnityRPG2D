@@ -190,6 +190,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2687869119229514654}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6819692548200466905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6464395077288662097}
+  m_Layer: 0
+  m_Name: EnemyHealthHeartsParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6464395077288662097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819692548200466905}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: 0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2687869119229514654}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6897299781908151801
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,6 +244,7 @@ GameObject:
   - component: {fileID: 8269918054671843715}
   - component: {fileID: 5225682628449209119}
   - component: {fileID: 5615967836538340462}
+  - component: {fileID: 3539204340437177966}
   m_Layer: 0
   m_Name: Enemy(BombGoblin)
   m_TagString: Enemy
@@ -239,6 +271,7 @@ Transform:
   - {fileID: 5131062832757193368}
   - {fileID: 1689637882927626468}
   - {fileID: 5550249052863701541}
+  - {fileID: 6464395077288662097}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &630675684909581477
@@ -467,8 +500,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a736526055fd4541a057a5c79a9056e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 16
-  maxHealth: 16
+  currentHealth: 4
+  maxHealth: 4
 --- !u!114 &5756919600229708024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,6 +604,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropPrefab: {fileID: 6333855969259875297, guid: 0af39702b31796f4f9d506b0fcad59dc, type: 3}
+--- !u!114 &3539204340437177966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6897299781908151801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50cd55245976ddc4aa80f146745a5f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyHeartObject: {fileID: 4857366358527522669, guid: 9045ea2174e22bf489cfaacae9a62f83, type: 3}
+  enemyHeartParentTransform: {fileID: 6464395077288662097}
+  paddingBetweenEnemyHearts: 0.15
 --- !u!1 &7570984762632781699
 GameObject:
   m_ObjectHideFlags: 0

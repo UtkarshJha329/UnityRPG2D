@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 1408986373046643218}
   - component: {fileID: 6514955182221276807}
   - component: {fileID: 2129231837655999972}
+  - component: {fileID: 4802289885471702785}
   m_Layer: 0
   m_Name: Enemy(TNTGoblin)
   m_TagString: Enemy
@@ -149,6 +150,7 @@ Transform:
   - {fileID: 4577795425143007727}
   - {fileID: 8776351532145060514}
   - {fileID: 3030386009913859665}
+  - {fileID: 7146711840002023226}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6157381841202903668
@@ -377,8 +379,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a736526055fd4541a057a5c79a9056e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 16
-  maxHealth: 16
+  currentHealth: 4
+  maxHealth: 4
 --- !u!114 &8049369513432238798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,6 +483,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropPrefab: {fileID: 6333855969259875297, guid: 0af39702b31796f4f9d506b0fcad59dc, type: 3}
+--- !u!114 &4802289885471702785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6064294110579197382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50cd55245976ddc4aa80f146745a5f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyHeartObject: {fileID: 4857366358527522669, guid: 9045ea2174e22bf489cfaacae9a62f83, type: 3}
+  enemyHeartParentTransform: {fileID: 7146711840002023226}
+  paddingBetweenEnemyHearts: 0.15
 --- !u!1 &6233277934127257519
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,6 +588,37 @@ MonoBehaviour:
   enemiesNearby: []
   enemiesNearbyEnemyProperties: []
   enemiesNearbyRigidbody2D: []
+--- !u!1 &6410578468944918724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7146711840002023226}
+  m_Layer: 0
+  m_Name: EnemyHealthHeartsParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7146711840002023226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6410578468944918724}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: 0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6598990616771730357}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8363180184335644920
 GameObject:
   m_ObjectHideFlags: 0

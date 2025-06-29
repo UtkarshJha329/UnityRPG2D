@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyHealth))]
@@ -15,6 +16,10 @@ public class EnemyDamageUIHandler : MonoBehaviour
     private float lastEnemyHealth = 0.0f;
 
     private bool displayedCurrentDamageText = false;
+
+    //private bool displayingHealth = false;
+    //private TextMeshProUGUI healthDisplayTextComponent;
+    //private bool deletedTextObject = false;
 
     private void Awake()
     {
@@ -35,11 +40,27 @@ public class EnemyDamageUIHandler : MonoBehaviour
     {
         if (characterStates.isKnockbacked && !displayedCurrentDamageText)
         {
-            damageNumbersUIHandler.ShowDamageText(transform, (int)(lastEnemyHealth - s_EnemyHealth.GetCurrentHealth()), s_EnemyProperties.personalDamageTextTime);
+            int enemyHealthInt = (int)s_EnemyHealth.GetCurrentHealth();
+            damageNumbersUIHandler.ShowDamageText(transform, (int)(lastEnemyHealth - enemyHealthInt), s_EnemyProperties.personalDamageTextTime);
             displayedCurrentDamageText = true;
+
+            //if (!displayingHealth)
+            //{
+            //    healthDisplayTextComponent = damageNumbersUIHandler.ShowEnemyHealth(transform, enemyHealthInt);
+            //    displayingHealth = true;
+            //}
+
+            //healthDisplayTextComponent.text = enemyHealthInt.ToString();
+
             StartCoroutine(ResetDisplayedCurrentDamageText());
         }
         lastEnemyHealth = s_EnemyHealth.GetCurrentHealth();
+
+        //if (s_EnemyHealth.GetCurrentHealth() <= 0 && !deletedTextObject)
+        //{
+        //    deletedTextObject = true;
+        //    damageNumbersUIHandler.RemoveEnemyFromUIHealthList(s_EnemyProperties.transform);
+        //}
     }
 
     IEnumerator ResetDisplayedCurrentDamageText()

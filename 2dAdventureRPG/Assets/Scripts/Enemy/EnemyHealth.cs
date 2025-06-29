@@ -10,13 +10,17 @@ public class EnemyHealth : MonoBehaviour
 
     private CharacterStates characterStates;
 
+    private EnemyHealthHeartsDisplayManager enemyHealthHeartsDisplayManager;
+
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
+        enemyHealthHeartsDisplayManager = GetComponent<EnemyHealthHeartsDisplayManager>();
     }
 
     public void ChangeHealth(float changeAmmount)
     {
+        enemyHealthHeartsDisplayManager.damaged = true;
         currentHealth += changeAmmount;
 
         if (currentHealth > maxHealth)
