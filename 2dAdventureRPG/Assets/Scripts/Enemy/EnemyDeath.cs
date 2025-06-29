@@ -14,11 +14,15 @@ public class EnemyDeath : MonoBehaviour
 
     private bool droppedItem = false;
 
+    private Transform playerTransform;
+
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
         s_EnemyProperties = GetComponent<EnemyProperties>();
         dropManager = GetComponent<EnemyDropManager>();
+
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -38,7 +42,8 @@ public class EnemyDeath : MonoBehaviour
         {
             if (!droppedItem)
             {
-                dropManager.DropAppropriateItemAtLocation(transform.position, s_EnemyProperties.dropType, s_EnemyProperties.dynamiteShadowsParentTransform);
+                Vector3 directionAwayFromPlayer = transform.position - playerTransform.position;
+                dropManager.DropAppropriateItemAtLocation(transform.position, directionAwayFromPlayer, s_EnemyProperties.dropType, s_EnemyProperties.dynamiteShadowsParentTransform);
                 droppedItem = true;
 
                 GameObject instantiatedDeathObject = Instantiate(deathObject, transform.position, Quaternion.identity);
