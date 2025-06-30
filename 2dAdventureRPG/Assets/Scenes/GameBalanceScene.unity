@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesSpawnPoints: []
+  spawnPointHealths: []
   torchEnemyGameObject: {fileID: 6897299781908151801, guid: c2d6ec4f72573f6418b8cbeb05cd1f31, type: 3}
   barrelEnemyGameObject: {fileID: 6064294110579197382, guid: e6953ff6232c2094e9bb0ea13fbed03a, type: 3}
   bombEnemyGameObject: {fileID: 6897299781908151801, guid: d8a4edb5fd6a1fb4eb3c311184cd1615, type: 3}
@@ -1197,6 +1198,7 @@ MonoBehaviour:
   minYForResourceRooms: 3
   minYForTeleportationRooms: 7
   probabilityOfSpecialSection: 0.15
+  minNumberOfTilesForTreesAndBushes: 36
   groundTileMap: {fileID: 846549900}
   wallsTileMap: {fileID: 1452999452}
   groundTileGrassTL: {fileID: 11400000, guid: 588d45008e403ea478b2c3c885be86c2, type: 2}
@@ -1217,6 +1219,8 @@ MonoBehaviour:
   emptyRoomPrefab: {fileID: 8206293764243112620, guid: 0cfc1b7086dce034188a0a55b9ceab53, type: 3}
   playerPrefab: {fileID: 368669901408580950, guid: f6162fca450d872459e8993a76b96029, type: 3}
   minesObjectPrefab: {fileID: 2188781144886451970, guid: f5b5a71845ff90b41ba07cefff026d8e, type: 3}
+  bushesObjectPrefab: {fileID: 2188781144886451970, guid: a1b75ab1cdd2adf429faaf6a9425a962, type: 3}
+  treesObjectPrefab: {fileID: 2188781144886451970, guid: c55099ece364b0f449185a42aec6d7b9, type: 3}
   goblinSpawnTowerPrefab: {fileID: 2188781144886451970, guid: 2f0a4e129e00d034aba9ad5089af1f2d, type: 3}
   goblinTowerSpawnerPositions:
   - {x: 7, y: 5}

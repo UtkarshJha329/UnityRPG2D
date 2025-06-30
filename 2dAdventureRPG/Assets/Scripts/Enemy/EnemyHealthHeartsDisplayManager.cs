@@ -58,14 +58,14 @@ public class EnemyHealthHeartsDisplayManager : MonoBehaviour
             }
         }
 
-        enemyHeartParentTransform.localPosition = originalHeartParentTransformLocalPosition + (Vector3.left * enemyCurrentHealth / 2) * horizontalSpacingBetweenEachHeart;
+        enemyHeartParentTransform.localPosition = originalHeartParentTransformLocalPosition + (Vector3.left * ((float)enemyCurrentHealth / 2.0f)) * horizontalSpacingBetweenEachHeart;
 
         for (int i = 0; i < enemyHeartParentTransform.childCount; i++)
         {
             if(i < enemyCurrentHealth)
             {
                 GameObject heart = enemyHeartParentTransform.GetChild(i).gameObject;
-                heart.transform.position = enemyHeartParentTransform.position + Vector3.right * (i * horizontalSpacingBetweenEachHeart);
+                heart.transform.localPosition = Vector3.right * (i * horizontalSpacingBetweenEachHeart);
                 heart.SetActive(true);
             }
             else

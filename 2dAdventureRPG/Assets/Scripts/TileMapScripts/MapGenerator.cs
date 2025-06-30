@@ -117,7 +117,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int minYForResourceRooms = 3;
     [SerializeField] private int minYForTeleportationRooms = 7;
     [SerializeField] private float probabilityOfSpecialSection = 0.15f;
-    //[SerializeField] private int minNumberOfTilesForTreesAndBushes = 36;
+    [SerializeField] private int minNumberOfTilesForTreesAndBushes = 36;
 
     [Header("Map Generator Tiles Data")]
     [SerializeField] private Tilemap groundTileMap;
@@ -146,8 +146,8 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
 
     [SerializeField] private GameObject minesObjectPrefab;
-    //[SerializeField] private GameObject bushesObjectPrefab;
-    //[SerializeField] private GameObject treesObjectPrefab;
+    [SerializeField] private GameObject bushesObjectPrefab;
+    [SerializeField] private GameObject treesObjectPrefab;
     [SerializeField] private GameObject goblinSpawnTowerPrefab;
     [SerializeField] private List<Vector2Int> goblinTowerSpawnerPositions;
     private List<Transform> goblinTowers = new List<Transform>();
@@ -432,57 +432,59 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        //List<Vector2> occupiedPositions = new List<Vector2>();
+        List<Vector2> occupiedPositions = new List<Vector2>();
 
-        //Vector2 dimsForTreesAndBushesRooms = dimsForRecourceRooms + Vector2.one;
-        //for (int i = 0; i < curRoom.sections.Count; i++)
-        //{
-        //    occupiedPositions.Clear();
-        //    if (curRoom.sections[i].size.x >= dimsForTreesAndBushesRooms.x && curRoom.sections[i].size.y >= dimsForTreesAndBushesRooms.y)
-        //    {
-        //        if (curRoom.sections[i].size.x * curRoom.sections[i].size.y > minNumberOfTilesForTreesAndBushes)
-        //        {
-        //            Transform structuresInRoomParentGameObjectTransform;
-        //            if (roomObjectDictionary[currentRoomIndex].transform.childCount == 1)
-        //            {
-        //                structuresInRoomParentGameObjectTransform = Instantiate(goldMinesParentPrefab, roomObjectDictionary[currentRoomIndex].transform).transform;
-        //            }
-        //            else
-        //            {
-        //                structuresInRoomParentGameObjectTransform = roomObjectDictionary[currentRoomIndex].transform.GetChild(1);
-        //            }
+        Vector2 dimsForTreesAndBushesRooms = dimsForRecourceRooms + Vector2.one;
+        for (int i = 0; i < curRoom.sections.Count; i++)
+        {
+            occupiedPositions.Clear();
+            if (curRoom.sections[i].size.x >= dimsForTreesAndBushesRooms.x && curRoom.sections[i].size.y >= dimsForTreesAndBushesRooms.y)
+            {
+                if (curRoom.sections[i].size.x * curRoom.sections[i].size.y > minNumberOfTilesForTreesAndBushes)
+                {
+                    Transform structuresInRoomParentGameObjectTransform;
+                    if (roomObjectDictionary[currentRoomIndex].transform.childCount == 1)
+                    {
+                        structuresInRoomParentGameObjectTransform = Instantiate(goldMinesParentPrefab, roomObjectDictionary[currentRoomIndex].transform).transform;
+                    }
+                    else
+                    {
+                        structuresInRoomParentGameObjectTransform = roomObjectDictionary[currentRoomIndex].transform.GetChild(1);
+                    }
 
-        //            int maxNumBushesInSection = (int)curRoom.sections[i].size.x * (int)curRoom.sections[i].size.y / 50;
-        //            int maxNumTreesInSection = (int)curRoom.sections[i].size.x * (int)curRoom.sections[i].size.y / 20;
+                    int maxNumBushesInSection = (int)curRoom.sections[i].size.x * (int)curRoom.sections[i].size.y / 50;
+                    int maxNumTreesInSection = (int)curRoom.sections[i].size.x * (int)curRoom.sections[i].size.y / 20;
 
-        //            int insetPositionsInsideSectionBy = 3;
-        //            //for (int bush = 0; bush < Mathf.Min(generateBushesInThisSection, maxNumBushesInSection); bush++)
-        //            for (int bush = 0; bush < maxNumBushesInSection; bush++)
-        //            {
-        //                Vector2 curBushPosition = ReturnRandomTileInSectionPadded(currentRoomIndex, i, insetPositionsInsideSectionBy);
-        //                if (!occupiedPositions.Contains(curBushPosition))
-        //                {
-        //                    GameObject bushObject = Instantiate(bushesObjectPrefab, curBushPosition, Quaternion.identity, structuresInRoomParentGameObjectTransform);
-        //                    occupiedPositions.Add(curBushPosition);
-        //                }
-        //            }
+                    int insetPositionsInsideSectionBy = 3;
+                    //for (int bush = 0; bush < Mathf.Min(generateBushesInThisSection, maxNumBushesInSection); bush++)
+                    for (int bush = 0; bush < maxNumBushesInSection; bush++)
+                    {
+                        Vector2 curBushPosition = ReturnRandomTileInSectionPadded(currentRoomIndex, i, insetPositionsInsideSectionBy);
+                        if (!occupiedPositions.Contains(curBushPosition))
+                        {
+                            GameObject bushObject = Instantiate(bushesObjectPrefab, curBushPosition, Quaternion.identity, structuresInRoomParentGameObjectTransform);
+                            bushObject.GetComponent<SpriteRenderer>().sortingOrder = (int)bushObject.transform.position.y * -1;
+                            occupiedPositions.Add(curBushPosition);
+                        }
+                    }
 
-        //            //for (int tree = 0; tree < Mathf.Min(generateTreeInThisSection, maxNumTreesInSection); tree++)
-        //            for (int tree = 0; tree < maxNumTreesInSection; tree++)
-        //            {
-        //                Vector2 curTreePosition = ReturnRandomTileInSectionPadded(currentRoomIndex, i, insetPositionsInsideSectionBy);
-        //                if (!occupiedPositions.Contains(curTreePosition))
-        //                {
-        //                    GameObject treeObject = Instantiate(treesObjectPrefab, curTreePosition, Quaternion.identity, structuresInRoomParentGameObjectTransform);
-        //                    occupiedPositions.Add(curTreePosition);
-        //                }
-        //            }
+                    //for (int tree = 0; tree < Mathf.Min(generateTreeInThisSection, maxNumTreesInSection); tree++)
+                    for (int tree = 0; tree < maxNumTreesInSection; tree++)
+                    {
+                        Vector2 curTreePosition = ReturnRandomTileInSectionPadded(currentRoomIndex, i, insetPositionsInsideSectionBy);
+                        if (!occupiedPositions.Contains(curTreePosition))
+                        {
+                            GameObject treeObject = Instantiate(treesObjectPrefab, curTreePosition, Quaternion.identity, structuresInRoomParentGameObjectTransform);
+                            treeObject.GetComponent<SpriteRenderer>().sortingOrder = (int)treeObject.transform.position.y * -1;
+                            occupiedPositions.Add(curTreePosition);
+                        }
+                    }
 
-        //            //GameObject treeObject = Instantiate(treesObjectPrefab, curSectionCentre + roomOffset, Quaternion.identity, structuresInRoomParentGameObjectTransform);
-        //            //PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
-        //        }
-        //    }
-        //}
+                    //GameObject treeObject = Instantiate(treesObjectPrefab, curSectionCentre + roomOffset, Quaternion.identity, structuresInRoomParentGameObjectTransform);
+                    //PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
+                }
+            }
+        }
 
         return true;
     }
@@ -1193,6 +1195,8 @@ public class MapGenerator : MonoBehaviour
                 GameObject enemyGameobject = Instantiate(goblinToSpawn, curEnemyPos, Quaternion.identity, enemiesParentGameObject.transform);
                 numEnemiesSpawned++;
                 //GameObject enemyGameobject = Instantiate(torchGoblinEnemy, curEnemyPos, Quaternion.identity, gameObject.transform);
+
+                enemyGameobject.GetComponent<SpriteRenderer>().sortingOrder = 4;
 
                 Enemy_Movement enemyMovementComponent = enemyGameobject.GetComponent<Enemy_Movement>();
                 enemyMovementComponent.currentWayPointIndex = currentWayPointIndex;

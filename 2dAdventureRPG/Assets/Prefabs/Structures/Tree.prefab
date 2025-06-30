@@ -41,7 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6912297374899224229}
   - component: {fileID: 8260702484614911997}
-  - component: {fileID: 4148980013840811576}
+  - component: {fileID: 2672882963322447613}
+  - component: {fileID: 1627363955229892737}
   - component: {fileID: 8811522098863145071}
   - component: {fileID: 8530591675075017814}
   - component: {fileID: 6877743597730466825}
@@ -62,7 +63,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9221295559768730612}
@@ -123,7 +124,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &4148980013840811576
+--- !u!58 &2672882963322447613
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -157,8 +158,35 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.2}
-  m_Radius: 0.4
+  m_Offset: {x: 0, y: -0.25}
+  m_Radius: 0.3
+--- !u!50 &1627363955229892737
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2188781144886451970}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 6200000, guid: be87464e6c724d04da8470cfd2921b4f, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 6
 --- !u!114 &8811522098863145071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,4 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e95d473b6fb64c40b9e4a63f58c2abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jiggleDistance: 0.5
+  jiggleDistance: 0.1
+  jiggleForTime: 0.2
+  jiggleSpeed: 4
+  jiggle: 0
