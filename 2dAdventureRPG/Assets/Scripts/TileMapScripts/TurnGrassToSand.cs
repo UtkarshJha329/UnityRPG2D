@@ -72,6 +72,16 @@ public class TurnGrassToSand : MonoBehaviour
                 {
                     mapGenerator.SetGroundTileToSand(currentTilePosition);
 
+                    if (mapGenerator.bushOnTile.ContainsKey(currentTilePosition))
+                    {
+                        mapGenerator.bushOnTile[currentTilePosition].structureCurrentHealth = 0;
+                    }
+
+                    if (mapGenerator.treeOnTile.ContainsKey(currentTilePosition))
+                    {
+                        mapGenerator.treeOnTile[currentTilePosition].structureCurrentHealth = 0;
+                    }
+
                     Vector3Int top = currentTilePosition + Vector3Int.up;
                     Vector3Int right = currentTilePosition + Vector3Int.right;
                     Vector3Int down = currentTilePosition + Vector3Int.down;
@@ -113,6 +123,16 @@ public class TurnGrassToSand : MonoBehaviour
                 if (mapGenerator.IsTileSand(currentTilePosition))
                 {
                     mapGenerator.SetGroundTileToGrass(currentTilePosition);
+
+                    if (mapGenerator.bushOnTile.ContainsKey(currentTilePosition))
+                    {
+                        mapGenerator.bushOnTile[currentTilePosition].ResetSprite();
+                    }
+
+                    if (mapGenerator.treeOnTile.ContainsKey(currentTilePosition))
+                    {
+                        mapGenerator.treeOnTile[currentTilePosition].ResetSprite();
+                    }
 
                     Vector3Int top = currentTilePosition + Vector3Int.up;
                     Vector3Int right = currentTilePosition + Vector3Int.right;
@@ -162,6 +182,16 @@ public class TurnGrassToSand : MonoBehaviour
                 if (mapGenerator.IsTileSand(currentTilePosition))
                 {
                     mapGenerator.SetGroundTileToGrass(currentTilePosition);
+
+                    if (mapGenerator.bushOnTile.ContainsKey(currentTilePosition))
+                    {
+                        mapGenerator.bushOnTile[currentTilePosition].ResetSprite();
+                    }
+
+                    if (mapGenerator.treeOnTile.ContainsKey(currentTilePosition))
+                    {
+                        mapGenerator.treeOnTile[currentTilePosition].ResetSprite();
+                    }
 
                     Vector3Int top = currentTilePosition + Vector3Int.up;
                     Vector3Int right = currentTilePosition + Vector3Int.right;

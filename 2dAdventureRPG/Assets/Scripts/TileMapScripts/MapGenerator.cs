@@ -156,6 +156,9 @@ public class MapGenerator : MonoBehaviour
 
     public Dictionary<Vector2Int, GameObject> roomObjectDictionary = new Dictionary<Vector2Int, GameObject>();
 
+    public Dictionary<Vector3Int, StructureHealth> bushOnTile = new Dictionary<Vector3Int, StructureHealth>();
+    public Dictionary<Vector3Int, StructureHealth> treeOnTile = new Dictionary<Vector3Int, StructureHealth>();
+
     [Header("Room Camera Generator Data")]
     [SerializeField] private CinemachineCamera cineCamera;
     [SerializeField] private GameObject currentRoomBoundaryObject;
@@ -502,6 +505,9 @@ public class MapGenerator : MonoBehaviour
                             GameObject bushObject = Instantiate(bushesObjectPrefab, curBushPosition, Quaternion.identity, structuresInRoomParentGameObjectTransform);
                             bushObject.GetComponent<SpriteRenderer>().sortingOrder = (int)bushObject.transform.position.y * -1;
                             occupiedPositions.Add(curBushPosition);
+
+                            Vector3Int bushTilePosition = new Vector3Int((int)curBushPosition.x, (int)curBushPosition.y, 0);
+                            bushOnTile.Add(bushTilePosition, bushObject.GetComponent<StructureHealth>());
                         }
                     }
 
@@ -514,6 +520,9 @@ public class MapGenerator : MonoBehaviour
                             GameObject treeObject = Instantiate(treesObjectPrefab, curTreePosition, Quaternion.identity, structuresInRoomParentGameObjectTransform);
                             treeObject.GetComponent<SpriteRenderer>().sortingOrder = (int)treeObject.transform.position.y * -1;
                             occupiedPositions.Add(curTreePosition);
+
+                            Vector3Int treeTilePosition = new Vector3Int((int)curTreePosition.x, (int)curTreePosition.y, 0);
+                            bushOnTile.Add(treeTilePosition, treeObject.GetComponent<StructureHealth>());
                         }
                     }
 

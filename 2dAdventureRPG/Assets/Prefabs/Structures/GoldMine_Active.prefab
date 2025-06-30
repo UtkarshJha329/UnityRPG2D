@@ -109,8 +109,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 332330453
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 7427445707187218192, guid: 1ca13eacb23ab164dbd5841c98d73233, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -171,9 +171,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdb31e2e37382b14794955f483fd540f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMine: 0
   destroyedStructureSprite: {fileID: -4502939662549986644, guid: 1c53a14d341ee034ea328130b5a84211, type: 3}
   structureCurrentHealth: 10
   structureTilePos: {x: 0, y: 0, z: 0}
+  finalSandToGrassConversionManager: {fileID: 0}
 --- !u!114 &8530591675075017814
 MonoBehaviour:
   m_ObjectHideFlags: 0

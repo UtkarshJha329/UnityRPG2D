@@ -67,6 +67,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9221295559768730612}
+  - {fileID: 4782380657349566027}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8260702484614911997
@@ -110,8 +111,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 332330453
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -3356593810811537127, guid: 66f96574e095d68419ea1b00d598a997, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -123,7 +124,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!58 &1237645697625840403
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -158,7 +159,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.2}
   m_Radius: 0.3
 --- !u!50 &2150631581760430067
 Rigidbody2D:
@@ -199,8 +200,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdb31e2e37382b14794955f483fd540f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyedStructureSprite: {fileID: -4502939662549986644, guid: 1c53a14d341ee034ea328130b5a84211, type: 3}
+  isMine: 0
+  destroyedStructureSprite: {fileID: -3881324838813229171, guid: 53287f75afd2d5e4db56f16d60055f06, type: 3}
   structureCurrentHealth: 10
+  structureTilePos: {x: 0, y: 0, z: 0}
+  finalSandToGrassConversionManager: {fileID: 0}
 --- !u!114 &8530591675075017814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,7 +233,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e95d473b6fb64c40b9e4a63f58c2abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jiggleDistance: 0.1
+  jiggleDistance: 0.2
   jiggleForTime: 0.2
-  jiggleSpeed: 4
+  jiggleSpeed: 6
   jiggle: 0
+--- !u!1001 &5075242351734785388
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6912297374899224229}
+    m_Modifications:
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3655207961821300402, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+      propertyPath: m_Name
+      value: ShadowSprite
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+--- !u!4 &4782380657349566027 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 301899340730768167, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
+  m_PrefabInstance: {fileID: 5075242351734785388}
+  m_PrefabAsset: {fileID: 0}

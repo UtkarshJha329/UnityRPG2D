@@ -21,6 +21,8 @@ public class StructureHealth : MonoBehaviour
 
     public FinalSandToGrassConversionManager finalSandToGrassConversionManager;
 
+    private Sprite originalStructureSprite;
+
     private void Awake()
     {
         if(destroyedStructureSprite == null)
@@ -39,6 +41,8 @@ public class StructureHealth : MonoBehaviour
 
         structureHealthDisplayManager = GetComponent<StructureHealthDisplayManager>();
         jiggleManager = GetComponent<JiggleStructure>();
+
+        originalStructureSprite = structureSpriteRenderer.sprite;
     }
 
 
@@ -51,14 +55,14 @@ public class StructureHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y < playerTransform.position.y)
-        {
-            structureSpriteRenderer.sortingOrder = 500;
-        }
-        else
-        {
-            structureSpriteRenderer.sortingOrder = 0;
-        }
+        //if (transform.position.y < playerTransform.position.y)
+        //{
+        //    structureSpriteRenderer.sortingOrder = 500;
+        //}
+        //else
+        //{
+        //    structureSpriteRenderer.sortingOrder = ((int) transform.position.y * -1);
+        //}
 
         if (structureCurrentHealth <= 0)
         {
@@ -77,5 +81,11 @@ public class StructureHealth : MonoBehaviour
         structureCurrentHealth += damageAmount;
         structureHealthDisplayManager.damaged = true;
         jiggleManager.jiggle = true;
+    }
+
+    public void ResetSprite()
+    {
+        structureSpriteRenderer.sprite = originalStructureSprite;
+        structureCurrentHealth = 1;
     }
 }

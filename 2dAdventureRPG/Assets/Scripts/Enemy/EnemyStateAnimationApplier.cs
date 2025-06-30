@@ -41,6 +41,8 @@ public class EnemyStateAnimationApplier : MonoBehaviour
         animator.SetBool("isAttackingSide", characterStates.isAttackingSide);
         animator.SetBool("isAttackingDown", characterStates.isAttackingDown);
         animator.SetBool("isAttackingUp", characterStates.isAttackingUp);
+
+        currentEnemySprite.sortingOrder = ((int)transform.position.y * -1);
     }
 
     private void LateUpdate()

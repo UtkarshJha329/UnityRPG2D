@@ -46,6 +46,8 @@ public class PlayerAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        currentPlayerSpriteRenderer.sortingOrder = ((int)transform.position.y * -1);
+
         if (!characterStates.IsAttacking())
         {
             if (Mathf.Abs(s_PlayerProperties.currentMovementInput.magnitude) > 0)
