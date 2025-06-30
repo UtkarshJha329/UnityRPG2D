@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5064731173921512427}
   - component: {fileID: 5640156492461940610}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: RightSideAttackAttackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3030386009913859665}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: DynamiteSpawnPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 6514955182221276807}
   - component: {fileID: 2129231837655999972}
   - component: {fileID: 4802289885471702785}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Enemy(TNTGoblin)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -367,6 +367,7 @@ MonoBehaviour:
   canAttack: 0
   dynamiteShadowsParentTransform: {fileID: 0}
   dropType: 1
+  castleRoomEnemies: 0
 --- !u!114 &6201999114247976535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,6 +395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWayPointIndex: -1
+  detectorCircle: {fileID: 0}
 --- !u!114 &603182054328130227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -498,6 +500,7 @@ MonoBehaviour:
   enemyHeartObject: {fileID: 4857366358527522669, guid: 9045ea2174e22bf489cfaacae9a62f83, type: 3}
   enemyHeartParentTransform: {fileID: 7146711840002023226}
   paddingBetweenEnemyHearts: 0.15
+  damaged: 0
 --- !u!1 &6233277934127257519
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,7 +518,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8776351532145060514
 Transform:
   m_ObjectHideFlags: 0
@@ -597,7 +600,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7146711840002023226}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: EnemyHealthHeartsParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -629,7 +632,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4577795425143007727}
   - component: {fileID: 5902593807102289334}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: UpAttackAttackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -698,7 +701,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3647643793264194538}
   - component: {fileID: 3329562099448185201}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: LeftSideAttackAttackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -767,7 +770,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1846080521766219583}
   - component: {fileID: 5828818304596150890}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: DownAttackAttackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

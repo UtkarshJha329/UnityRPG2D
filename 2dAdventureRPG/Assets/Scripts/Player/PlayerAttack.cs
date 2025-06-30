@@ -124,7 +124,15 @@ public class PlayerAttack : MonoBehaviour
 
                     s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.enemyHitTimeStopTime, s_PlayerProperties.enemyHitTimeStopTimeScale);
                     s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(knockbackDirection.normalized * 0.05f);
+                }
+                else if (!collidedColliders.isTrigger && collidedColliders.CompareTag("Structure"))
+                {
+                    StructureHealth structureHealth = collidedColliders.gameObject.GetComponent<StructureHealth>();
+                    structureHealth.DamageStructure(-1);
 
+                    Vector3 knockbackDirection = structureHealth.transform.position - transform.position;
+                    s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.enemyHitTimeStopTime, s_PlayerProperties.enemyHitTimeStopTimeScale);
+                    s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(knockbackDirection.normalized * 0.05f);
                 }
             }
         }

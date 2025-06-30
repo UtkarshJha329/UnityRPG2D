@@ -39,6 +39,7 @@ public class Section
 
     public List<EnemyProperties> enemiesPropertyComponentList = new List<EnemyProperties>();
     public List<Enemy_Movement> enemiesMovementComponentList = new List<Enemy_Movement>();
+    public List<EnemyHealth> enemiesHealthComponentList = new List<EnemyHealth>();
 }
 
 [System.Serializable]
@@ -108,7 +109,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private Vector2Int maximumSectionSize = Vector2Int.zero;
     [SerializeField] private Vector2Int playerSpawnRoom;
     [SerializeField] private Vector2Int playerSpawnTile;
-    [SerializeField] private Vector2Int castleSpawnRoom;
+    [SerializeField] public Vector2Int castleSpawnRoom;
 
     [Header("Resource Section Properties")]
     [SerializeField] private Vector2Int dimsForRecourceRooms = new Vector2Int(5, 5);
@@ -144,7 +145,11 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
 
     [SerializeField] private GameObject minesObjectPrefab;
-    private Dictionary<Vector2Int, GameObject> roomObjectDictionary = new Dictionary<Vector2Int, GameObject>();
+    [SerializeField] private GameObject goblinSpawnTowerPrefab;
+    [SerializeField] private List<Vector2Int> goblinTowerSpawnerPositions;
+    private List<Transform> goblinTowers = new List<Transform>();
+
+    public Dictionary<Vector2Int, GameObject> roomObjectDictionary = new Dictionary<Vector2Int, GameObject>();
 
     [Header("Room Camera Generator Data")]
     [SerializeField] private CinemachineCamera cineCamera;
@@ -268,27 +273,29 @@ public class MapGenerator : MonoBehaviour
         List<Vector2Int> roomsSeen = new List<Vector2Int>();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateConnectionsBetweenRooms);
 
-        roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateSectionsInCurrentRoom);
+        DecideCastleSpawnRoom();
 
         roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, DrawSectionsToTileMaps);
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateSectionsInCurrentRoom);              // V -> One section, full room.
 
         roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, FormConnectionsBetweenSectionsInRoom);
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, DrawSectionsToTileMaps);                   // V -> Draw one section.
 
         roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, MakeConnectionsBetweenRoomsVisibleOnMap);
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, FormConnectionsBetweenSectionsInRoom);     // X -> No other sections to form connection with.
+
+        roomsSeen.Clear();
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, MakeConnectionsBetweenRoomsVisibleOnMap);  // V -> Need to draw connections to this room with everything else.
 
 
         roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateRoomGameObject);
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateRoomGameObject);                   // V -> Generate information about room.
 
         roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateResourcesInSmallRooms);
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateResourcesInRooms);              // X -> No resources in this room? Or create towers for enemies here?
 
         roomsSeen.Clear();
-        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateEnemiesForRoom);
+        TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateEnemiesForRoom);                   // V/X -> Pregenerate all the enemies that this room will need?
 
         roomsThatHaveBeenCreated.Clear();
         foreach (KeyValuePair<Vector2Int, Room> roomData in roomIndexAndRoom)
@@ -342,17 +349,47 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private bool ConnectSectionsWithRoom(Vector2Int curRoomIndex)
+    private void DecideCastleSpawnRoom()
     {
-        Room curRoom = roomIndexAndRoom[curRoomIndex];
+        if (roomIndexAndRoom.ContainsKey(castleSpawnRoom))
+        {
+            return;
+        }
 
-        return true;
+        bool roomFound = false;
+        for (int y = mapSizeInRooms.y - 1; y >= 0; y--)
+        {
+            for (int x = mapSizeInRooms.x; x >= 0; x--)
+            {
+                Vector2Int checkRoom = new Vector2Int(x, y);
+                if (roomIndexAndRoom.ContainsKey(checkRoom))
+                {
+                    castleSpawnRoom = checkRoom;
+                    break;
+                }
+            }
+            if (roomFound)
+            {
+                break;
+            }
+        }
     }
 
-    private bool CreateResourcesInSmallRooms(Vector2Int currentRoomIndex)
+    private bool CreateResourcesInRooms(Vector2Int currentRoomIndex)
     {
         Room curRoom = roomIndexAndRoom[currentRoomIndex];
         Vector3 roomOffset = new Vector3(currentRoomIndex.x * numTilesInRooms.x, currentRoomIndex.y * numTilesInRooms.y, 0.0f);
+
+        if (currentRoomIndex == castleSpawnRoom)
+        {
+            for (int i = 0; i < goblinTowerSpawnerPositions.Count; i++)
+            {
+                GameObject goblinSpawnTower = Instantiate(goblinSpawnTowerPrefab, roomOffset + new Vector3(goblinTowerSpawnerPositions[i].x, goblinTowerSpawnerPositions[i].y, 0.0f), Quaternion.identity, roomObjectDictionary[currentRoomIndex].transform);
+                goblinTowers.Add(goblinSpawnTower.transform);
+            }
+
+            return true;
+        }
 
         for (int i = 0; i < curRoom.sections.Count; i++)
         {
@@ -384,6 +421,11 @@ public class MapGenerator : MonoBehaviour
 
     private bool FormConnectionsBetweenSectionsInRoom(Vector2Int curRoomIndex)
     {
+        if (curRoomIndex == castleSpawnRoom)
+        {
+            return true;
+        }
+
         Room curRoom = roomIndexAndRoom[curRoomIndex];
         Vector3 roomOffset = new Vector3(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y, 0.0f);
 
@@ -954,12 +996,63 @@ public class MapGenerator : MonoBehaviour
         return true;
     }
 
+    public void CreateCastleRoomEnemy(GameObject goblinToSpawn, Vector3 spawnPosition, Transform enemiesParentTransform, Vector2Int curRoomIndex, int sectionIndex, CameraTargetManager curCameraTargetManager)
+    {
+        GameObject enemyGameobject = Instantiate(goblinToSpawn, spawnPosition, Quaternion.identity, enemiesParentTransform);
+
+        Enemy_Movement enemyMovementComponent = enemyGameobject.GetComponent<Enemy_Movement>();
+        EnemyHealth enemyHealthComponent = enemyGameobject.GetComponent<EnemyHealth>();
+
+        EnemyProperties s_EnemyProperties = enemyGameobject.GetComponent<EnemyProperties>();
+        s_EnemyProperties.sectionIndex = sectionIndex;
+        s_EnemyProperties.roomIndex = curRoomIndex;
+        s_EnemyProperties.castleRoomEnemies = true;
+
+        s_EnemyProperties.dynamiteShadowsParentTransform = curCameraTargetManager.dynamiteShadowsParent;
+
+        enemyGameobject.SetActive(false);
+
+        Section curSection = roomIndexAndRoom[curRoomIndex].sections[sectionIndex];
+        curSection.enemiesPropertyComponentList.Add(s_EnemyProperties);
+        curSection.enemiesMovementComponentList.Add(enemyMovementComponent);
+        curSection.enemiesHealthComponentList.Add(enemyHealthComponent);
+    }
+
     private void GenerateEnemiesForSection(Vector2Int curRoomIndex, int sectionIndex, Section curSection, CameraTargetManager curCameraTargetManager, ref GameObject enemiesParentGameObject)
     {
         //Vector2Int roomOffset = new Vector2Int(curRoomIndex.x * numTilesInRooms.x, curRoomIndex.y * numTilesInRooms.y);
 
         if (SectionContainsPointPadded(curRoomIndex, sectionIndex, (playerSpawnRoom * numTilesInRooms) + playerSpawnTile))
         {
+            return;
+        }
+
+        if(curRoomIndex == castleSpawnRoom)
+        {
+            SpawnCastleEnemies s_SpawnCastleEnemies = GameObject.FindGameObjectWithTag("CastleSpawner").GetComponent<SpawnCastleEnemies>();
+            s_SpawnCastleEnemies.enemiesParentTransform = enemiesParentGameObject.transform;
+            s_SpawnCastleEnemies.cameraTargetManager = curCameraTargetManager;
+
+            s_SpawnCastleEnemies.enemiesSpawnPoints.Clear();
+            s_SpawnCastleEnemies.enemiesSpawnPoints = goblinTowers;
+
+            //int numTorchGoblinsInCastleSpawnRoom = 30;
+            //int numTNTBarrelGoblinsInCastleSpawnRoom = 15;
+            //int numBombGoblinsInCastleSpawnRoom = 10;
+
+            //for (int i = 0; i < numTorchGoblinsInCastleSpawnRoom; i++)
+            //{
+            //    CreateCastleRoomEnemy(torchGoblinEnemy, enemiesParentGameObject.transform, curRoomIndex, sectionIndex, curCameraTargetManager);
+            //}
+            //for (int i = 0; i < numTNTBarrelGoblinsInCastleSpawnRoom; i++)
+            //{
+            //    CreateCastleRoomEnemy(tntGoblinEnemy, enemiesParentGameObject.transform, curRoomIndex, sectionIndex, curCameraTargetManager);
+            //}
+            //for (int i = 0; i < numBombGoblinsInCastleSpawnRoom; i++)
+            //{
+            //    CreateCastleRoomEnemy(bombGoblinEnemy, enemiesParentGameObject.transform, curRoomIndex, sectionIndex, curCameraTargetManager);
+            //}
+
             return;
         }
 
@@ -1038,6 +1131,10 @@ public class MapGenerator : MonoBehaviour
 
                 curSection.enemiesPropertyComponentList.Add(s_EnemyProperties);
                 curSection.enemiesMovementComponentList.Add(enemyMovementComponent);
+
+                EnemyHealth enemyHealthComponent = enemyGameobject.GetComponent<EnemyHealth>();
+                curSection.enemiesHealthComponentList.Add(enemyHealthComponent);
+
 
                 enemyTypesInThisSection.Add(s_EnemyProperties.enemyType);
 
@@ -1419,10 +1516,29 @@ public class MapGenerator : MonoBehaviour
         Room currentRoom = roomIndexAndRoom[currentRoomIndex];
         currentRoom.sections.Clear();
 
+        if (currentRoomIndex == castleSpawnRoom)
+        {
+            Section curSection = new Section();
+
+            Vector2Int randomSectionSize = new Vector2Int(numTilesInRooms.x, numTilesInRooms.y);
+
+            curSection.bottomLeft = new Vector2Int(0, 0);
+            curSection.size = randomSectionSize;
+
+            curSection.borderingWallTypes.Add(SectionBorderingWallType.Left);
+            curSection.borderingWallTypes.Add(SectionBorderingWallType.Bottom);
+            curSection.borderingWallTypes.Add(SectionBorderingWallType.Right);
+            curSection.borderingWallTypes.Add(SectionBorderingWallType.Top);
+
+            currentRoom.sections.Add(curSection);
+
+            return true;
+        }
+
         bool[,] marked = new bool[numTilesInRooms.x, numTilesInRooms.y];
         Vector2Int _minimumSectionSize = minimumSectionSize;
 
-        if(currentRoomIndex.y >= minYForResourceRooms)
+        if (currentRoomIndex.y >= minYForResourceRooms)
         {
             _minimumSectionSize = dimsForRecourceRooms;
         }

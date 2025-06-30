@@ -12,7 +12,7 @@ public class Enemy_Movement : MonoBehaviour
     public int currentWayPointIndex = -1;
 
     private Rigidbody2D rb2d;
-    private CircleCollider2D detectorCircle;
+    public CircleCollider2D detectorCircle;
     private CharacterStates characterStates;
     private EnemyProperties s_EnemyProperties;
 
@@ -55,16 +55,19 @@ public class Enemy_Movement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (mapGenerator.roomIndexAndRoom[s_EnemyProperties.roomIndex].sections[s_EnemyProperties.sectionIndex].size.x <= 6.0f
-                        || mapGenerator.roomIndexAndRoom[s_EnemyProperties.roomIndex].sections[s_EnemyProperties.sectionIndex].size.y <= 6.0f)
+        if (!s_EnemyProperties.castleRoomEnemies)
         {
-            //wanderRadius = 0.5f;
-            wander = false;
-            useAllPatrolPoints = false;
-        }
+            if (mapGenerator.roomIndexAndRoom[s_EnemyProperties.roomIndex].sections[s_EnemyProperties.sectionIndex].size.x <= 6.0f
+                        || mapGenerator.roomIndexAndRoom[s_EnemyProperties.roomIndex].sections[s_EnemyProperties.sectionIndex].size.y <= 6.0f)
+            {
+                //wanderRadius = 0.5f;
+                wander = false;
+                useAllPatrolPoints = false;
+            }
 
-        currentPatrolWayPointPosition = mapGenerator.GetNextPatrolWayPointPosition(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, ref currentWayPointIndex, useCornersForMovingAround, useAllPatrolPoints);
-        pointCloseToCurrentPatrolWayPointPosition = PointCloseToCurrentWayPointPosition(wanderRadius);
+            currentPatrolWayPointPosition = mapGenerator.GetNextPatrolWayPointPosition(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, ref currentWayPointIndex, useCornersForMovingAround, useAllPatrolPoints);
+            pointCloseToCurrentPatrolWayPointPosition = PointCloseToCurrentWayPointPosition(wanderRadius);
+        }
     }
 
     private void OnEnable()
@@ -85,123 +88,160 @@ public class Enemy_Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!characterStates.isKnockbacked && !characterStates.isDead && currentWayPointIndex >= 0)
+        if (s_EnemyProperties.castleRoomEnemies)
         {
-            if (!alreadySeenPlayer)
+            if (!characterStates.IsAttacking())
             {
-                alreadySeenPlayer = detectorCircle.OverlapPoint(playerTransform.position);
-            }
+                Vector2 directionToPlayer = playerTransform.position - transform.position;
+                float distanceToPlayer = directionToPlayer.magnitude;
 
-            if (alreadySeenPlayer && PlayerIsWithinTheSameSection(playerTransform.position))
-            {
-                //Debug.Log("Detected player.");
-                playerWasDetected = true;
-
-                if (!characterStates.IsAttacking())
+                if (distanceToPlayer > s_EnemyProperties.attackRange)
                 {
-                    Vector2 directionToPlayer = playerTransform.position - transform.position;
-                    float distanceToPlayer = directionToPlayer.magnitude;
+                    directionToPlayer = directionToPlayer.normalized;
+                    rb2d.linearVelocity = directionToPlayer * s_EnemyProperties.speed;
 
-                    if (distanceToPlayer > s_EnemyProperties.attackRange)
-                    {
-                        directionToPlayer = directionToPlayer.normalized;
-                        rb2d.linearVelocity = directionToPlayer * s_EnemyProperties.speed;
+                    //Debug.Log("Moving to attack player!");
 
-                        //Debug.Log("Moving to attack player!");
-
-                        characterStates.isMoving = true;
-                        characterStates.isIdling = false;
-                    }
-                    else
-                    {
-                        rb2d.linearVelocity = Vector2.zero;
-
-                        characterStates.isMoving = false;
-                        characterStates.isIdling = true;
-                    }
+                    characterStates.isMoving = true;
+                    characterStates.isIdling = false;
                 }
                 else
                 {
                     rb2d.linearVelocity = Vector2.zero;
 
                     characterStates.isMoving = false;
-                    characterStates.isIdling = false;
+                    characterStates.isIdling = true;
                 }
             }
             else
             {
-                playerWasDetected = false;
+                rb2d.linearVelocity = Vector2.zero;
 
-                if(s_EnemyProperties.mineGuard || s_EnemyProperties.connectedToMineGuardSection || !wander)
+                characterStates.isMoving = false;
+                characterStates.isIdling = false;
+            }
+        }
+        else
+        {
+
+            if (!characterStates.isKnockbacked && !characterStates.isDead && currentWayPointIndex >= 0)
+            {
+                if (!alreadySeenPlayer)
                 {
-                    Vector2 displacementBetweenCurWayPointAndEnemy = (currentPatrolWayPointPosition) - new Vector2(transform.position.x, transform.position.y);
-                    float distanceToWaypoint = displacementBetweenCurWayPointAndEnemy.magnitude;
-                    if (distanceToWaypoint > s_EnemyProperties.patrolingWayPointStoppingDistance)
+                    alreadySeenPlayer = detectorCircle.OverlapPoint(playerTransform.position);
+                }
+
+                if (alreadySeenPlayer && PlayerIsWithinTheSameSection(playerTransform.position))
+                {
+                    //Debug.Log("Detected player.");
+                    playerWasDetected = true;
+
+                    if (!characterStates.IsAttacking())
                     {
-                        rb2d.linearVelocity = displacementBetweenCurWayPointAndEnemy.normalized * s_EnemyProperties.speed;
+                        Vector2 directionToPlayer = playerTransform.position - transform.position;
+                        float distanceToPlayer = directionToPlayer.magnitude;
 
-                        characterStates.isMoving = true;
-                        characterStates.isIdling = false;
+                        if (distanceToPlayer > s_EnemyProperties.attackRange)
+                        {
+                            directionToPlayer = directionToPlayer.normalized;
+                            rb2d.linearVelocity = directionToPlayer * s_EnemyProperties.speed;
 
-                        //if (distanceToWaypoint < emptyApproachingWayPointDistance && !mapGenerator.IsCurrentWayPointEmpty(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex))
-                        //{
-                        //    mapGenerator.EmptyApproachingWayPoint(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex, useAllPatrolPoints, useCornersForMovingAround);
-                        //}
+                            //Debug.Log("Moving to attack player!");
+
+                            characterStates.isMoving = true;
+                            characterStates.isIdling = false;
+                        }
+                        else
+                        {
+                            rb2d.linearVelocity = Vector2.zero;
+
+                            characterStates.isMoving = false;
+                            characterStates.isIdling = true;
+                        }
                     }
                     else
                     {
                         rb2d.linearVelocity = Vector2.zero;
 
                         characterStates.isMoving = false;
-                        characterStates.isIdling = true;
-
-                        if (!switchingToNextWayPoint)
-                        {
-                            switchingToNextWayPoint = true;
-                            mapGenerator.SetPatrolPointOccupancyInSection(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, true, currentWayPointIndex);
-                            StartCoroutine(SwitchToNextWayPointAfterWaiting());
-                        }
+                        characterStates.isIdling = false;
                     }
                 }
                 else
                 {
-                    //Debug.Log("Random wandering.");
+                    playerWasDetected = false;
 
-                    Vector2 displaceBetweenCurRandomPointAndEnemy = (pointCloseToCurrentPatrolWayPointPosition) - new Vector2(transform.position.x, transform.position.y);
-
-                    float distanceToWaypoint = displaceBetweenCurRandomPointAndEnemy.magnitude;
-                    if (distanceToWaypoint > s_EnemyProperties.wanderWayPointStoppingDistance)
+                    if (s_EnemyProperties.mineGuard || s_EnemyProperties.connectedToMineGuardSection || !wander)
                     {
-                        //Debug.Log("Am trying to move as a wanderlin.");
-                        rb2d.linearVelocity = displaceBetweenCurRandomPointAndEnemy.normalized * s_EnemyProperties.speed;
-
-                        characterStates.isMoving = true;
-                        characterStates.isIdling = false;
-
-                        //if (distanceToWaypoint < emptyApproachingWayPointDistance && !mapGenerator.IsCurrentWayPointEmpty(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex))
-                        //{
-                        //    mapGenerator.EmptyApproachingWayPoint(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex, useAllPatrolPoints, useCornersForMovingAround);
-                        //}
-                    }
-                    else
-                    {
-                        //Debug.Log("THE WANDERLIN HAS REACHED IT'S DESTINATION!!!");
-
-                        rb2d.linearVelocity = Vector2.zero;
-
-                        characterStates.isMoving = false;
-                        characterStates.isIdling = true;
-
-                        if (!switchingToNextWayPoint)
+                        Vector2 displacementBetweenCurWayPointAndEnemy = (currentPatrolWayPointPosition) - new Vector2(transform.position.x, transform.position.y);
+                        float distanceToWaypoint = displacementBetweenCurWayPointAndEnemy.magnitude;
+                        if (distanceToWaypoint > s_EnemyProperties.patrolingWayPointStoppingDistance)
                         {
-                            //Debug.Log("Wanderling has ordered a new destination.");
-                            switchingToNextWayPoint = true;
-                            mapGenerator.SetPatrolPointOccupancyInSection(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, true, currentWayPointIndex);
-                            StartCoroutine(SwitchToNextWayPointAfterWaiting());
+                            rb2d.linearVelocity = displacementBetweenCurWayPointAndEnemy.normalized * s_EnemyProperties.speed;
+
+                            characterStates.isMoving = true;
+                            characterStates.isIdling = false;
+
+                            //if (distanceToWaypoint < emptyApproachingWayPointDistance && !mapGenerator.IsCurrentWayPointEmpty(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex))
+                            //{
+                            //    mapGenerator.EmptyApproachingWayPoint(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex, useAllPatrolPoints, useCornersForMovingAround);
+                            //}
                         }
                         else
                         {
-                            //Debug.Log("Wanderling has already ordered a new destination.");
+                            rb2d.linearVelocity = Vector2.zero;
+
+                            characterStates.isMoving = false;
+                            characterStates.isIdling = true;
+
+                            if (!switchingToNextWayPoint)
+                            {
+                                switchingToNextWayPoint = true;
+                                mapGenerator.SetPatrolPointOccupancyInSection(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, true, currentWayPointIndex);
+                                StartCoroutine(SwitchToNextWayPointAfterWaiting());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Debug.Log("Random wandering.");
+
+                        Vector2 displaceBetweenCurRandomPointAndEnemy = (pointCloseToCurrentPatrolWayPointPosition) - new Vector2(transform.position.x, transform.position.y);
+
+                        float distanceToWaypoint = displaceBetweenCurRandomPointAndEnemy.magnitude;
+                        if (distanceToWaypoint > s_EnemyProperties.wanderWayPointStoppingDistance)
+                        {
+                            //Debug.Log("Am trying to move as a wanderlin.");
+                            rb2d.linearVelocity = displaceBetweenCurRandomPointAndEnemy.normalized * s_EnemyProperties.speed;
+
+                            characterStates.isMoving = true;
+                            characterStates.isIdling = false;
+
+                            //if (distanceToWaypoint < emptyApproachingWayPointDistance && !mapGenerator.IsCurrentWayPointEmpty(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex))
+                            //{
+                            //    mapGenerator.EmptyApproachingWayPoint(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, currentWayPointIndex, useAllPatrolPoints, useCornersForMovingAround);
+                            //}
+                        }
+                        else
+                        {
+                            //Debug.Log("THE WANDERLIN HAS REACHED IT'S DESTINATION!!!");
+
+                            rb2d.linearVelocity = Vector2.zero;
+
+                            characterStates.isMoving = false;
+                            characterStates.isIdling = true;
+
+                            if (!switchingToNextWayPoint)
+                            {
+                                //Debug.Log("Wanderling has ordered a new destination.");
+                                switchingToNextWayPoint = true;
+                                mapGenerator.SetPatrolPointOccupancyInSection(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, true, currentWayPointIndex);
+                                StartCoroutine(SwitchToNextWayPointAfterWaiting());
+                            }
+                            else
+                            {
+                                //Debug.Log("Wanderling has already ordered a new destination.");
+                            }
                         }
                     }
                 }

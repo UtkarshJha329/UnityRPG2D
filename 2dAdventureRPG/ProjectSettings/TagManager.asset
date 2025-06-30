@@ -12,6 +12,8 @@ TagManager:
   - Dynamite
   - HitStopManager
   - DropItem
+  - Structure
+  - CastleSpawner
   layers:
   - Default
   - TransparentFX
@@ -24,11 +26,11 @@ TagManager:
   - Player
   - RoomCameraHandler
   - DropItem
-  - 
-  - 
-  - 
-  - 
-  - 
+  - DynamiteGoblin
+  - BarrelGoblin
+  - TorchGoblin
+  - EnemyTriggerColliders
+  - EnemyUI
   - 
   - 
   - 

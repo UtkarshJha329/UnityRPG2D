@@ -50,4 +50,6 @@ public class EnemyProperties : MonoBehaviour
     public Transform dynamiteShadowsParentTransform;
 
     public DropType dropType;
+
+    public bool castleRoomEnemies = false;
 }

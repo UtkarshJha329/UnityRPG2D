@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4021899758831534941}
   - component: {fileID: 2646791570430811239}
   m_Layer: 0
-  m_Name: EnemyHeart
+  m_Name: NonPlayerHeart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
