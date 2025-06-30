@@ -15,7 +15,7 @@ public class StructureHealthDisplayManager : MonoBehaviour
 
     public bool damaged = false;
 
-    private Vector3 originalHeartsTransformPosition = Vector3.zero;
+    private Vector3 originalHeartsTransformLocalPosition = Vector3.zero;
 
     private void Awake()
     {
@@ -27,7 +27,7 @@ public class StructureHealthDisplayManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        originalHeartsTransformPosition = structureHeartParentTransform.position;
+        originalHeartsTransformLocalPosition = structureHeartParentTransform.localPosition;
     }
 
     // Update is called once per frame
@@ -56,14 +56,14 @@ public class StructureHealthDisplayManager : MonoBehaviour
             }
         }
 
-        structureHeartParentTransform.position = originalHeartsTransformPosition + Vector3.left * (structureCurrentHealth / 2) * horizontalSpacingBetweenEachHeart;
+        structureHeartParentTransform.localPosition = originalHeartsTransformLocalPosition + Vector3.left * ((float)structureCurrentHealth / 2.0f) * horizontalSpacingBetweenEachHeart;
 
         for (int i = 0; i < structureHeartParentTransform.childCount; i++)
         {
             if (i < structureCurrentHealth)
             {
                 GameObject heart = structureHeartParentTransform.GetChild(i).gameObject;
-                heart.transform.position = structureHeartParentTransform.position + Vector3.right * (i * horizontalSpacingBetweenEachHeart);
+                heart.transform.localPosition = Vector3.right * (i * horizontalSpacingBetweenEachHeart);
                 heart.SetActive(true);
             }
             else

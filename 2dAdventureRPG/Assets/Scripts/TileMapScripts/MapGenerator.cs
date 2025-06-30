@@ -186,6 +186,8 @@ public class MapGenerator : MonoBehaviour
 
     public List<Vector3> mineTilePositions = new List<Vector3>();
 
+    private FinalSandToGrassConversionManager finalConversionManager;
+
     private void Awake()
     {
         if (groundTileMap == null)
@@ -197,6 +199,7 @@ public class MapGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        finalConversionManager = GameObject.FindGameObjectWithTag("FinalConversionManager").GetComponent<FinalSandToGrassConversionManager>();
 
         maximumSectionSize = new Vector2Int((2 * numTilesInRooms.x) / 3, (2 * numTilesInRooms.y) / 3);
         minYForResourceRooms = mapSizeInRooms.y / 3;
@@ -374,6 +377,11 @@ public class MapGenerator : MonoBehaviour
         groundTileMap.SetTile(tilePositionOnTilesMap, groundTileDrySand);
     }
 
+    public void SetGroundTileToGrass(Vector3Int tilePositionOnTilesMap)
+    {
+        groundTileMap.SetTile(tilePositionOnTilesMap, groundTileGrassMM);
+    }
+
     public bool IsTileSand(Vector3Int tilePositionOnTileMap)
     {
         return groundTileMap.GetTile(tilePositionOnTileMap) == groundTileDrySand;
@@ -417,11 +425,17 @@ public class MapGenerator : MonoBehaviour
 
         if (currentRoomIndex == castleSpawnRoom)
         {
+            Vector3 centreTilePos = Vector3.zero;
             for (int i = 0; i < goblinTowerSpawnerPositions.Count; i++)
             {
                 GameObject goblinSpawnTower = Instantiate(goblinSpawnTowerPrefab, roomOffset + new Vector3(goblinTowerSpawnerPositions[i].x, goblinTowerSpawnerPositions[i].y, 0.0f), Quaternion.identity, roomObjectDictionary[currentRoomIndex].transform);
                 goblinTowers.Add(goblinSpawnTower.transform);
+
+                centreTilePos += goblinSpawnTower.transform.position * 0.333f;
+
+                finalConversionManager.healthsOfAllFinalStructures.Add(goblinSpawnTower.GetComponent<StructureHealth>());
             }
+            finalConversionManager.startFinalConversionFromTile = new Vector3Int((int)centreTilePos.x, (int)centreTilePos.y, 0);
 
             return true;
         }
@@ -447,6 +461,8 @@ public class MapGenerator : MonoBehaviour
                     Vector3 minePos = curSectionCentre + roomOffset;
                     GameObject mineObject = Instantiate(minesObjectPrefab, minePos, Quaternion.identity, goldMinesParentGameObjectTransform);
                     //PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
+
+                    mineObject.GetComponent<StructureHealth>().structureTilePos = new Vector3Int((int)minePos.x, (int)minePos.y, 0);
 
                     mineTilePositions.Add(minePos);
                 }

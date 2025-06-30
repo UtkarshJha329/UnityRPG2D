@@ -4,17 +4,27 @@ using UnityEngine;
 public class TurnGrassToSand : MonoBehaviour
 {
     [SerializeField] private float turnGrassIntoSandEveryXSeconds = 5.0f;
+    [SerializeField] private float turnSandIntoGrassEveryXSecondsForMineDestruction = 30.0f;
 
     private MapGenerator mapGenerator;
 
-    private float nextTurnGrassIntoSandSeconds = 0.0f;
+    private float nextTurnGrassIntoSandSeconds = 5.0f;
+    private float nextTurnSandIntoGrassSeconds = 5.0f;
+    private float nextTurnSandIntoGrassSecondsFinal = 0.0f;
 
     private bool initTilesList = true;
     private Queue<Vector3Int> tilesToTurnIntoSand = new Queue<Vector3Int>();
 
     [SerializeField] private int maxNumTilesToConvertEachFrame = 40;
-    private bool notFinishedPreviousConversionsToSand = false;
-    private int numTilesToConvertInCommingFrames = 0;
+
+    private Queue<Vector3Int> tilesToTurnIntoGrassFromMineDestruction = new Queue<Vector3Int>();
+    [SerializeField] private int maxTilesToConvertSandIntoGrassFromMines = 30;
+
+    private Queue<Vector3Int> tilesToTurnIntoGrassFromFinalStructureDestruction = new Queue<Vector3Int>();
+    [SerializeField] private int maxTilesToConvertSandIntoGrassFromFinalStructureDestruction = 10;
+
+    public bool performFinalConversion = false;
+    public Vector3Int finalPerformanceStartTile = Vector3Int.zero;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,6 +35,12 @@ public class TurnGrassToSand : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (performFinalConversion)
+        {
+            AddTileToTurnIntoGrassFinal(finalPerformanceStartTile);
+            performFinalConversion = false;
+        }
+
         if (initTilesList)
         {
             for (int i = 0; i < mapGenerator.mineTilePositions.Count; i++)
@@ -78,26 +94,117 @@ public class TurnGrassToSand : MonoBehaviour
                         tilesToTurnIntoSand.Enqueue(left);
                     }
 
-                    Debug.Log("Converted tile to sand.");
+                    //Debug.Log("Converted tile to sand.");
                 }
-
-                numTilesToConvertInCommingFrames--;
-                numTilesToConvertInCommingFrames = Mathf.Max(numTilesToConvertInCommingFrames, 0);
-            }
-
-            if (numTilesToConvertInCommingFrames == 0)
-            {
-                notFinishedPreviousConversionsToSand = false;
-            }
-
-            if(numTilesConvertedThisRound >= maxNumTilesToConvertEachFrame && !notFinishedPreviousConversionsToSand)
-            {
-                notFinishedPreviousConversionsToSand = true;
-                numTilesToConvertInCommingFrames = tilesToTurnIntoSand.Count;
             }
 
             nextTurnGrassIntoSandSeconds = Time.time + turnGrassIntoSandEveryXSeconds;
         }
+
+        if(nextTurnSandIntoGrassSeconds <= Time.time)
+        {
+            int numTilesConvertedThisRound = 0;
+            while (numTilesConvertedThisRound < maxTilesToConvertSandIntoGrassFromMines && tilesToTurnIntoGrassFromMineDestruction.Count > 0)
+            {
+                numTilesConvertedThisRound++;
+ 
+                Vector3Int currentTilePosition = tilesToTurnIntoGrassFromMineDestruction.Dequeue();
+
+                if (mapGenerator.IsTileSand(currentTilePosition))
+                {
+                    mapGenerator.SetGroundTileToGrass(currentTilePosition);
+
+                    Vector3Int top = currentTilePosition + Vector3Int.up;
+                    Vector3Int right = currentTilePosition + Vector3Int.right;
+                    Vector3Int down = currentTilePosition + Vector3Int.down;
+                    Vector3Int left = currentTilePosition + Vector3Int.left;
+
+                    if (mapGenerator.IsTileSand(top))
+                    {
+                        tilesToTurnIntoGrassFromMineDestruction.Enqueue(top);
+                    }
+                    if (mapGenerator.IsTileSand(right))
+                    {
+                        tilesToTurnIntoGrassFromMineDestruction.Enqueue(right);
+                    }
+                    if (mapGenerator.IsTileSand(down))
+                    {
+                        tilesToTurnIntoGrassFromMineDestruction.Enqueue(down);
+                    }
+                    if (mapGenerator.IsTileSand(left))
+                    {
+                        tilesToTurnIntoGrassFromMineDestruction.Enqueue(left);
+                    }
+
+                    //Debug.Log("Converted tile to grass.");
+                }
+            }
+
+            if(numTilesConvertedThisRound >= maxTilesToConvertSandIntoGrassFromMines)
+            {
+                tilesToTurnIntoGrassFromMineDestruction.Clear();
+            }
+
+            nextTurnSandIntoGrassSeconds = Time.time + turnSandIntoGrassEveryXSecondsForMineDestruction;
+        }
+
+        if (nextTurnSandIntoGrassSecondsFinal <= Time.time)
+        {
+            //Debug.Log("Can convert but := " + tilesToTurnIntoGrassFromFinalStructureDestruction.Count);
+            int numTilesConvertedThisRound = 0;
+            while (tilesToTurnIntoGrassFromFinalStructureDestruction.Count > 0 && numTilesConvertedThisRound < maxTilesToConvertSandIntoGrassFromFinalStructureDestruction)
+            {
+                //Debug.Log("Converting to grass final.");
+                numTilesConvertedThisRound++;
+
+                Vector3Int currentTilePosition = tilesToTurnIntoGrassFromFinalStructureDestruction.Dequeue();
+
+                if (mapGenerator.IsTileSand(currentTilePosition))
+                {
+                    mapGenerator.SetGroundTileToGrass(currentTilePosition);
+
+                    Vector3Int top = currentTilePosition + Vector3Int.up;
+                    Vector3Int right = currentTilePosition + Vector3Int.right;
+                    Vector3Int down = currentTilePosition + Vector3Int.down;
+                    Vector3Int left = currentTilePosition + Vector3Int.left;
+
+                    if (mapGenerator.IsTileSand(top))
+                    {
+                        tilesToTurnIntoGrassFromFinalStructureDestruction.Enqueue(top);
+                    }
+                    if (mapGenerator.IsTileSand(right))
+                    {
+                        tilesToTurnIntoGrassFromFinalStructureDestruction.Enqueue(right);
+                    }
+                    if (mapGenerator.IsTileSand(down))
+                    {
+                        tilesToTurnIntoGrassFromFinalStructureDestruction.Enqueue(down);
+                    }
+                    if (mapGenerator.IsTileSand(left))
+                    {
+                        tilesToTurnIntoGrassFromFinalStructureDestruction.Enqueue(left);
+                    }
+
+                    //Debug.Log("Converted tile to grass final conversion.");
+                }
+            }
+            //nextTurnSandIntoGrassSecondsFinal = Time.time + turnSandIntoGrassEveryXSecondsForMineDestruction;
+        }
     }
 
+    public void AddMineTileToTurnIntoGrassFrom(Vector3Int tileToTurnIntoGrass, bool immediate)
+    {
+        if (immediate)
+        {
+            nextTurnSandIntoGrassSeconds = 0.0f;
+            tilesToTurnIntoGrassFromMineDestruction.Clear();
+            tilesToTurnIntoGrassFromMineDestruction.Enqueue(tileToTurnIntoGrass);
+        }
+    }
+
+    public void AddTileToTurnIntoGrassFinal(Vector3Int tileToTurnIntoGrass)
+    {
+        nextTurnSandIntoGrassSecondsFinal = 0.0f;
+        tilesToTurnIntoGrassFromFinalStructureDestruction.Enqueue(tileToTurnIntoGrass);
+    }
 }

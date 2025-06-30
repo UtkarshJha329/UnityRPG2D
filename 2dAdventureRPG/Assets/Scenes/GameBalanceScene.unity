@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 71018448}
   m_Layer: 0
   m_Name: TurnGrassToSandOnTileMap
-  m_TagString: Untagged
+  m_TagString: GrassSandConversionManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -149,7 +149,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnGrassIntoSandEveryXSeconds: 5
+  turnSandIntoGrassEveryXSecondsForMineDestruction: 5
   maxNumTilesToConvertEachFrame: 40
+  maxTilesToConvertSandIntoGrassFromMines: 20
+  maxTilesToConvertSandIntoGrassFromFinalStructureDestruction: 30
 --- !u!4 &71018449
 Transform:
   m_ObjectHideFlags: 0
@@ -671,6 +674,53 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!1 &700395523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 700395524}
+  - component: {fileID: 700395525}
+  m_Layer: 0
+  m_Name: FinalConversionManager
+  m_TagString: FinalConversionManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &700395524
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700395523}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &700395525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700395523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb92bfa2fce0a742952a2fcdce6cd6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthsOfAllFinalStructures: []
+  startFinalConversionFromTile: {x: 0, y: 0, z: 0}
+  performFinalConversion: 0
 --- !u!1 &826341665
 GameObject:
   m_ObjectHideFlags: 0
@@ -1626,3 +1676,4 @@ SceneRoots:
   - {fileID: 325540882}
   - {fileID: 323092071}
   - {fileID: 71018449}
+  - {fileID: 700395524}

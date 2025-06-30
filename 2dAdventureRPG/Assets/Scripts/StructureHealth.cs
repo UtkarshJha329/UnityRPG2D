@@ -1,8 +1,10 @@
+using System.Xml.Schema;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class StructureHealth : MonoBehaviour
 {
+    public bool isMine = false;
     public Sprite destroyedStructureSprite;
 
     public int structureCurrentHealth = 40;
@@ -12,6 +14,12 @@ public class StructureHealth : MonoBehaviour
 
     private StructureHealthDisplayManager structureHealthDisplayManager;
     private JiggleStructure jiggleManager;
+
+    private TurnGrassToSand grassSandConversionManager;
+
+    public Vector3Int structureTilePos = Vector3Int.zero;
+
+    public FinalSandToGrassConversionManager finalSandToGrassConversionManager;
 
     private void Awake()
     {
@@ -24,6 +32,8 @@ public class StructureHealth : MonoBehaviour
         {
             playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         }
+
+        grassSandConversionManager = GameObject.FindGameObjectWithTag("GrassSandConversionManager").GetComponent<TurnGrassToSand>();
 
         structureSpriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -53,6 +63,11 @@ public class StructureHealth : MonoBehaviour
         if (structureCurrentHealth <= 0)
         {
             structureSpriteRenderer.sprite = destroyedStructureSprite;
+
+            if (isMine)
+            {
+                grassSandConversionManager.AddMineTileToTurnIntoGrassFrom(structureTilePos, true);
+            }
             // Add smoke and sound effects during the change.
         }
     }
