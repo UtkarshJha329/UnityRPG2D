@@ -15,6 +15,8 @@ public class StructureHealthDisplayManager : MonoBehaviour
 
     public bool damaged = false;
 
+    private Vector3 originalHeartsTransformPosition = Vector3.zero;
+
     private void Awake()
     {
         s_StructureHealth = GetComponent<StructureHealth>();
@@ -25,6 +27,7 @@ public class StructureHealthDisplayManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        originalHeartsTransformPosition = structureHeartParentTransform.position;
     }
 
     // Update is called once per frame
@@ -40,22 +43,24 @@ public class StructureHealthDisplayManager : MonoBehaviour
     private void UpdateEnemyHealthUIHearts()
     {
         //Debug.Log("Created enemy hearts.");
-        int enemyCurrentHealth = (int)s_StructureHealth.structureCurrentHealth;
+        int structureCurrentHealth = (int)s_StructureHealth.structureCurrentHealth;
 
         float horizontalSpacingBetweenEachHeart = structureHeartSprite.bounds.size.x + paddingBetweenHearts;
 
-        if (structureHeartParentTransform.childCount < enemyCurrentHealth)
+        if (structureHeartParentTransform.childCount < structureCurrentHealth)
         {
-            for (int i = structureHeartParentTransform.childCount; i < enemyCurrentHealth; i++)
+            for (int i = structureHeartParentTransform.childCount; i < structureCurrentHealth; i++)
             {
                 GameObject heart = Instantiate(structureHeartObject, transform.position, Quaternion.identity, structureHeartParentTransform);
                 heart.name = "Structure Heart (" + i + ")";
             }
         }
 
+        structureHeartParentTransform.position = originalHeartsTransformPosition + Vector3.left * (structureCurrentHealth / 2) * horizontalSpacingBetweenEachHeart;
+
         for (int i = 0; i < structureHeartParentTransform.childCount; i++)
         {
-            if (i < enemyCurrentHealth)
+            if (i < structureCurrentHealth)
             {
                 GameObject heart = structureHeartParentTransform.GetChild(i).gameObject;
                 heart.transform.position = structureHeartParentTransform.position + Vector3.right * (i * horizontalSpacingBetweenEachHeart);

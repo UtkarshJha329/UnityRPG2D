@@ -12,6 +12,7 @@ public class WaveData
 public class SpawnCastleEnemies : MonoBehaviour
 {
     public List<Transform> enemiesSpawnPoints = new List<Transform>();
+    public List<StructureHealth> spawnPointHealths = new List<StructureHealth>();
     public GameObject torchEnemyGameObject;
     public GameObject barrelEnemyGameObject;
     public GameObject bombEnemyGameObject;
@@ -34,7 +35,7 @@ public class SpawnCastleEnemies : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (NumEnemiesAliveCrossedRespawnThreshold(3))
+        if (NumEnemiesAliveCrossedRespawnThreshold(4))
         {
             SpawnWave(currentWaveIndex);
             currentWaveIndex++;
@@ -43,12 +44,22 @@ public class SpawnCastleEnemies : MonoBehaviour
 
     private void SpawnWave(int waveIndex)
     {
+        List<Transform> validSpawnPoints = new List<Transform>();
+        for (int i = 0; i < spawnPointHealths.Count; i++)
+        {
+            if (spawnPointHealths[i].structureCurrentHealth > 0)
+            {
+                validSpawnPoints.Add(enemiesSpawnPoints[i]);
+            }
+        }
+
+
         float randomSpawnRadius = 2.0f;
         GameObject curRoom = mapGenerator.roomObjectDictionary[mapGenerator.castleSpawnRoom];
         for (int i = 0; i < wavesData[waveIndex].numTorchEnemies; i++)
         {
             Vector3 randomOffsetFromSpawn = (Random.insideUnitCircle * randomSpawnRadius);
-            Vector3 spawnPosition =  randomOffsetFromSpawn + enemiesSpawnPoints[Random.Range(0, enemiesSpawnPoints.Count)].position;
+            Vector3 spawnPosition =  randomOffsetFromSpawn + validSpawnPoints[Random.Range(0, validSpawnPoints.Count)].position;
             mapGenerator.CreateCastleRoomEnemy(torchEnemyGameObject, spawnPosition, enemiesParentTransform, mapGenerator.castleSpawnRoom, 0, cameraTargetManager);
         }
 
@@ -56,7 +67,7 @@ public class SpawnCastleEnemies : MonoBehaviour
         for (int i = 0; i < wavesData[waveIndex].numBarrelEnemies; i++)
         {
             Vector3 randomOffsetFromSpawn = (Random.insideUnitCircle * randomSpawnRadius);
-            Vector3 spawnPosition = randomOffsetFromSpawn + enemiesSpawnPoints[Random.Range(0, enemiesSpawnPoints.Count)].position;
+            Vector3 spawnPosition = randomOffsetFromSpawn + validSpawnPoints[Random.Range(0, validSpawnPoints.Count)].position;
             mapGenerator.CreateCastleRoomEnemy(barrelEnemyGameObject, spawnPosition, enemiesParentTransform, mapGenerator.castleSpawnRoom, 0, cameraTargetManager);
         }
 
@@ -64,7 +75,7 @@ public class SpawnCastleEnemies : MonoBehaviour
         for (int i = 0; i < wavesData[waveIndex].numBombEnemies; i++)
         {
             Vector3 randomOffsetFromSpawn = (Random.insideUnitCircle * randomSpawnRadius);
-            Vector3 spawnPosition = randomOffsetFromSpawn + enemiesSpawnPoints[Random.Range(0, enemiesSpawnPoints.Count)].position;
+            Vector3 spawnPosition = randomOffsetFromSpawn + validSpawnPoints[Random.Range(0, validSpawnPoints.Count)].position;
             mapGenerator.CreateCastleRoomEnemy(bombEnemyGameObject, spawnPosition, enemiesParentTransform, mapGenerator.castleSpawnRoom, 0, cameraTargetManager);
         }
     }

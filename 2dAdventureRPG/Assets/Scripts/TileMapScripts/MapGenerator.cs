@@ -117,6 +117,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int minYForResourceRooms = 3;
     [SerializeField] private int minYForTeleportationRooms = 7;
     [SerializeField] private float probabilityOfSpecialSection = 0.15f;
+    //[SerializeField] private int minNumberOfTilesForTreesAndBushes = 36;
 
     [Header("Map Generator Tiles Data")]
     [SerializeField] private Tilemap groundTileMap;
@@ -145,6 +146,8 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
 
     [SerializeField] private GameObject minesObjectPrefab;
+    //[SerializeField] private GameObject bushesObjectPrefab;
+    //[SerializeField] private GameObject treesObjectPrefab;
     [SerializeField] private GameObject goblinSpawnTowerPrefab;
     [SerializeField] private List<Vector2Int> goblinTowerSpawnerPositions;
     private List<Transform> goblinTowers = new List<Transform>();
@@ -177,6 +180,7 @@ public class MapGenerator : MonoBehaviour
 
     private Dictionary<int, EnemyTypeAndPercentageSpawnList> spawnTypesBasedOnRoomY = new Dictionary<int, EnemyTypeAndPercentageSpawnList>();
 
+    private GameObject player;
 
     private void Awake()
     {
@@ -197,12 +201,8 @@ public class MapGenerator : MonoBehaviour
         mapSizeInTiles = mapSizeInRooms * numTilesInRooms;
 
         playerSpawnRoom = new Vector2Int(mapSizeInRooms.x / 2, 0);
-        playerSpawnTile = new Vector2Int(numTilesInRooms.x / 2, 2);
+        //playerSpawnTile = new Vector2Int(numTilesInRooms.x / 2, 2);
         castleSpawnRoom = new Vector2Int(mapSizeInRooms.x / 2, mapSizeInRooms.y - 1);
-
-
-        GameObject player = Instantiate(playerPrefab);
-        player.transform.position = new Vector3(playerSpawnRoom.x * numTilesInRooms.x + playerSpawnTile.x, playerSpawnRoom.y * numTilesInRooms.y + playerSpawnTile.y, 0.0f);
 
 
         for (int y = 0; y < mapSizeInRooms.y; y++)
@@ -214,6 +214,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
+        player = Instantiate(playerPrefab);
 
         spawnTypesBasedOnRoomY[0] = new EnemyTypeAndPercentageSpawnList(EnemyType.TorchGoblin, 1.0f);
         spawnTypesBasedOnRoomY[1] = new EnemyTypeAndPercentageSpawnList(EnemyType.TorchGoblin, 1.0f);
@@ -293,6 +294,21 @@ public class MapGenerator : MonoBehaviour
 
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, CreateResourcesInRooms);              // X -> No resources in this room? Or create towers for enemies here?
+
+        int playerSpawnSectionIndex = 0;
+        Vector2Int roomOffset = new Vector2Int((int)(playerSpawnRoom.x * numTilesInRooms.x), (int)(playerSpawnRoom.y * numTilesInRooms.y));
+        Room playerSpawnRoomData = roomIndexAndRoom[playerSpawnRoom];
+        for (int i = 0; i < playerSpawnRoomData.sections.Count; i++)
+        {
+            if (SectionContainsPointPadded(playerSpawnRoom, i, roomOffset + playerSpawnTile)){
+                playerSpawnSectionIndex = i;
+                break;
+            }
+        }
+
+        Vector3 playerSpawnSectionCentre = playerSpawnRoomData.sections[playerSpawnSectionIndex].bottomLeft + playerSpawnRoomData.sections[playerSpawnSectionIndex].size * 0.5f;
+        player.transform.position = new Vector3(playerSpawnRoom.x * numTilesInRooms.x + playerSpawnSectionCentre.x, playerSpawnRoom.y * numTilesInRooms.y + playerSpawnSectionCentre.y, 0.0f);
+        playerSpawnTile = new Vector2Int((int)playerSpawnSectionCentre.x, (int)playerSpawnSectionCentre.y);
 
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateEnemiesForRoom);                   // V/X -> Pregenerate all the enemies that this room will need?
@@ -415,6 +431,58 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+
+        //List<Vector2> occupiedPositions = new List<Vector2>();
+
+        //Vector2 dimsForTreesAndBushesRooms = dimsForRecourceRooms + Vector2.one;
+        //for (int i = 0; i < curRoom.sections.Count; i++)
+        //{
+        //    occupiedPositions.Clear();
+        //    if (curRoom.sections[i].size.x >= dimsForTreesAndBushesRooms.x && curRoom.sections[i].size.y >= dimsForTreesAndBushesRooms.y)
+        //    {
+        //        if (curRoom.sections[i].size.x * curRoom.sections[i].size.y > minNumberOfTilesForTreesAndBushes)
+        //        {
+        //            Transform structuresInRoomParentGameObjectTransform;
+        //            if (roomObjectDictionary[currentRoomIndex].transform.childCount == 1)
+        //            {
+        //                structuresInRoomParentGameObjectTransform = Instantiate(goldMinesParentPrefab, roomObjectDictionary[currentRoomIndex].transform).transform;
+        //            }
+        //            else
+        //            {
+        //                structuresInRoomParentGameObjectTransform = roomObjectDictionary[currentRoomIndex].transform.GetChild(1);
+        //            }
+
+        //            int maxNumBushesInSection = (int)curRoom.sections[i].size.x * (int)curRoom.sections[i].size.y / 50;
+        //            int maxNumTreesInSection = (int)curRoom.sections[i].size.x * (int)curRoom.sections[i].size.y / 20;
+
+        //            int insetPositionsInsideSectionBy = 3;
+        //            //for (int bush = 0; bush < Mathf.Min(generateBushesInThisSection, maxNumBushesInSection); bush++)
+        //            for (int bush = 0; bush < maxNumBushesInSection; bush++)
+        //            {
+        //                Vector2 curBushPosition = ReturnRandomTileInSectionPadded(currentRoomIndex, i, insetPositionsInsideSectionBy);
+        //                if (!occupiedPositions.Contains(curBushPosition))
+        //                {
+        //                    GameObject bushObject = Instantiate(bushesObjectPrefab, curBushPosition, Quaternion.identity, structuresInRoomParentGameObjectTransform);
+        //                    occupiedPositions.Add(curBushPosition);
+        //                }
+        //            }
+
+        //            //for (int tree = 0; tree < Mathf.Min(generateTreeInThisSection, maxNumTreesInSection); tree++)
+        //            for (int tree = 0; tree < maxNumTreesInSection; tree++)
+        //            {
+        //                Vector2 curTreePosition = ReturnRandomTileInSectionPadded(currentRoomIndex, i, insetPositionsInsideSectionBy);
+        //                if (!occupiedPositions.Contains(curTreePosition))
+        //                {
+        //                    GameObject treeObject = Instantiate(treesObjectPrefab, curTreePosition, Quaternion.identity, structuresInRoomParentGameObjectTransform);
+        //                    occupiedPositions.Add(curTreePosition);
+        //                }
+        //            }
+
+        //            //GameObject treeObject = Instantiate(treesObjectPrefab, curSectionCentre + roomOffset, Quaternion.identity, structuresInRoomParentGameObjectTransform);
+        //            //PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
+        //        }
+        //    }
+        //}
 
         return true;
     }
@@ -627,6 +695,24 @@ public class MapGenerator : MonoBehaviour
 
         return new Vector2Int(Random.Range((int)bottomLeft.x, (int)topRight.x), Random.Range((int)bottomLeft.y, (int)topRight.y));
     }
+
+    public Vector2Int ReturnRandomTileInSectionPadded(Vector2Int currentRoomIndex, int sectionIndex, int padding)
+    {
+        Vector2 roomOffset = new Vector2(currentRoomIndex.x * numTilesInRooms.x, currentRoomIndex.y * numTilesInRooms.y);
+        Room curRoom = roomIndexAndRoom[currentRoomIndex];
+        Section currentSection = curRoom.sections[sectionIndex];
+
+        Vector2 bottomLeft = currentSection.bottomLeft + Vector2.one * padding;
+        //Vector2 topLeft = currentSection.bottomLeft + Vector2.up * currentSection.size.y + Vector2.down;
+        //Vector2 bottomRight = currentSection.bottomLeft + Vector2.right * currentSection.size.x + Vector2.left;
+        Vector2 topRight = currentSection.bottomLeft + currentSection.size + Vector2.one * -padding;
+
+        bottomLeft += roomOffset;
+        topRight += roomOffset;
+
+        return new Vector2Int(Random.Range((int)bottomLeft.x, (int)topRight.x), Random.Range((int)bottomLeft.y, (int)topRight.y));
+    }
+
 
     private bool IsTileACornerTileInSection(Section currentSection, Vector3Int tileToCheck)
     {
@@ -1035,6 +1121,11 @@ public class MapGenerator : MonoBehaviour
 
             s_SpawnCastleEnemies.enemiesSpawnPoints.Clear();
             s_SpawnCastleEnemies.enemiesSpawnPoints = goblinTowers;
+
+            for (int i = 0; i < s_SpawnCastleEnemies.enemiesSpawnPoints.Count; i++)
+            {
+                s_SpawnCastleEnemies.spawnPointHealths.Add(s_SpawnCastleEnemies.enemiesSpawnPoints[i].GetComponent<StructureHealth>());
+            }
 
             //int numTorchGoblinsInCastleSpawnRoom = 30;
             //int numTNTBarrelGoblinsInCastleSpawnRoom = 15;

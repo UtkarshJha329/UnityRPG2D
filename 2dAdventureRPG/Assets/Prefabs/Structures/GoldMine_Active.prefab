@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 4148980013840811576}
   - component: {fileID: 8811522098863145071}
   - component: {fileID: 8530591675075017814}
+  - component: {fileID: 7218907010484089688}
   m_Layer: 0
   m_Name: GoldMine_Active
   m_TagString: Structure
@@ -188,3 +189,17 @@ MonoBehaviour:
   structureHeartParentTransform: {fileID: 9221295559768730612}
   paddingBetweenHearts: 0.15
   damaged: 0
+--- !u!114 &7218907010484089688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2188781144886451970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4816b0c19ed9bb442bdee0a958559650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jiggleDistance: 0.1
+  jiggle: 0

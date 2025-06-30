@@ -11,6 +11,7 @@ public class StructureHealth : MonoBehaviour
     public static Transform playerTransform;
 
     private StructureHealthDisplayManager structureHealthDisplayManager;
+    private JiggleStructure jiggleManager;
 
     private void Awake()
     {
@@ -27,6 +28,7 @@ public class StructureHealth : MonoBehaviour
         structureSpriteRenderer = GetComponent<SpriteRenderer>();
 
         structureHealthDisplayManager = GetComponent<StructureHealthDisplayManager>();
+        jiggleManager = GetComponent<JiggleStructure>();
     }
 
 
@@ -59,5 +61,6 @@ public class StructureHealth : MonoBehaviour
     {
         structureCurrentHealth += damageAmount;
         structureHealthDisplayManager.damaged = true;
+        jiggleManager.jiggle = true;
     }
 }

@@ -17,6 +17,8 @@ public class EnemyHealthHeartsDisplayManager : MonoBehaviour
 
     public bool damaged = false;
 
+    private Vector3 originalHeartParentTransformLocalPosition = Vector3.zero;
+
     private void Awake()
     {
         s_EnemyHealth = GetComponent<EnemyHealth>();
@@ -27,6 +29,7 @@ public class EnemyHealthHeartsDisplayManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        originalHeartParentTransformLocalPosition = enemyHeartParentTransform.localPosition;
     }
 
     // Update is called once per frame
@@ -54,6 +57,8 @@ public class EnemyHealthHeartsDisplayManager : MonoBehaviour
                 heart.name = "Enemy Heart (" + i + ")";
             }
         }
+
+        enemyHeartParentTransform.localPosition = originalHeartParentTransformLocalPosition + (Vector3.left * enemyCurrentHealth / 2) * horizontalSpacingBetweenEachHeart;
 
         for (int i = 0; i < enemyHeartParentTransform.childCount; i++)
         {
