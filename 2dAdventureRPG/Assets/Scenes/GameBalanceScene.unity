@@ -119,6 +119,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &71018447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 71018449}
+  - component: {fileID: 71018448}
+  m_Layer: 0
+  m_Name: TurnGrassToSandOnTileMap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &71018448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71018447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27f373b8f832ce7489234fd4fb5de053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnGrassIntoSandEveryXSeconds: 5
+  maxNumTilesToConvertEachFrame: 40
+--- !u!4 &71018449
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71018447}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &136942373
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,6 +1226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ec5ebfe37482664592fbd27b577cd45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawConnnectionsInSand: 0
   spawnEnemyType: 0
   torchGoblinEnemy: {fileID: 6897299781908151801, guid: c2d6ec4f72573f6418b8cbeb05cd1f31, type: 3}
   bombGoblinEnemy: {fileID: 6897299781908151801, guid: d8a4edb5fd6a1fb4eb3c311184cd1615, type: 3}
@@ -1231,6 +1278,7 @@ MonoBehaviour:
   debugStringVisitedRooms: 
   debugStringUntouchedRooms: 
   roomsThatHaveBeenCreated: []
+  mineTilePositions: []
 --- !u!1 &1452999449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1577,3 +1625,4 @@ SceneRoots:
   - {fileID: 296067484}
   - {fileID: 325540882}
   - {fileID: 323092071}
+  - {fileID: 71018449}

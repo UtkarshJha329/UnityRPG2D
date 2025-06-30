@@ -91,6 +91,8 @@ public class EnemyTypeAndPercentageSpawnList
 
 public class MapGenerator : MonoBehaviour
 {
+    public bool drawConnnectionsInSand = false;
+
     public EnemyType spawnEnemyType = EnemyType.TorchGoblin;
 
     [Header("Enemy Instantiating Data")]
@@ -181,6 +183,8 @@ public class MapGenerator : MonoBehaviour
     private Dictionary<int, EnemyTypeAndPercentageSpawnList> spawnTypesBasedOnRoomY = new Dictionary<int, EnemyTypeAndPercentageSpawnList>();
 
     private GameObject player;
+
+    public List<Vector3> mineTilePositions = new List<Vector3>();
 
     private void Awake()
     {
@@ -365,6 +369,21 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    public void SetGroundTileToSand(Vector3Int tilePositionOnTilesMap)
+    {
+        groundTileMap.SetTile(tilePositionOnTilesMap, groundTileDrySand);
+    }
+
+    public bool IsTileSand(Vector3Int tilePositionOnTileMap)
+    {
+        return groundTileMap.GetTile(tilePositionOnTileMap) == groundTileDrySand;
+    }
+
+    public bool IsTileGrass(Vector3Int tilePositionOnTileMap)
+    {
+        return groundTileMap.GetTile(tilePositionOnTileMap) == groundTileGrassMM;
+    }
+
     private void DecideCastleSpawnRoom()
     {
         if (roomIndexAndRoom.ContainsKey(castleSpawnRoom))
@@ -425,9 +444,11 @@ public class MapGenerator : MonoBehaviour
 
                     curRoom.sections[i].mineSection = true;
                     Vector3 curSectionCentre = curRoom.sections[i].bottomLeft + curRoom.sections[i].size * 0.5f;
-
-                    GameObject mineObject = Instantiate(minesObjectPrefab, curSectionCentre + roomOffset, Quaternion.identity, goldMinesParentGameObjectTransform);
+                    Vector3 minePos = curSectionCentre + roomOffset;
+                    GameObject mineObject = Instantiate(minesObjectPrefab, minePos, Quaternion.identity, goldMinesParentGameObjectTransform);
                     //PaintSectionToSand(currentRoomIndex, curRoom.sections[i]);
+
+                    mineTilePositions.Add(minePos);
                 }
             }
         }
@@ -516,8 +537,18 @@ public class MapGenerator : MonoBehaviour
                     if (CanSectionsBeConnected(curRoom.sections[i], curRoom.sections[j], new Vector3Int((int)roomOffset.x, (int)roomOffset.y, 0), ref connectionTiles) && connectionTiles.Count > 0)
                     {
                         int randomTileToMakeConnection = Random.Range(0, connectionTiles.Count);
-                        groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, groundTileDrySand);
-                        groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, groundTileDrySand);
+
+                        if (drawConnnectionsInSand)
+                        {
+                            groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, groundTileDrySand);
+                            groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, groundTileDrySand);
+                        }
+                        else
+                        {
+                            groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, groundTileGrassMM);
+                            groundTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, groundTileGrassMM);
+                        }
+
 
                         wallsTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileA, null);
                         wallsTileMap.SetTile(connectionTiles[randomTileToMakeConnection].worldTileB, null);
@@ -898,8 +929,16 @@ public class MapGenerator : MonoBehaviour
         Vector3Int tileA = tilesThatAllowConnection[randConnectionTile].worldTileA;
         Vector3Int tileB = tilesThatAllowConnection[randConnectionTile].worldTileB;
 
-        groundTileMap.SetTile(tileA, groundTileDrySand);
-        groundTileMap.SetTile(tileB, groundTileDrySand);
+        if (drawConnnectionsInSand)
+        {
+            groundTileMap.SetTile(tileA, groundTileDrySand);
+            groundTileMap.SetTile(tileB, groundTileDrySand);
+        }
+        else
+        {
+            groundTileMap.SetTile(tileA, groundTileGrassMM);
+            groundTileMap.SetTile(tileB, groundTileGrassMM);
+        }
 
         wallsTileMap.SetTile(tileA, null);
         wallsTileMap.SetTile(tileB, null);
