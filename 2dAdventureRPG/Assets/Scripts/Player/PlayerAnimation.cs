@@ -27,6 +27,8 @@ public class PlayerAnimation : MonoBehaviour
 
     private Color originalSpriteColor;
 
+    private PlayerHealth playerHealth;
+
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -35,6 +37,7 @@ public class PlayerAnimation : MonoBehaviour
 
         characterStates = GetComponent<CharacterStates>();
         s_PlayerProperties = GetComponent<PlayerProperties>();
+        playerHealth = GetComponent<PlayerHealth>();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -84,7 +87,14 @@ public class PlayerAnimation : MonoBehaviour
 
         if (characterStates.isKnockbacked && !waitingToResetKnockback)
         {
-            s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.knockedBackTimeStopTime, s_PlayerProperties.knockedBackTimeStopTimeScale);      // Hit stop while taking a hit.
+            if(playerHealth.GetCurrentPlayerHealth() <= 0)
+            {
+                s_PlayerProperties.playerHitStopManager.StopTimeFor(5.0f, 0.1f);
+            }
+            else
+            {
+                s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.knockedBackTimeStopTime, s_PlayerProperties.knockedBackTimeStopTimeScale);      // Hit stop while taking a hit.
+            }
 
             numTimesDamageFlashed = 0;
             s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(s_PlayerProperties.knockBackDirection.normalized * 0.2f);

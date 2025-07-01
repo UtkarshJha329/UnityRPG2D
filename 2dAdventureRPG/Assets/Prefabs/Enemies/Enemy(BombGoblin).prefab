@@ -530,7 +530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 275868d301d3cf546b3615ac0a5ea40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 4.5
   attackRange: 4.5
   detectorCircleOffset: 5
   detectorCircleRadius: 9

@@ -226,6 +226,8 @@ public class TurnGrassToSand : MonoBehaviour
     {
         if (immediate)
         {
+            Debug.Log("Called immediate sand to grass conversion.");
+
             nextTurnSandIntoGrassSeconds = 0.0f;
             tilesToTurnIntoGrassFromMineDestruction.Clear();
             tilesToTurnIntoGrassFromMineDestruction.Enqueue(tileToTurnIntoGrass);

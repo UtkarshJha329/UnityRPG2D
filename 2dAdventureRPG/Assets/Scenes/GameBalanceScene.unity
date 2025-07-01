@@ -148,9 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27f373b8f832ce7489234fd4fb5de053, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnGrassIntoSandEveryXSeconds: 5
+  turnGrassIntoSandEveryXSeconds: 1
   turnSandIntoGrassEveryXSecondsForMineDestruction: 5
-  maxNumTilesToConvertEachFrame: 40
+  maxNumTilesToConvertEachFrame: 30
   maxTilesToConvertSandIntoGrassFromMines: 20
   maxTilesToConvertSandIntoGrassFromFinalStructureDestruction: 30
   performFinalConversion: 0

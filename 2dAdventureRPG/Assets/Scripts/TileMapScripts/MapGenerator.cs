@@ -431,12 +431,18 @@ public class MapGenerator : MonoBehaviour
             Vector3 centreTilePos = Vector3.zero;
             for (int i = 0; i < goblinTowerSpawnerPositions.Count; i++)
             {
-                GameObject goblinSpawnTower = Instantiate(goblinSpawnTowerPrefab, roomOffset + new Vector3(goblinTowerSpawnerPositions[i].x, goblinTowerSpawnerPositions[i].y, 0.0f), Quaternion.identity, roomObjectDictionary[currentRoomIndex].transform);
+                Vector3 structureTilePos = roomOffset + new Vector3(goblinTowerSpawnerPositions[i].x, goblinTowerSpawnerPositions[i].y, 0.0f);
+                GameObject goblinSpawnTower = Instantiate(goblinSpawnTowerPrefab, structureTilePos, Quaternion.identity, roomObjectDictionary[currentRoomIndex].transform);
                 goblinTowers.Add(goblinSpawnTower.transform);
 
                 centreTilePos += goblinSpawnTower.transform.position * 0.333f;
 
-                finalConversionManager.healthsOfAllFinalStructures.Add(goblinSpawnTower.GetComponent<StructureHealth>());
+                StructureHealth goblinSpawnTowerHealth = goblinSpawnTower.GetComponent<StructureHealth>();
+                finalConversionManager.healthsOfAllFinalStructures.Add(goblinSpawnTowerHealth);
+
+                goblinSpawnTowerHealth.structureTilePos = new Vector3Int((int)structureTilePos.x, (int)structureTilePos.y, 0);
+
+                mineTilePositions.Add(structureTilePos);
             }
             finalConversionManager.startFinalConversionFromTile = new Vector3Int((int)centreTilePos.x, (int)centreTilePos.y, 0);
 

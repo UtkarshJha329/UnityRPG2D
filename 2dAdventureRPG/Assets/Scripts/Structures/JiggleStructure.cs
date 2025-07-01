@@ -49,7 +49,7 @@ public class JiggleStructure : MonoBehaviour
 
         if (Time.time >= jiggleStopTime)
         {
-            Debug.Log("Stopped jiggling.");
+            //Debug.Log("Stopped jiggling.");
             jiggle = false;
         }
     }

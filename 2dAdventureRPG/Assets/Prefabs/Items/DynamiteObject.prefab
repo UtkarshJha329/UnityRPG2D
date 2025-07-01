@@ -277,12 +277,13 @@ MonoBehaviour:
   timeInWhichDynamiteDetonates: 2
   timeToReachTarget: 0
   explosionAtTime: 1
-  damage: 10
+  damage: -5
   knockbackForce: 5
   playerHealthManager: {fileID: 0}
   s_PlayerMovement: {fileID: 0}
   explosionRangeCollider: {fileID: 370703307791941786}
   explosionObjectPrefabToSummonBeforeDestroying: {fileID: 9068294721562290749, guid: 2fc4c85e788c0294d8039d5b5ba81bb6, type: 3}
+  dynamiteShadowsParentTransform: {fileID: 0}
   shadowSpriteObjectToSpawn: {fileID: 3655207961821300402, guid: 847e91999ced9ed47944c37ff61b5145, type: 3}
   shadowSpriteTransform: {fileID: 0}
   explosionRadiusIndicator: {fileID: 7671067659582918439}
@@ -292,6 +293,8 @@ MonoBehaviour:
   verticalSpeed: 0
   verticalAcceleration: 0
   dynamiteSprite: {fileID: 3903481790830163293}
+  showDynamiteSprite: 1
+  tntGoblinEnemyParent: {fileID: 0}
 --- !u!1 &7671067659582918439
 GameObject:
   m_ObjectHideFlags: 0

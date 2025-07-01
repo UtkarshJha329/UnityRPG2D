@@ -498,13 +498,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 275868d301d3cf546b3615ac0a5ea40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 4.5
   attackRange: 1.2
   detectorCircleOffset: 2.5
   detectorCircleRadius: 4
   damage: -1
-  delayTimeToAttackAfterPlayerDetection: 1.5
-  delayTimeToAttackAfterPreviousAttack: 1.5
+  delayTimeToAttackAfterPlayerDetection: 0.75
+  delayTimeToAttackAfterPreviousAttack: 0.75
   attakcingDownOffset: {x: 1, y: -0.75}
   attakcingUpOffset: {x: 1, y: 0.75}
   facingDirection: {x: 1, y: 1, z: 1}

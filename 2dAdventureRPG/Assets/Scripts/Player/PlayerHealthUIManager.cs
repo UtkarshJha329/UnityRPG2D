@@ -13,6 +13,7 @@ public class PlayerHealthUIManager : MonoBehaviour
 
     private HorizontalLayoutGroup c_playerHealthUIHorizontalLayoutGroup;
     private PlayerHealth s_playerHealth;
+    private CharacterStates characterStates;
 
     private int totalNumberOfHeartContainers = 0;
     private int numberOfPartsPerHeart = 4;
@@ -22,6 +23,7 @@ public class PlayerHealthUIManager : MonoBehaviour
     private void Awake()
     {
         s_playerHealth = GetComponent<PlayerHealth>();
+        characterStates = GetComponent<CharacterStates>();
 
         playerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");
     }
@@ -42,6 +44,11 @@ public class PlayerHealthUIManager : MonoBehaviour
         {
             UpdatePlayerHealthUIHearts();
             updatedHealth = false;
+
+            if (s_playerHealth.GetCurrentPlayerHealth() <= 0)
+            {
+                characterStates.isDead = true;
+            }
         }
     }
 

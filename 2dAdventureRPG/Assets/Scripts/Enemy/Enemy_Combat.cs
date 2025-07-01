@@ -160,14 +160,14 @@ public class Enemy_Combat : MonoBehaviour
         return mapGenerator.SectionContainsPointPadded(s_EnemyProperties.roomIndex, s_EnemyProperties.sectionIndex, playerPosition);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Player"))
-        {
-            //collision.gameObject.GetComponent<PlayerHealth>().ChangeHealth(s_EnemyProperties.damage);
-            //playerHealthManager.ChangeHealth(s_EnemyProperties.damage);
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.collider.CompareTag("Player"))
+    //    {
+    //        //collision.gameObject.GetComponent<PlayerHealth>().ChangeHealth(s_EnemyProperties.damage);
+    //        //playerHealthManager.ChangeHealth(s_EnemyProperties.damage);
+    //    }
+    //}
 
     private void AttackPlayer()
     {

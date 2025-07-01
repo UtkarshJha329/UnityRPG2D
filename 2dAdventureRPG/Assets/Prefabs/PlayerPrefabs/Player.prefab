@@ -326,8 +326,8 @@ MonoBehaviour:
   currentMovementInput: {x: 0, y: 0}
   lastMovementInput: {x: 0, y: 0}
   playerHitStopManager: {fileID: 0}
-  knockedBackTimeStopTime: 0.5
-  knockedBackTimeStopTimeScale: 0
+  knockedBackTimeStopTime: 0.25
+  knockedBackTimeStopTimeScale: 0.15
   enemyHitTimeStopTime: 0.25
   enemyHitTimeStopTimeScale: 0.5
   knockBackDirection: {x: 0, y: 0}
@@ -387,6 +387,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 16
   maxHealth: 16
+  timeBetweenSandDamage: 5
 --- !u!114 &4246228756998997651
 MonoBehaviour:
   m_ObjectHideFlags: 0

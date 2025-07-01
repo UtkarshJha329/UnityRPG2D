@@ -50,7 +50,7 @@ public class PlayerPickupsHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
 
-        Debug.Log("Reduced player attack damage amount.");
+        //Debug.Log("Reduced player attack damage amount.");
 
         increasedAttackCount--;
         s_PlayerProperties.attackDamageValue -= reduceByAmount;
@@ -68,7 +68,7 @@ public class PlayerPickupsHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
 
-        Debug.Log("Reduced player movement speed amount.");
+        //Debug.Log("Reduced player movement speed amount.");
 
         increasedSpeedCount--;
         s_PlayerProperties.speed -= reduceByAmount;

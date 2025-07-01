@@ -24,6 +24,7 @@ public class StructureHealth : MonoBehaviour
     private Sprite originalStructureSprite;
 
     public bool foliage = false;
+    private bool alreadyUsedForConversionToGrass = false;
 
     private void Awake()
     {
@@ -82,9 +83,10 @@ public class StructureHealth : MonoBehaviour
         {
             structureSpriteRenderer.sprite = destroyedStructureSprite;
 
-            if (isMine)
+            if (isMine && !alreadyUsedForConversionToGrass)
             {
                 grassSandConversionManager.AddMineTileToTurnIntoGrassFrom(structureTilePos, true);
+                alreadyUsedForConversionToGrass = true;
             }
             // Add smoke and sound effects during the change.
         }

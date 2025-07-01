@@ -68,7 +68,7 @@ public class DropItem : MonoBehaviour
         {
             if (dropItemType == DropType.DamageDrop)
             {
-                Debug.Log("Increased player attack damage.");
+                //Debug.Log("Increased player attack damage.");
 
                 //s_PlayerProperties.attackDamageValue--;
                 //s_PlayerProperties.IncreaseAttackDamageForSeconds(1, 5);
@@ -76,7 +76,7 @@ public class DropItem : MonoBehaviour
             }
             else if (dropItemType == DropType.SpeedDrop)
             {
-                Debug.Log("Increased player speed.");
+                //Debug.Log("Increased player speed.");
 
                 //s_PlayerProperties.speed++;
                 //s_PlayerProperties.IncreaseMovementSpeedForSeconds(1, 5);
@@ -84,7 +84,7 @@ public class DropItem : MonoBehaviour
             }
             else if (dropItemType == DropType.HealthDrop)
             {
-                Debug.Log("Increased player health.");
+                //Debug.Log("Increased player health.");
 
                 //s_PlayerHealthManager.IncreaseMaxHealth(1);
                 //s_PlayerHealthManager.ChangeHealth(1);
