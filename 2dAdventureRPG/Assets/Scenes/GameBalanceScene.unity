@@ -153,6 +153,8 @@ MonoBehaviour:
   maxNumTilesToConvertEachFrame: 40
   maxTilesToConvertSandIntoGrassFromMines: 20
   maxTilesToConvertSandIntoGrassFromFinalStructureDestruction: 30
+  performFinalConversion: 0
+  finalPerformanceStartTile: {x: 0, y: 0, z: 0}
 --- !u!4 &71018449
 Transform:
   m_ObjectHideFlags: 0
@@ -721,6 +723,7 @@ MonoBehaviour:
   healthsOfAllFinalStructures: []
   startFinalConversionFromTile: {x: 0, y: 0, z: 0}
   performFinalConversion: 0
+  once: 1
 --- !u!1 &826341665
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,7 +742,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &826341666
 MonoBehaviour:
   m_ObjectHideFlags: 0

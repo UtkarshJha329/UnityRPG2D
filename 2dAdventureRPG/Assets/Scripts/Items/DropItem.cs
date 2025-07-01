@@ -23,8 +23,9 @@ public class DropItem : MonoBehaviour
 
     //public CircleCollider2D dropPlayerPickupCollider;
 
-    private PlayerHealth s_PlayerHealthManager;
+    //private PlayerHealth s_PlayerHealthManager;
     private PlayerProperties s_PlayerProperties;
+    private PlayerPickupsHandler playerPickupsHandler;
 
     public float pickupDistance = 2.5f;
 
@@ -43,7 +44,8 @@ public class DropItem : MonoBehaviour
 
         GameObject playerGameObject = GameObject.FindGameObjectWithTag("Player");
         s_PlayerProperties = playerGameObject.GetComponent<PlayerProperties>();
-        s_PlayerHealthManager = playerGameObject.GetComponent<PlayerHealth>();
+        playerPickupsHandler = playerGameObject.GetComponent<PlayerPickupsHandler>();
+        //s_PlayerHealthManager = playerGameObject.GetComponent<PlayerHealth>();
     }
 
     private void Update()
@@ -53,7 +55,7 @@ public class DropItem : MonoBehaviour
             transform.position += (s_PlayerProperties.transform.position - transform.position).normalized * 0.25f * Time.deltaTime;
         }
 
-        if (transform.position.y < s_PlayerHealthManager.transform.position.y)
+        if (transform.position.y < s_PlayerProperties.transform.position.y)
         {
             dropSpriteRenderer.sortingOrder = 500;
         }
@@ -68,20 +70,25 @@ public class DropItem : MonoBehaviour
             {
                 Debug.Log("Increased player attack damage.");
 
-                s_PlayerProperties.attackDamageValue--;
+                //s_PlayerProperties.attackDamageValue--;
+                //s_PlayerProperties.IncreaseAttackDamageForSeconds(1, 5);
+                playerPickupsHandler.IncreaseAttackDamageForSeconds(-1, 5);
             }
             else if (dropItemType == DropType.SpeedDrop)
             {
                 Debug.Log("Increased player speed.");
 
-                s_PlayerProperties.speed++;
+                //s_PlayerProperties.speed++;
+                //s_PlayerProperties.IncreaseMovementSpeedForSeconds(1, 5);
+                playerPickupsHandler.IncreaseMovementSpeedForSeconds(1, 5);
             }
             else if (dropItemType == DropType.HealthDrop)
             {
                 Debug.Log("Increased player health.");
 
-                s_PlayerHealthManager.IncreaseMaxHealth(1);
-                s_PlayerHealthManager.ChangeHealth(1);
+                //s_PlayerHealthManager.IncreaseMaxHealth(1);
+                //s_PlayerHealthManager.ChangeHealth(1);
+                playerPickupsHandler.IncreasePlayerHealthByAmount(1);
             }
             else if (dropItemType == DropType.PlayerDeath)
             {

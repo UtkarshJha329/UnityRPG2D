@@ -23,6 +23,8 @@ public class StructureHealth : MonoBehaviour
 
     private Sprite originalStructureSprite;
 
+    public bool foliage = false;
+
     private void Awake()
     {
         if(destroyedStructureSprite == null)
@@ -63,6 +65,18 @@ public class StructureHealth : MonoBehaviour
         //{
         //    structureSpriteRenderer.sortingOrder = ((int) transform.position.y * -1);
         //}
+
+        if (!foliage)
+        {
+            if (transform.position.y < playerTransform.position.y)
+            {
+                structureSpriteRenderer.sortingOrder = 500;
+            }
+            else
+            {
+                structureSpriteRenderer.sortingOrder = ((int)transform.position.y * -1);
+            }
+        }
 
         if (structureCurrentHealth <= 0)
         {

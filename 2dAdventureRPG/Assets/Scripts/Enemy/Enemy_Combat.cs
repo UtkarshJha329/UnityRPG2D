@@ -165,7 +165,7 @@ public class Enemy_Combat : MonoBehaviour
         if (collision.collider.CompareTag("Player"))
         {
             //collision.gameObject.GetComponent<PlayerHealth>().ChangeHealth(s_EnemyProperties.damage);
-            playerHealthManager.ChangeHealth(s_EnemyProperties.damage);
+            //playerHealthManager.ChangeHealth(s_EnemyProperties.damage);
         }
     }
 

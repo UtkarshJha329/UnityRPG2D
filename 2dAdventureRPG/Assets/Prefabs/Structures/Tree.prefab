@@ -205,6 +205,7 @@ MonoBehaviour:
   structureCurrentHealth: 10
   structureTilePos: {x: 0, y: 0, z: 0}
   finalSandToGrassConversionManager: {fileID: 0}
+  foliage: 1
 --- !u!114 &8530591675075017814
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -171,11 +171,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdb31e2e37382b14794955f483fd540f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isMine: 0
+  isMine: 1
   destroyedStructureSprite: {fileID: -4502939662549986644, guid: 1c53a14d341ee034ea328130b5a84211, type: 3}
   structureCurrentHealth: 10
   structureTilePos: {x: 0, y: 0, z: 0}
   finalSandToGrassConversionManager: {fileID: 0}
+  foliage: 0
 --- !u!114 &8530591675075017814
 MonoBehaviour:
   m_ObjectHideFlags: 0
