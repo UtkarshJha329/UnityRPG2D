@@ -91,6 +91,11 @@ public class PlayerAnimation : MonoBehaviour
             {
                 s_PlayerProperties.playerHitStopManager.StopTimeFor(5.0f, 0.1f);
             }
+            else if (s_PlayerProperties.sandDamage)
+            {
+                s_PlayerProperties.playerHitStopManager.StopTimeFor(0.1f, 0.1f);
+                s_PlayerProperties.sandDamage = false;
+            }
             else
             {
                 s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.knockedBackTimeStopTime, s_PlayerProperties.knockedBackTimeStopTimeScale);      // Hit stop while taking a hit.

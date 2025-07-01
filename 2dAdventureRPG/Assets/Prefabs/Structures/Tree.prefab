@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jiggleDistance: 0.2
-  jiggleForTime: 0.2
+  jiggleForTime: 0.15
   jiggleSpeed: 6
   jiggle: 0
 --- !u!1001 &5803841503909836846

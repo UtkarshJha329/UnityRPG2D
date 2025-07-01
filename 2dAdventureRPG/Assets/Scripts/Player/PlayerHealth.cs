@@ -11,11 +11,6 @@ public class PlayerHealth : MonoBehaviour
     private CharacterStates characterStates;
     private PlayerHealthUIManager s_PlayerHealthUIManager;
 
-    private MapGenerator mapGenerator;
-
-    [SerializeField] private float timeBetweenSandDamage = 5.0f;
-    private float nextSandDamageTime = 0.0f;
-
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
@@ -26,22 +21,10 @@ public class PlayerHealth : MonoBehaviour
     {
         //currentHealth = 1000000;
         //maxHealth = 10000000;
-
-        mapGenerator = GameObject.FindGameObjectWithTag("MapTileGrid").GetComponent<MapGenerator>();
     }
 
     private void Update()
     {
-        if(nextSandDamageTime <= Time.time)
-        {
-            Vector3Int playerTilePos = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0);
-            if (mapGenerator.IsTileSand(playerTilePos))
-            {
-                ChangeHealth(-1);
-
-                nextSandDamageTime = Time.time + timeBetweenSandDamage;
-            }
-        }
     }
 
     public bool ChangeHealth(float changeAmmount)

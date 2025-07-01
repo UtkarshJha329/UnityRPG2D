@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 5569979238581115530}
   - component: {fileID: 273208601665665596}
   - component: {fileID: 4246228756998997651}
+  - component: {fileID: 4253489141159803879}
   - component: {fileID: 962191278581702546}
   - component: {fileID: 4713862790925913648}
   - component: {fileID: 7078589675244104900}
@@ -332,6 +333,7 @@ MonoBehaviour:
   enemyHitTimeStopTimeScale: 0.5
   knockBackDirection: {x: 0, y: 0}
   impulseSourceForScreenShake: {fileID: 0}
+  sandDamage: 0
 --- !u!114 &1042105427255219212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,7 +389,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 16
   maxHealth: 16
-  timeBetweenSandDamage: 5
 --- !u!114 &4246228756998997651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,6 +411,21 @@ MonoBehaviour:
   - {fileID: 49780919, guid: 99c7c683868c37347817f1018a2bf685, type: 3}
   - {fileID: -1264171211, guid: 99c7c683868c37347817f1018a2bf685, type: 3}
   updatedHealth: 1
+--- !u!114 &4253489141159803879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368669901408580950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80488a60d1988c14eb19a5a082f0bef5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeBetweenSandDamage: 2.5
+  knockbackForce: 0.05
+  sandDamageAmount: -1
 --- !u!114 &962191278581702546
 MonoBehaviour:
   m_ObjectHideFlags: 0

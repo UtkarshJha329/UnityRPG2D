@@ -35,6 +35,8 @@ public class PlayerProperties : MonoBehaviour
 
     public CinemachineImpulseSource impulseSourceForScreenShake;
 
+    public bool sandDamage = false;
+
     private void Awake()
     {
         playerHitStopManager = GameObject.FindGameObjectWithTag("HitStopManager").GetComponent<TimeStop>();
