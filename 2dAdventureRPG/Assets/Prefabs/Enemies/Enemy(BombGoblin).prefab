@@ -560,6 +560,8 @@ MonoBehaviour:
   dynamiteShadowsParentTransform: {fileID: 0}
   dropType: 2
   castleRoomEnemies: 0
+  audioSourcePitch: 1.2
+  dynamiteExplosionVolume: 1.2
 --- !u!114 &6646084242993171397
 MonoBehaviour:
   m_ObjectHideFlags: 0

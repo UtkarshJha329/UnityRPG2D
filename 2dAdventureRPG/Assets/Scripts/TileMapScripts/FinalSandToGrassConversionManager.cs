@@ -11,6 +11,7 @@ public class FinalSandToGrassConversionManager : MonoBehaviour
 
     public bool performFinalConversion = false;
     public bool once = true;
+    public bool calledForFinalConversion = false;
 
     private Transform playerTransform;
     private PlayerProperties s_PlayerProperties;
@@ -31,24 +32,32 @@ public class FinalSandToGrassConversionManager : MonoBehaviour
             grassSandConversionManager.finalPerformanceStartTile = startFinalConversionFromTile;
             once = false;
         }
-        performFinalConversion = true;
-        for (int i = 0; i < healthsOfAllFinalStructures.Count; i++)
+
+        if (!calledForFinalConversion)
         {
-            if (healthsOfAllFinalStructures[i].structureCurrentHealth > 0)
+            performFinalConversion = true;
+            for (int i = 0; i < healthsOfAllFinalStructures.Count; i++)
             {
-                performFinalConversion = false;
-                break;
+                if (healthsOfAllFinalStructures[i].structureCurrentHealth > 0)
+                {
+                    performFinalConversion = false;
+                    break;
+                }
             }
-        }
 
-        if (performFinalConversion)
-        {
-            s_PlayerProperties.playerHitStopManager.StopTimeFor(5.0f, 0.1f);
-            s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 0.05f);
+            if (performFinalConversion)
+            {
+                //Debug.Log("Performing final conversion.");
 
-            grassSandConversionManager.AddTileToTurnIntoGrassFinal(startFinalConversionFromTile);
+                s_PlayerProperties.playerHitStopManager.StopTimeFor(5.0f, 0.1f);
+                s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 0.05f);
 
-            performFinalConversion = false;
+                grassSandConversionManager.AddTileToTurnIntoGrassFinal(startFinalConversionFromTile);
+
+                performFinalConversion = false;
+
+                calledForFinalConversion = true;
+            }
         }
     }
 }

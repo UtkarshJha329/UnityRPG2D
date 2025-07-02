@@ -93,11 +93,13 @@ public class PlayerAnimation : MonoBehaviour
             }
             else if (s_PlayerProperties.sandDamage)
             {
+                //Debug.Log("Stopped time from sand damage.");
                 s_PlayerProperties.playerHitStopManager.StopTimeFor(0.1f, 0.1f);
                 s_PlayerProperties.sandDamage = false;
             }
             else
             {
+                //Debug.Log("Stopped time from unknown sources.");
                 s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.knockedBackTimeStopTime, s_PlayerProperties.knockedBackTimeStopTimeScale);      // Hit stop while taking a hit.
             }
 

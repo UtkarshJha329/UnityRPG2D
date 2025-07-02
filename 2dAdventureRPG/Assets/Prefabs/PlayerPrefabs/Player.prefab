@@ -535,7 +535,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   environmentWalkAudioSource: {fileID: 3781221997538927268}
   knightArmourWalkAudioSource: {fileID: 7341458132551123922}
-  environmentWalkVolume: 0.06
+  grassWalkVolume: 0.06
+  sandWalkVolume: 0.04
   knightArmourWalkVolume: 0.06
 --- !u!82 &4699781467180392083
 AudioSource:

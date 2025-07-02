@@ -5,6 +5,7 @@ public class TurnGrassToSand : MonoBehaviour
 {
     [SerializeField] private float turnGrassIntoSandEveryXSeconds = 5.0f;
     [SerializeField] private float turnSandIntoGrassEveryXSecondsForMineDestruction = 30.0f;
+    [SerializeField] private float turnGrassIntoSandEveryXSecondsForStructureDestruction = 0.1f;
 
     private MapGenerator mapGenerator;
 
@@ -35,11 +36,11 @@ public class TurnGrassToSand : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (performFinalConversion)
-        {
-            AddTileToTurnIntoGrassFinal(finalPerformanceStartTile);
-            performFinalConversion = false;
-        }
+        //if (performFinalConversion)
+        //{
+        //    AddTileToTurnIntoGrassFinal(finalPerformanceStartTile);
+        //    performFinalConversion = false;
+        //}
 
         if (initTilesList)
         {
@@ -59,6 +60,7 @@ public class TurnGrassToSand : MonoBehaviour
             }
             initTilesList = false;
         }
+
         if(nextTurnGrassIntoSandSeconds <= Time.time /* || notFinishedPreviousConversionsToSand*/)
         {
             int numTilesConvertedThisRound = 0;
@@ -170,6 +172,7 @@ public class TurnGrassToSand : MonoBehaviour
 
         if (nextTurnSandIntoGrassSecondsFinal <= Time.time)
         {
+            //Debug.Log("Checking to perform final conversion at := " + nextTurnSandIntoGrassSecondsFinal);
             //Debug.Log("Can convert but := " + tilesToTurnIntoGrassFromFinalStructureDestruction.Count);
             int numTilesConvertedThisRound = 0;
             while (tilesToTurnIntoGrassFromFinalStructureDestruction.Count > 0 && numTilesConvertedThisRound < maxTilesToConvertSandIntoGrassFromFinalStructureDestruction)
@@ -218,7 +221,7 @@ public class TurnGrassToSand : MonoBehaviour
                     //Debug.Log("Converted tile to grass final conversion.");
                 }
             }
-            //nextTurnSandIntoGrassSecondsFinal = Time.time + turnSandIntoGrassEveryXSecondsForMineDestruction;
+            nextTurnSandIntoGrassSecondsFinal = Time.time + turnGrassIntoSandEveryXSecondsForStructureDestruction;
         }
     }
 
@@ -226,7 +229,7 @@ public class TurnGrassToSand : MonoBehaviour
     {
         if (immediate)
         {
-            Debug.Log("Called immediate sand to grass conversion.");
+            //Debug.Log("Called immediate sand to grass conversion.");
 
             nextTurnSandIntoGrassSeconds = 0.0f;
             tilesToTurnIntoGrassFromMineDestruction.Clear();
@@ -236,6 +239,7 @@ public class TurnGrassToSand : MonoBehaviour
 
     public void AddTileToTurnIntoGrassFinal(Vector3Int tileToTurnIntoGrass)
     {
+        //Debug.Log("Called for final conversion.");
         nextTurnSandIntoGrassSecondsFinal = 0.0f;
         tilesToTurnIntoGrassFromFinalStructureDestruction.Enqueue(tileToTurnIntoGrass);
     }

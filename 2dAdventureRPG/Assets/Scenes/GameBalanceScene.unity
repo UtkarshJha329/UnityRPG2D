@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnGrassIntoSandEveryXSeconds: 1
   turnSandIntoGrassEveryXSecondsForMineDestruction: 5
+  turnGrassIntoSandEveryXSecondsForStructureDestruction: 0.09
   maxNumTilesToConvertEachFrame: 30
   maxTilesToConvertSandIntoGrassFromMines: 20
   maxTilesToConvertSandIntoGrassFromFinalStructureDestruction: 30
@@ -724,6 +725,7 @@ MonoBehaviour:
   startFinalConversionFromTile: {x: 0, y: 0, z: 0}
   performFinalConversion: 0
   once: 1
+  calledForFinalConversion: 0
 --- !u!1 &826341665
 GameObject:
   m_ObjectHideFlags: 0
@@ -1629,6 +1631,11 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 3145b66d5466686469886fcac254e16a, type: 3}
   - enemyType: 1
     audioClip: {fileID: 8300000, guid: 3145b66d5466686469886fcac254e16a, type: 3}
+  enemyBlastSfx:
+  - enemyType: 2
+    audioClip: {fileID: 8300000, guid: f7910e6396bf057459b1177c055dfa23, type: 3}
+  - enemyType: 1
+    audioClip: {fileID: 8300000, guid: 0a056596aa5d6944cb02b3f1ef8fa90c, type: 3}
   swishSfx:
   - gameObjectType: 0
     audioClip: []

@@ -203,7 +203,11 @@ public class Enemy_Combat : MonoBehaviour
         dynamiteHandling.s_PlayerMovement = s_PlayerMovement;
         dynamiteHandling.playerHealthManager = playerHealthManager;
 
+        dynamiteHandling.dynamiteExplosionVolume = s_EnemyProperties.dynamiteExplosionVolume;
+
         //Debug.Log(gameObject.name + " ;=; Exploding and destroying myself in front of player.");
+
+        gameObject.GetComponent<EnemyHealth>().ChangeHealth(-100);
 
         Destroy(gameObject, 0.8f);
     }
@@ -258,6 +262,8 @@ public class Enemy_Combat : MonoBehaviour
         dynamiteHandling.dynamiteShadowsParentTransform = s_EnemyProperties.dynamiteShadowsParentTransform;
         dynamiteHandling.s_PlayerMovement = s_PlayerMovement;
         dynamiteHandling.playerHealthManager = playerHealthManager;
+
+        dynamiteHandling.dynamiteExplosionVolume = s_EnemyProperties.dynamiteExplosionVolume;
     }
 
     private void AttackPlayerUsingColliders(List<Collider2D> colliderPairsToCheck)

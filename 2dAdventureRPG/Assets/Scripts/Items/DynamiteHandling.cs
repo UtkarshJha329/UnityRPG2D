@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DynamiteHandling : MonoBehaviour
 {
+    public float dynamiteExplosionVolume = 0.0f;
+
     public Vector3 moveDirection = Vector3.zero;
     public float moveSpeedDirect = 2.0f;
 
@@ -58,7 +60,6 @@ public class DynamiteHandling : MonoBehaviour
         {
             Debug.LogError("explosionRadiusIndicator reference is missing in Dynamite Handling script.");
         }
-
         shadowSpriteTransform = Instantiate(shadowSpriteObjectToSpawn, transform.position, Quaternion.identity, dynamiteShadowsParentTransform).transform;
     }
 
@@ -106,7 +107,10 @@ public class DynamiteHandling : MonoBehaviour
                 dynamiteSpriteTransform.localPosition += Vector3.down * verticalSpeed * Time.deltaTime;
             }
 
-            shadowSpriteTransform.position += moveDirection * moveSpeedDirect * Time.deltaTime;
+            if (shadowSpriteTransform != null)
+            {
+                shadowSpriteTransform.position += moveDirection * moveSpeedDirect * Time.deltaTime;
+            }
         }
     }
 
@@ -126,12 +130,25 @@ public class DynamiteHandling : MonoBehaviour
                 s_PlayerMovement.KnockbackPlayer(knockbackForce, knockbackDirection);
             }
         }
-
-        if(shadowSpriteTransform == null)
+        else
         {
-            Debug.LogError("shadowSpiritTransform is missing!");
+            s_PlayerMovement.GetComponent<PlayerProperties>().impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 1.0f);
         }
-        Instantiate(explosionObjectPrefabToSummonBeforeDestroying, shadowSpriteTransform.position, Quaternion.identity);
-        Destroy(gameObject);
+
+        if (shadowSpriteTransform != null)
+        {
+            //shadowSpriteTransform = Instantiate(shadowSpriteObjectToSpawn, transform.position, Quaternion.identity, dynamiteShadowsParentTransform).transform;
+            //Debug.LogError("shadowSpiritTransform is missing!");
+
+            GameObject explosionGameObject = Instantiate(explosionObjectPrefabToSummonBeforeDestroying, shadowSpriteTransform.position, Quaternion.identity);
+
+            ExplosionSoundEffectHandler explosionSoundEffectHandler = explosionGameObject.GetComponent<ExplosionSoundEffectHandler>();
+            EnemyType dynamiteLaunchedFromEnemy = showDynamiteSprite ? EnemyType.BombGoblin : EnemyType.TNTBarrelGoblin;
+            explosionSoundEffectHandler.explosionSfxClip = AllAudioContainer.blastBasedOnEnemyType[dynamiteLaunchedFromEnemy];
+            explosionSoundEffectHandler.explosionVolume = dynamiteExplosionVolume;
+
+            Destroy(gameObject);
+
+        }
     }
 }

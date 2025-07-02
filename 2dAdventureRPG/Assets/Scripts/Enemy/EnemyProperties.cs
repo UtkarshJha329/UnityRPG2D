@@ -54,4 +54,6 @@ public class EnemyProperties : MonoBehaviour
     public bool castleRoomEnemies = false;
 
     public float audioSourcePitch = 1.2f;
+
+    public float dynamiteExplosionVolume = 0.0f;
 }

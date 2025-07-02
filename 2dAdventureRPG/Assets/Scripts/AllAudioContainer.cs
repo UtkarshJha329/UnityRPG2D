@@ -2,13 +2,6 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
-[System.Serializable]
-public class EnemyAudio
-{
-    public EnemyType enemyType;
-    public AudioClip audioClip;
-}
-
 public enum GameObjectType
 {
     Enemy,
@@ -48,11 +41,23 @@ public class FoliageMovementAudio
     public AudioClip audioClip;
 }
 
+[System.Serializable]
+public class EnemyAudio
+{
+    public EnemyType enemyType;
+    public AudioClip audioClip;
+}
+
+// grass 0.7
+// sand 0.6
+// knight 0.7
+
 public class AllAudioContainer : MonoBehaviour
 {
     [Header("Goblin Specific")]
     [SerializeField] private List<EnemyAudio> enemyHurtSfx = new List<EnemyAudio>();
     [SerializeField] private List<EnemyAudio> enemyDeadSfx = new List<EnemyAudio>();
+    [SerializeField] private List<EnemyAudio> enemyBlastSfx = new List<EnemyAudio>();
 
     [Header("Attacking")]
     [SerializeField] private List<GameObjectBasedAudio> swishSfx = new List<GameObjectBasedAudio>();
@@ -68,6 +73,7 @@ public class AllAudioContainer : MonoBehaviour
 
     public static Dictionary<EnemyType, AudioClip> enemyHurtBasedOnEnemyType = new Dictionary<EnemyType, AudioClip>();
     public static Dictionary<EnemyType, AudioClip> enemyDeadBasedOnEnemyType = new Dictionary<EnemyType, AudioClip>();
+    public static Dictionary<EnemyType, AudioClip> blastBasedOnEnemyType = new Dictionary<EnemyType, AudioClip>();
     public static Dictionary<GameObjectType, List<AudioClip>> swishSoundEffects = new Dictionary<GameObjectType, List<AudioClip>>();
     public static Dictionary<EnvironmentType, List<AudioClip>> environmentWalkSoundEffects = new Dictionary<EnvironmentType, List<AudioClip>>();
     public static Dictionary<FoliageType, AudioClip> foliageMovementSoundEffects = new Dictionary<FoliageType, AudioClip>();
@@ -86,6 +92,12 @@ public class AllAudioContainer : MonoBehaviour
         for (int i = 0; i < enemyDeadSfx.Count; i++)
         {
             enemyDeadBasedOnEnemyType.Add(enemyDeadSfx[i].enemyType, enemyDeadSfx[i].audioClip);
+        }
+
+        blastBasedOnEnemyType.Clear();
+        for (int i = 0; i < enemyBlastSfx.Count; i++)
+        {
+            blastBasedOnEnemyType.Add(enemyBlastSfx[i].enemyType, enemyBlastSfx[i].audioClip);
         }
 
         swishSoundEffects.Clear();

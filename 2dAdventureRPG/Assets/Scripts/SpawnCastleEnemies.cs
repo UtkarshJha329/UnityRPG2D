@@ -35,7 +35,7 @@ public class SpawnCastleEnemies : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (NumEnemiesAliveCrossedRespawnThreshold(4))
+        if (NumEnemiesAliveCrossedRespawnThreshold(4) && currentWaveIndex < wavesData.Count)
         {
             SpawnWave(currentWaveIndex);
             currentWaveIndex++;
