@@ -52,4 +52,6 @@ public class EnemyProperties : MonoBehaviour
     public DropType dropType;
 
     public bool castleRoomEnemies = false;
+
+    public float audioSourcePitch = 1.2f;
 }

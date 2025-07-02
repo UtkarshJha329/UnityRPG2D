@@ -8,6 +8,10 @@ public class JiggleFoliage : MonoBehaviour
     [SerializeField] private float jiggleForTime = 0.25f;
     [SerializeField] private float jiggleSpeed = 4.0f;
 
+    [SerializeField] private float foliageAudioVolume = 0.2f;
+
+    public FoliageType foliageType;
+
     private Vector3 jigglePositionA = Vector3.zero;
     private Vector3 jigglePositionB = Vector3.zero;
 
@@ -18,6 +22,10 @@ public class JiggleFoliage : MonoBehaviour
 
     private Rigidbody2D rb2d;
 
+    private AudioSource foliageAudioSource;
+
+    private bool touchedByPlayer = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,6 +35,7 @@ public class JiggleFoliage : MonoBehaviour
         currentJiggleToPosition = jigglePositionA;
 
         rb2d = GetComponent<Rigidbody2D>();
+        foliageAudioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -44,6 +53,27 @@ public class JiggleFoliage : MonoBehaviour
 
     private void Jiggle()
     {
+        if (touchedByPlayer)
+        {
+            foliageAudioSource.volume = foliageAudioVolume;
+            touchedByPlayer = false;
+        }
+        else
+        {
+            foliageAudioSource.volume = foliageAudioVolume * 0.75f;
+        }
+
+        if (!foliageAudioSource.isPlaying)
+        {
+            foliageAudioSource.PlayOneShot(AllAudioContainer.foliageMovementSoundEffects[foliageType]);
+            if (foliageType == FoliageType.Tree)
+            {
+                foliageAudioSource.volume = foliageAudioVolume * 0.25f;
+                foliageAudioSource.PlayOneShot(AllAudioContainer.foliageMovementSoundEffects[FoliageType.Bush]);
+                foliageAudioSource.volume = foliageAudioVolume;
+            }
+        }
+
         if (Vector3.Distance(transform.position, currentJiggleToPosition) < 0.1f)
         {
             currentJiggleToPosition = currentJiggleToPosition == jigglePositionA ? jigglePositionB : jigglePositionA;
@@ -61,13 +91,29 @@ public class JiggleFoliage : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        jiggle = true;
-        jiggleStopTime = Time.time + jiggleForTime;
+        if (!collision.CompareTag("Structure"))
+        {
+            jiggle = true;
+            jiggleStopTime = Time.time + jiggleForTime;
+
+            if (collision.CompareTag("Player"))
+            {
+                touchedByPlayer = true;
+            }
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        jiggle = true;
-        jiggleStopTime = Time.time + jiggleForTime;
+        if (!collision.CompareTag("Structure"))
+        {
+            jiggle = true;
+            jiggleStopTime = Time.time + jiggleForTime;
+
+            if (collision.CompareTag("Player"))
+            {
+                touchedByPlayer = true;
+            }
+        }
     }
 }

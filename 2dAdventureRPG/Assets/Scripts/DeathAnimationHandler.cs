@@ -7,15 +7,20 @@ public class DeathAnimationHandler : MonoBehaviour
 {
     private Animator animator;
 
+    private AudioSource deathSoundSource;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        deathSoundSource = GetComponent<AudioSource>();
 
         transform.localScale = Vector3.one * 2.0f;
     }
 
-    public void BuryInTime(float duration)
+    public void BuryInTime(float pitch, EnemyType enemyType, float duration)
     {
+        deathSoundSource.pitch = pitch;
+        deathSoundSource.PlayOneShot(AllAudioContainer.enemyDeadBasedOnEnemyType[enemyType]);
         StartCoroutine(BuryIn(duration));
     }
 

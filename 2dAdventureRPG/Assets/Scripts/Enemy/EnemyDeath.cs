@@ -48,7 +48,7 @@ public class EnemyDeath : MonoBehaviour
 
                 GameObject instantiatedDeathObject = Instantiate(deathObject, transform.position, Quaternion.identity);
                 DeathAnimationHandler deathAnimationHandler = instantiatedDeathObject.GetComponent<DeathAnimationHandler>();
-                deathAnimationHandler.BuryInTime(2.5f);
+                deathAnimationHandler.BuryInTime(s_EnemyProperties.audioSourcePitch, s_EnemyProperties.enemyType, 2.5f);
             }
             gameObject.SetActive(false);
         }

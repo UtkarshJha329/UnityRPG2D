@@ -19,7 +19,6 @@ public class PlayerAttack : MonoBehaviour
     {
         characterStates = GetComponent<CharacterStates>();
         s_PlayerProperties = GetComponent<PlayerProperties>();
-
     }
     private void Start()
     {

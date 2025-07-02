@@ -16,6 +16,7 @@ TagManager:
   - CastleSpawner
   - GrassSandConversionManager
   - FinalConversionManager
+  - AllAudioContainer
   layers:
   - Default
   - TransparentFX

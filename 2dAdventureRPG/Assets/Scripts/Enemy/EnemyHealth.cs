@@ -12,10 +12,13 @@ public class EnemyHealth : MonoBehaviour
 
     private EnemyHealthHeartsDisplayManager enemyHealthHeartsDisplayManager;
 
+    private EnemyAudioManager enemyAudioManager;
+
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
         enemyHealthHeartsDisplayManager = GetComponent<EnemyHealthHeartsDisplayManager>();
+        enemyAudioManager = GetComponent<EnemyAudioManager>();
     }
 
     public void ChangeHealth(float changeAmmount)
@@ -26,6 +29,11 @@ public class EnemyHealth : MonoBehaviour
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
+        }
+
+        if(changeAmmount < 0)
+        {
+            enemyAudioManager.PlayHurtAudio();
         }
 
         if (currentHealth <= 0)
