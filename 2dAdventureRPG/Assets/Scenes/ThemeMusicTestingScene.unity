@@ -229,6 +229,21 @@ MonoBehaviour:
     - trackPatterns: 000000000000000000000000000000000200000001000000030000000300000004000000050000000600000000000000
       volume: 1
       loopTrack: 1
+    - trackPatterns: feffffff0a0000000a0000000b0000000d0000000e0000000c0000000d00000010000000fefffffffefffffffeffffff
+      volume: 1
+      loopTrack: 1
+    - trackPatterns: fefffffffeffffff1c0000001c0000001d0000001f0000001e0000001e000000210000001c000000fefffffffeffffff
+      volume: 1
+      loopTrack: 1
+    - trackPatterns: fefffffffefffffffeffffff22000000220000002200000026000000260000002600000022000000fefffffffeffffff
+      volume: 1
+      loopTrack: 1
+    - trackPatterns: fefffffffefffffffefffffffefffffffefffffffeffffff270000002700000027000000fefffffffefffffffeffffff
+      volume: 1
+      loopTrack: 1
+    - trackPatterns: fefffffffeffffff12000000130000001400000015000000160000001700000018000000190000001a000000feffffff
+      volume: 1
+      loopTrack: 1
   mainMenuMusicIndex: 0
   combatMusicIndex: 1
 --- !u!82 &473887731

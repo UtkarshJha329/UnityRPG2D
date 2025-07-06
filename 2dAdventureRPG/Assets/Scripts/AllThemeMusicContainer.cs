@@ -86,6 +86,8 @@ public class AllThemeMusicContainer : MonoBehaviour
     [SerializeField] private int mainMenuMusicIndex = 0;
     [SerializeField] private int combatMusicIndex = 1;
 
+    [SerializeField] private const int skipPatternIndex8Bars140bpm = -2;
+    [SerializeField] private const float skipPatternIndex8Bars140bpmTimeInSec = 6.86f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -109,9 +111,16 @@ public class AllThemeMusicContainer : MonoBehaviour
             int nextPatternToPlayFromTrack = themeMusics[musicIndex].themeTracks[i].PatternToPlayNowFromTrack();
             if(nextPatternToPlayFromTrack != -1)
             {
-                //Debug.Log("Playing pattern number := " + nextPatternToPlayFromTrack);
-                themeMusicSource.PlayOneShot(themesMusicPatterns[nextPatternToPlayFromTrack], themeMusics[musicIndex].themeTracks[i].volume);
-                StartCoroutine(SetCurrentTrackPatternPlayingToFalse(musicIndex, i, themesMusicPatterns[nextPatternToPlayFromTrack].length));
+                if(nextPatternToPlayFromTrack != skipPatternIndex8Bars140bpm)
+                {
+                    //Debug.Log("Playing pattern number := " + nextPatternToPlayFromTrack);
+                    themeMusicSource.PlayOneShot(themesMusicPatterns[nextPatternToPlayFromTrack], themeMusics[musicIndex].themeTracks[i].volume);
+                    StartCoroutine(SetCurrentTrackPatternPlayingToFalse(musicIndex, i, themesMusicPatterns[nextPatternToPlayFromTrack].length));
+                }
+                else
+                {
+                    StartCoroutine(SetCurrentTrackPatternPlayingToFalse(musicIndex, i, skipPatternIndex8Bars140bpmTimeInSec));
+                }
             }
             else
             {
