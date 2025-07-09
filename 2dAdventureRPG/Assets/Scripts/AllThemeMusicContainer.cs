@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 [System.Serializable]
 public class Track
@@ -9,27 +10,48 @@ public class Track
     public float volume = 1.0f;
     public bool loopTrack = true;
 
-    private int currentPlayingPatternIndex = 0;
+    public bool muteTrack = false;
+
+    [HideInInspector] public int trackIndex = -1;
+
+    private int currentPlayingPatternIndex = -1;
     private List<bool> patternPlayingStatus = new List<bool>();
     
-    public void InitTrack()
+    public void InitTrack(int trackIndex)
     {
         for (int i = 0; i < trackPatterns.Count; i++)
         {
             patternPlayingStatus.Add(false);
         }
+
+        this.trackIndex = trackIndex;
     }
 
     public int PatternToPlayNowFromTrack()
     {
+        //if (muteTrack)
+        //{
+        //    return -2;
+        //}
+
         if (currentPlayingPatternIndex == -1 || !patternPlayingStatus[currentPlayingPatternIndex])
         {
             currentPlayingPatternIndex++;
 
             if (currentPlayingPatternIndex >= patternPlayingStatus.Count)
             {
+                //if(trackIndex == 0)
+                //{
+                //    Debug.Log("Current Playing Pattern Index := " + currentPlayingPatternIndex + ", patternPlayingStatus.Count" + patternPlayingStatus.Count);
+                //}
                 if (loopTrack)
                 {
+                    //if(trackIndex == 0)
+                    //{
+                    //    Debug.Log("Finished playing track (" + trackIndex + ") at := " + Time.time + ", now looping.");
+                    //}
+                    Debug.Log("Finished playing track (" + trackIndex + ") at := " + Time.time + ", now looping.");
+
                     currentPlayingPatternIndex = 0;
 
                     patternPlayingStatus[currentPlayingPatternIndex] = true;
@@ -43,7 +65,15 @@ public class Track
             else
             {
                 //Debug.Log("From the track, playing new pattern number := " + currentPlayingPatternIndex);
-
+                //if(currentPlayingPatternIndex == 0)
+                //{
+                //    Debug.Log("Played 0 pattern.");
+                //}
+                //Debug.Log("Playing new pattern (" + currentPlayingPatternIndex + ") at := " + Time.time);
+                //if (trackIndex == 0)
+                //{
+                //    Debug.Log("Playing next := " + trackPatterns[currentPlayingPatternIndex]);
+                //}
                 patternPlayingStatus[currentPlayingPatternIndex] = true;
                 return trackPatterns[currentPlayingPatternIndex];
             }
@@ -71,7 +101,7 @@ public class Theme
     {
         for (int i = 0; i < themeTracks.Count; i++)
         {
-            themeTracks[i].InitTrack();
+            themeTracks[i].InitTrack(i);
         }
     }
 }
@@ -87,7 +117,12 @@ public class AllThemeMusicContainer : MonoBehaviour
     [SerializeField] private int combatMusicIndex = 1;
 
     [SerializeField] private const int skipPatternIndex8Bars140bpm = -2;
-    [SerializeField] private const float skipPatternIndex8Bars140bpmTimeInSec = 6.86f;
+    [SerializeField] private const int skipPatternIndex1Bars140bpm = -3;
+    [SerializeField] private const float skipPatternIndex4Bars140bpmTimeInSec = 6.86f;
+    [SerializeField] private const float skipPatternIndex1Bars140bpmTimeInSec = 6.86f / 4.0f;
+    //[SerializeField] private const float skipPatternIndex1Bars140bpmTimeInSec = 1.72f;
+
+    private bool once = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -101,7 +136,13 @@ public class AllThemeMusicContainer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayMusic(mainMenuMusicIndex);
+        //if (once)
+        //{
+        //    //Debug.Log("Started playing track at := " + Time.time);
+        //    once = false;
+        //}
+        //PlayMusic(mainMenuMusicIndex);
+        PlayMusic(combatMusicIndex);
     }
 
     private void PlayMusic(int musicIndex)
@@ -111,15 +152,28 @@ public class AllThemeMusicContainer : MonoBehaviour
             int nextPatternToPlayFromTrack = themeMusics[musicIndex].themeTracks[i].PatternToPlayNowFromTrack();
             if(nextPatternToPlayFromTrack != -1)
             {
-                if(nextPatternToPlayFromTrack != skipPatternIndex8Bars140bpm)
+                if(nextPatternToPlayFromTrack != skipPatternIndex8Bars140bpm && nextPatternToPlayFromTrack != skipPatternIndex1Bars140bpm)
                 {
                     //Debug.Log("Playing pattern number := " + nextPatternToPlayFromTrack);
-                    themeMusicSource.PlayOneShot(themesMusicPatterns[nextPatternToPlayFromTrack], themeMusics[musicIndex].themeTracks[i].volume);
+                    if (!themeMusics[musicIndex].themeTracks[i].muteTrack)
+                    {
+                        themeMusicSource.PlayOneShot(themesMusicPatterns[nextPatternToPlayFromTrack], themeMusics[musicIndex].themeTracks[i].volume);
+                    }
                     StartCoroutine(SetCurrentTrackPatternPlayingToFalse(musicIndex, i, themesMusicPatterns[nextPatternToPlayFromTrack].length));
+                    //StartCoroutine(SetCurrentTrackPatternPlayingToFalse(musicIndex, i, skipPatternIndex8Bars140bpmTimeInSec));
                 }
-                else
+                else if(nextPatternToPlayFromTrack == skipPatternIndex8Bars140bpm)
                 {
-                    StartCoroutine(SetCurrentTrackPatternPlayingToFalse(musicIndex, i, skipPatternIndex8Bars140bpmTimeInSec));
+                    StartCoroutine(SetCurrentTrackPatternPlayingToFalse(musicIndex, i, skipPatternIndex4Bars140bpmTimeInSec));
+                }
+                else if(nextPatternToPlayFromTrack == skipPatternIndex1Bars140bpm)
+                {
+                    //if (!themeMusics[musicIndex].themeTracks[i].muteTrack)
+                    //{
+                    //    Debug.Log("Loading reset after := " + skipPatternIndex1Bars140bpmTimeInSec + " seconds.");
+                    //}
+
+                    StartCoroutine(SetCurrentTrackPatternPlayingToFalse(musicIndex, i, skipPatternIndex1Bars140bpmTimeInSec));
                 }
             }
             else
@@ -132,6 +186,11 @@ public class AllThemeMusicContainer : MonoBehaviour
     IEnumerator SetCurrentTrackPatternPlayingToFalse(int musicIndex, int trackIndex, float durationOfPatternPlaying)
     {
         yield return new WaitForSeconds(durationOfPatternPlaying);
+
+        //if (trackIndex == 0)
+        //{
+        //    Debug.Log("Resetting after := " + durationOfPatternPlaying + " seconds.");
+        //}
 
         themeMusics[musicIndex].themeTracks[trackIndex].SetCurrentPlayingPatternToFinished();
     }
