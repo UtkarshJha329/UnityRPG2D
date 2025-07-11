@@ -229,71 +229,183 @@ MonoBehaviour:
     - trackPatterns: 000000000000000000000000000000000200000001000000030000000300000004000000050000000600000000000000
       volume: 1
       loopTrack: 1
+      trackSplits: []
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: feffffff0a0000000a0000000b0000000d0000000e0000000c0000000d00000010000000fefffffffefffffffeffffff
       volume: 1
       loopTrack: 1
+      trackSplits: []
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffeffffff1c0000001c0000001d0000001f0000001e0000001e000000210000001c000000fefffffffeffffff
       volume: 0.39
       loopTrack: 1
+      trackSplits: []
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffefffffffeffffff22000000220000002200000026000000260000002600000022000000fefffffffeffffff
       volume: 0.07
       loopTrack: 1
+      trackSplits: []
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffefffffffefffffffefffffffefffffffeffffff270000002700000027000000fefffffffefffffffeffffff
       volume: 0.04
       loopTrack: 1
+      trackSplits: []
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffeffffff12000000130000001400000015000000160000001700000018000000190000001a000000feffffff
       volume: 1
       loopTrack: 1
+      trackSplits: []
       muteTrack: 0
       trackIndex: -1
   - themeTracks:
     - trackPatterns: 280000002800000029000000290000002b000000280000002800000028000000fdffffff0700000009000000080000000800000007000000070000000700000007000000fdfffffffdfffffffdffffff
       volume: 1
       loopTrack: 1
+      trackSplits:
+      - trackSplitPatternIndexStart: 0
+        trackSplitPatternIndexEnd: 7
+        mixingRules:
+          playNumberOfTimes: 2
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
+      - trackSplitPatternIndexStart: 8
+        trackSplitPatternIndexEnd: 16
+        mixingRules:
+          playNumberOfTimes: 1
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffeffffff3100000031000000340000000f0000000f0000000f0000001100000011000000fdfffffffefffffffefffffffeffffff
       volume: 1
       loopTrack: 1
+      trackSplits:
+      - trackSplitPatternIndexStart: 0
+        trackSplitPatternIndexEnd: 4
+        mixingRules:
+          playNumberOfTimes: 2
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 0
+          outroVolumePattern: 1
+      - trackSplitPatternIndexStart: 5
+        trackSplitPatternIndexEnd: 13
+        mixingRules:
+          playNumberOfTimes: 1
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: 2c0000002c0000002c0000002c0000002c0000002c0000002c0000002c0000002d0000002d0000002e0000002e0000002e0000002e0000002e0000002e0000002c000000
       volume: 1
       loopTrack: 1
+      trackSplits:
+      - trackSplitPatternIndexStart: 0
+        trackSplitPatternIndexEnd: 7
+        mixingRules:
+          playNumberOfTimes: 2
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
+      - trackSplitPatternIndexStart: 7
+        trackSplitPatternIndexEnd: 16
+        mixingRules:
+          playNumberOfTimes: 1
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffeffffff380000003800000036000000fdfffffffdfffffffdfffffffeffffff
       volume: 1
       loopTrack: 1
+      trackSplits:
+      - trackSplitPatternIndexStart: 0
+        trackSplitPatternIndexEnd: 7
+        mixingRules:
+          playNumberOfTimes: 2
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
+      - trackSplitPatternIndexStart: 8
+        trackSplitPatternIndexEnd: 15
+        mixingRules:
+          playNumberOfTimes: 1
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 0
+          outroVolumePattern: 1
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffeffffff2f0000002f0000002f0000002f000000fefffffffeffffff
       volume: 1
       loopTrack: 1
+      trackSplits:
+      - trackSplitPatternIndexStart: 0
+        trackSplitPatternIndexEnd: 7
+        mixingRules:
+          playNumberOfTimes: 2
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
+      - trackSplitPatternIndexStart: 8
+        trackSplitPatternIndexEnd: 16
+        mixingRules:
+          playNumberOfTimes: 1
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffeffffff2300000023000000230000002300000023000000230000002400000024000000240000002400000024000000240000002400000024000000feffffff
-      volume: 1
+      volume: 0.07
       loopTrack: 1
+      trackSplits:
+      - trackSplitPatternIndexStart: 0
+        trackSplitPatternIndexEnd: 7
+        mixingRules:
+          playNumberOfTimes: 2
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
+      - trackSplitPatternIndexStart: 8
+        trackSplitPatternIndexEnd: 16
+        mixingRules:
+          playNumberOfTimes: 1
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
       muteTrack: 0
       trackIndex: -1
     - trackPatterns: fefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffeffffff390000003900000039000000fefffffffefffffffeffffff
       volume: 1
       loopTrack: 1
+      trackSplits:
+      - trackSplitPatternIndexStart: 0
+        trackSplitPatternIndexEnd: 7
+        mixingRules:
+          playNumberOfTimes: 2
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
+      - trackSplitPatternIndexStart: 8
+        trackSplitPatternIndexEnd: 16
+        mixingRules:
+          playNumberOfTimes: 1
+          ignoreVolumePatternsForInBetweenPlays: 0
+          introVolumePattern: 1
+          outroVolumePattern: 1
       muteTrack: 0
       trackIndex: -1
   mainMenuMusicIndex: 0
   combatMusicIndex: 1
+  trackAudioSourceGameObject: {fileID: 3322986547514600125, guid: 141eed1d8f4d10849a4968a7c3e0efde, type: 3}
 --- !u!82 &473887731
 AudioSource:
   m_ObjectHideFlags: 0
