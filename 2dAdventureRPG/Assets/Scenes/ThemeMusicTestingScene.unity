@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 473887729}
   - component: {fileID: 473887730}
+  - component: {fileID: 473887732}
   - component: {fileID: 473887731}
   m_Layer: 0
   m_Name: ThemeMusicManager
@@ -503,6 +504,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &473887732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473887728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 048d7cbb5b9c9524db7ceea30b457b31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatState: 0
+  winningCombatThemeGroupsTracksData:
+    tracksIncluded: 00000000010000000200000003000000040000000500000006000000
+  idlingCombatSlowThemeGroupsTracksData:
+    tracksIncluded: 000000000200000005000000
+  losingCombatThemeGroupsTracksData:
+    tracksIncluded: 00000000010000000200000003000000040000000500000006000000
+  idlingCombatUpbeatThemeGroupsTracksData:
+    tracksIncluded: 0000000001000000020000000400000005000000
 --- !u!1 &1788500388
 GameObject:
   m_ObjectHideFlags: 0

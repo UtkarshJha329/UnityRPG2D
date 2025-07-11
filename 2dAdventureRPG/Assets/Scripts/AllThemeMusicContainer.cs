@@ -12,8 +12,6 @@ public enum VolumePatterns
 [System.Serializable]
 public class TrackSplitMixingRules
 {
-    public int playNumberOfTimes = 1;
-
     public bool ignoreVolumePatternsForInBetweenPlays = false;
 
     public VolumePatterns introVolumePattern;
@@ -44,10 +42,25 @@ public class Track
 
     [HideInInspector] public int trackIndex = -1;
 
-    private int currentTrackSplitPlayedNumberOfTimes = 0;
-    private int currentPlayingTrackSplitIndex = -1;
+    private int currentPlayingTrackSplitIndex = 1;
     private int currentPlayingPatternIndex = -1;
     private List<bool> patternPlayingStatus = new List<bool>();
+
+    public void SetCurrentPlayingTrackSplitIndex(int value)
+    {
+        currentPlayingTrackSplitIndex = value;
+    }
+
+    public void SetCurrentPlayingPatternIndexToTrackSplitIndexStart(int trackSplitIndex)
+    {
+        currentPlayingPatternIndex = trackSplits[trackSplitIndex].trackSplitPatternIndexStart;
+    }
+
+    public void SetCurrentTrackSplitIndexAndPatternIndexToTracksStart(int trackSplitIndex)
+    {
+        SetCurrentPlayingTrackSplitIndex(trackSplitIndex);
+        SetCurrentPlayingPatternIndexToTrackSplitIndexStart(trackSplitIndex);
+    }
 
     public void InitTrack(int trackIndex)
     {
@@ -59,22 +72,36 @@ public class Track
         this.trackIndex = trackIndex;
     }
 
+    public void InterruptWithNewTrackSplitIndex(int newTrackSplitIndex)
+    {
+        SetCurrentTrackSplitIndexAndPatternIndexToTracksStart(newTrackSplitIndex);
+        currentPlayingPatternIndex--;
+    }
+
+    public bool IsTrackPlaying()
+    {
+        return patternPlayingStatus[currentPlayingPatternIndex];
+    }
+
     public int PatternToPlayNowFromTrack(ref VolumePatterns volumePatternToUseToPlayThisPattern)
     {
         if(currentPlayingTrackSplitIndex < trackSplits.Count)
         {
-            if (currentPlayingTrackSplitIndex == -1 || 
-                (currentTrackSplitPlayedNumberOfTimes >= trackSplits[currentPlayingTrackSplitIndex].mixingRules.playNumberOfTimes - 1
-                && currentPlayingPatternIndex > trackSplits[currentPlayingTrackSplitIndex].trackSplitPatternIndexEnd))
-            {
-                currentPlayingTrackSplitIndex++;
-                Debug.Log("Increased track (" + trackIndex + ") split index to := " + currentPlayingTrackSplitIndex);
-                currentTrackSplitPlayedNumberOfTimes = 0;
-                volumePatternToUseToPlayThisPattern = trackSplits[currentPlayingTrackSplitIndex].mixingRules.introVolumePattern;
-            }
+            //if (currentPlayingTrackSplitIndex == -1 || currentPlayingPatternIndex > trackSplits[currentPlayingTrackSplitIndex].trackSplitPatternIndexEnd)
+            //{
+            //    currentPlayingTrackSplitIndex++;
+            //    Debug.Log("Increased track (" + trackIndex + ") split index to := " + currentPlayingTrackSplitIndex);
+            //}
 
             if (currentPlayingPatternIndex == -1 || !patternPlayingStatus[currentPlayingPatternIndex])
             {
+                if (currentPlayingPatternIndex == -1)
+                {
+                    //currentPlayingPatternIndex = trackSplits[currentPlayingTrackSplitIndex].trackSplitPatternIndexStart;
+                    SetCurrentPlayingPatternIndexToTrackSplitIndexStart(currentPlayingTrackSplitIndex);
+                    currentPlayingPatternIndex--;
+                }
+
                 bool previousPatternWasEmpty = true;
                 if(currentPlayingPatternIndex != -1 && currentPlayingPatternIndex < patternPlayingStatus.Count)
                 {
@@ -83,13 +110,16 @@ public class Track
 
                 currentPlayingPatternIndex++;
 
-                if (currentPlayingPatternIndex >= patternPlayingStatus.Count)
+                //if (currentPlayingPatternIndex >= patternPlayingStatus.Count)
+                if (currentPlayingPatternIndex > trackSplits[currentPlayingTrackSplitIndex].trackSplitPatternIndexEnd)
                 {
                     if (loopTrack)
                     {
-                        currentPlayingPatternIndex = 0;
-                        currentPlayingTrackSplitIndex = -1;
-                        currentTrackSplitPlayedNumberOfTimes = 0;
+                        //currentPlayingPatternIndex = 0;
+                        //currentPlayingTrackSplitIndex = -1;
+
+                        currentPlayingPatternIndex = trackSplits[currentPlayingTrackSplitIndex].trackSplitPatternIndexStart;
+                        currentPlayingPatternIndex--;
 
                         patternPlayingStatus[currentPlayingPatternIndex] = true;
                         return trackPatterns[currentPlayingPatternIndex];
@@ -101,16 +131,6 @@ public class Track
                 }
                 else
                 {
-                    if(currentTrackSplitPlayedNumberOfTimes < trackSplits[currentPlayingTrackSplitIndex].mixingRules.playNumberOfTimes - 1)
-                    {
-                        if(currentPlayingPatternIndex > trackSplits[currentPlayingTrackSplitIndex].trackSplitPatternIndexEnd)
-                        {
-                            //Debug.Log("Reset to replay track split.");
-                            currentPlayingPatternIndex = trackSplits[currentPlayingTrackSplitIndex].trackSplitPatternIndexStart;
-                            currentTrackSplitPlayedNumberOfTimes++;
-                        }
-                    }
-
                     bool currentPatternIsNotEmpty = trackPatterns[currentPlayingPatternIndex] >= 0;
 
                     if(currentPatternIsNotEmpty && previousPatternWasEmpty)
@@ -202,6 +222,9 @@ public class AllThemeMusicContainer : MonoBehaviour
 
     private List<List<AudioSource>> audioSourcePerThemePerTrack = new List<List<AudioSource>>();
 
+    private bool interruptWithOtherTrackSplit = false;
+    private int currentTrackListIndex = 0;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -236,7 +259,69 @@ public class AllThemeMusicContainer : MonoBehaviour
         //    once = false;
         //}
         //PlayMusic(mainMenuMusicIndex);
-        PlayMusic(combatMusicIndex);
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            interruptWithOtherTrackSplit = true;
+        }
+
+        if (!interruptWithOtherTrackSplit)
+        {
+            PlayMusic(combatMusicIndex);
+        }
+        else
+        {
+            int trackListIndexToInterruptWith = currentTrackListIndex == 0 ? 1 : 0;
+            InterruptMusicToChangeTrackLists(combatMusicIndex, trackListIndexToInterruptWith);
+        }
+    }
+
+    private void InterruptMusicToChangeTrackLists(int musicIndex, int trackListIndexToInterruptWith)
+    {
+        //bool someTrackHasBeenPlayingFromBeforeInterruption = false;
+        for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
+        {
+            //if (audioSourcePerThemePerTrack[musicIndex][i].isPlaying)
+            if (themeMusics[musicIndex].themeTracks[i].IsTrackPlaying())
+            {
+                //someTrackHasBeenPlayingFromBeforeInterruption = true;
+                return;
+            }
+        }
+
+        //if (someTrackHasBeenPlayingFromBeforeInterruption)
+        //{
+        //    for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
+        //    {
+        //        if (!audioSourcePerThemePerTrack[musicIndex][i].isPlaying)
+        //        {
+        //            //audioSourcePerThemePerTrack[musicIndex][i].Play();
+        //            audioSourcePerThemePerTrack[musicIndex][i].loop = true;
+        //        }
+        //    }
+
+        //    return;
+        //}
+        //else
+        //{
+        //    for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
+        //    {
+        //        if (!audioSourcePerThemePerTrack[musicIndex][i].isPlaying)
+        //        {
+        //            //audioSourcePerThemePerTrack[musicIndex][i].Play();
+        //            audioSourcePerThemePerTrack[musicIndex][i].loop = false;
+        //        }
+        //    }
+        //}
+
+        for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
+        {
+            themeMusics[musicIndex].themeTracks[i].InterruptWithNewTrackSplitIndex(trackListIndexToInterruptWith);
+        }
+
+        currentTrackListIndex = trackListIndexToInterruptWith;
+
+        interruptWithOtherTrackSplit = false;
     }
 
     private void PlayMusic(int musicIndex)
