@@ -61,6 +61,7 @@ public class AllAudioContainer : MonoBehaviour
 
     [Header("Attacking")]
     [SerializeField] private List<GameObjectBasedAudio> swishSfx = new List<GameObjectBasedAudio>();
+    [SerializeField] private List<AudioClip> slicedSfx = new List<AudioClip>();
 
     [Header("Walking")]
     [SerializeField] private List<EnvironmentBasedAudio> environmentWalkSfx = new List<EnvironmentBasedAudio>();
@@ -68,8 +69,10 @@ public class AllAudioContainer : MonoBehaviour
     [Header("Foliage")]
     [SerializeField] private List<FoliageMovementAudio> foliageMovementClips = new List<FoliageMovementAudio>();
 
+
     [Header("Knight Specific")]
     [SerializeField] private List<AudioClip> knightArmourWalkingClips = new List<AudioClip>();
+    [SerializeField] private List<AudioClip> knightHitArmourClips = new List<AudioClip>();
 
     public static Dictionary<EnemyType, AudioClip> enemyHurtBasedOnEnemyType = new Dictionary<EnemyType, AudioClip>();
     public static Dictionary<EnemyType, AudioClip> enemyDeadBasedOnEnemyType = new Dictionary<EnemyType, AudioClip>();
@@ -79,6 +82,8 @@ public class AllAudioContainer : MonoBehaviour
     public static Dictionary<FoliageType, AudioClip> foliageMovementSoundEffects = new Dictionary<FoliageType, AudioClip>();
     public static List<AudioClip> knightWalkingInArmourSoundEffects = new List<AudioClip>();
     //public static List<AudioClip> dynamiteExplodingSoundEffects = new List<AudioClip>();
+    public static List<AudioClip> hitBySwordAudioClips = new List<AudioClip>();
+    public static List<AudioClip> knightHitArmourAudioClips = new List<AudioClip>();
 
     private void OnValidate()
     {
@@ -122,6 +127,18 @@ public class AllAudioContainer : MonoBehaviour
         for (int i = 0; i < foliageMovementClips.Count; i++)
         {
             foliageMovementSoundEffects.Add(foliageMovementClips[i].foliageType, foliageMovementClips[i].audioClip);
+        }
+
+        hitBySwordAudioClips.Clear();
+        for (int i = 0; i < slicedSfx.Count; i++)
+        {
+            hitBySwordAudioClips.Add(slicedSfx[i]);
+        }
+
+        knightHitArmourAudioClips.Clear();
+        for (int i = 0; i < knightHitArmourClips.Count; i++)
+        {
+            knightHitArmourAudioClips.Add(knightHitArmourClips[i]);
         }
     }
 

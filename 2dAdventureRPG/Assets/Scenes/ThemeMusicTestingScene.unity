@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 473887731}
   m_Layer: 0
   m_Name: ThemeMusicManager
-  m_TagString: Untagged
+  m_TagString: ThemeMusicManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -271,14 +271,12 @@ MonoBehaviour:
       - trackSplitPatternIndexStart: 0
         trackSplitPatternIndexEnd: 7
         mixingRules:
-          playNumberOfTimes: 2
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
       - trackSplitPatternIndexStart: 8
         trackSplitPatternIndexEnd: 16
         mixingRules:
-          playNumberOfTimes: 1
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
@@ -291,14 +289,12 @@ MonoBehaviour:
       - trackSplitPatternIndexStart: 0
         trackSplitPatternIndexEnd: 4
         mixingRules:
-          playNumberOfTimes: 2
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 0
           outroVolumePattern: 1
       - trackSplitPatternIndexStart: 5
         trackSplitPatternIndexEnd: 13
         mixingRules:
-          playNumberOfTimes: 1
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
@@ -311,14 +307,12 @@ MonoBehaviour:
       - trackSplitPatternIndexStart: 0
         trackSplitPatternIndexEnd: 7
         mixingRules:
-          playNumberOfTimes: 2
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
       - trackSplitPatternIndexStart: 7
         trackSplitPatternIndexEnd: 16
         mixingRules:
-          playNumberOfTimes: 1
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
@@ -331,14 +325,12 @@ MonoBehaviour:
       - trackSplitPatternIndexStart: 0
         trackSplitPatternIndexEnd: 7
         mixingRules:
-          playNumberOfTimes: 2
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
       - trackSplitPatternIndexStart: 8
         trackSplitPatternIndexEnd: 15
         mixingRules:
-          playNumberOfTimes: 1
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 0
           outroVolumePattern: 1
@@ -351,14 +343,12 @@ MonoBehaviour:
       - trackSplitPatternIndexStart: 0
         trackSplitPatternIndexEnd: 7
         mixingRules:
-          playNumberOfTimes: 2
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
       - trackSplitPatternIndexStart: 8
         trackSplitPatternIndexEnd: 16
         mixingRules:
-          playNumberOfTimes: 1
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
@@ -371,14 +361,12 @@ MonoBehaviour:
       - trackSplitPatternIndexStart: 0
         trackSplitPatternIndexEnd: 7
         mixingRules:
-          playNumberOfTimes: 2
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
       - trackSplitPatternIndexStart: 8
         trackSplitPatternIndexEnd: 16
         mixingRules:
-          playNumberOfTimes: 1
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
@@ -391,14 +379,12 @@ MonoBehaviour:
       - trackSplitPatternIndexStart: 0
         trackSplitPatternIndexEnd: 7
         mixingRules:
-          playNumberOfTimes: 2
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1
       - trackSplitPatternIndexStart: 8
         trackSplitPatternIndexEnd: 16
         mixingRules:
-          playNumberOfTimes: 1
           ignoreVolumePatternsForInBetweenPlays: 0
           introVolumePattern: 1
           outroVolumePattern: 1

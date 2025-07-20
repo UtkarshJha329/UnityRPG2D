@@ -45,6 +45,13 @@ public class PlayerAudioManager : MonoBehaviour
         audioSource.PlayOneShot(AllAudioContainer.swishSoundEffects[GameObjectType.Player][Random.Range(0, AllAudioContainer.swishSoundEffects[GameObjectType.Player].Count)]);
     }
 
+    public void PlayPlayerHurtSfx()
+    {
+        //audioSource.pitch = Random.Range(0.75f, 1.25f);
+        audioSource.PlayOneShot(AllAudioContainer.hitBySwordAudioClips[Random.Range(0, AllAudioContainer.hitBySwordAudioClips.Count)], Random.Range(4.0f, 8.0f));
+        audioSource.PlayOneShot(AllAudioContainer.knightHitArmourAudioClips[Random.Range(0, AllAudioContainer.knightHitArmourAudioClips.Count)], Random.Range(0.5f, 1.0f));
+    }
+
     public void PlayWalkingSfx(bool grass)
     {
         environmentWalkAudioSource.pitch = Random.Range(0.75f, 1.25f);

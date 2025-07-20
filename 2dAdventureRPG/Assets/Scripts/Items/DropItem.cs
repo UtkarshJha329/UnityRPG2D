@@ -37,6 +37,14 @@ public class DropItem : MonoBehaviour
 
     private Vector3 currentBobToPosition = Vector3.zero;
 
+    public int increaseAttackDamageByUponPickup = -1;
+    public float increaseAttackDamageForAmountOfTime = 7.0f;
+    public int increaseMovementSpeedByUponPickup = 1;
+    public float increaseMovementSpeedForSeconds = 7.0f;
+    public int increasePlayerHealthByAmountUponPickup = 4;
+
+    public bool increasePlayerHealthToOnlyNextFullHeart = true;
+
     private void Awake()
     {
         //dropSpriteRenderer = GetComponent<SpriteRenderer>();
@@ -72,7 +80,7 @@ public class DropItem : MonoBehaviour
 
                 //s_PlayerProperties.attackDamageValue--;
                 //s_PlayerProperties.IncreaseAttackDamageForSeconds(1, 5);
-                playerPickupsHandler.IncreaseAttackDamageForSeconds(-1, 5);
+                playerPickupsHandler.IncreaseAttackDamageForSeconds(increaseAttackDamageByUponPickup, increaseAttackDamageForAmountOfTime);
             }
             else if (dropItemType == DropType.SpeedDrop)
             {
@@ -80,7 +88,7 @@ public class DropItem : MonoBehaviour
 
                 //s_PlayerProperties.speed++;
                 //s_PlayerProperties.IncreaseMovementSpeedForSeconds(1, 5);
-                playerPickupsHandler.IncreaseMovementSpeedForSeconds(1, 5);
+                playerPickupsHandler.IncreaseMovementSpeedForSeconds(increaseMovementSpeedByUponPickup, increaseMovementSpeedForSeconds);
             }
             else if (dropItemType == DropType.HealthDrop)
             {
@@ -88,7 +96,7 @@ public class DropItem : MonoBehaviour
 
                 //s_PlayerHealthManager.IncreaseMaxHealth(1);
                 //s_PlayerHealthManager.ChangeHealth(1);
-                playerPickupsHandler.IncreasePlayerHealthByAmount(1);
+                playerPickupsHandler.IncreasePlayerHealthByAmount(increasePlayerHealthByAmountUponPickup, true);
             }
             else if (dropItemType == DropType.PlayerDeath)
             {

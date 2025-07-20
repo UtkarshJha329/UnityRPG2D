@@ -10,11 +10,14 @@ public class PlayerHealth : MonoBehaviour
 
     private CharacterStates characterStates;
     private PlayerHealthUIManager s_PlayerHealthUIManager;
+    private PlayerAudioManager s_PlayerAudioManager;
 
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
         s_PlayerHealthUIManager = GetComponent<PlayerHealthUIManager>();
+
+        s_PlayerAudioManager = GetComponent<PlayerAudioManager>();
     }
 
     private void Start()
@@ -25,6 +28,16 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
+    }
+
+    public bool IncreasePlayerHealthOnlyUntilNextFullHeart()
+    {
+        float fullHeartTotalHealth = 4;
+        float newHealth = currentHealth + fullHeartTotalHealth;
+        float remainder = newHealth % fullHeartTotalHealth;
+        float changeHealthBy = fullHeartTotalHealth - remainder;
+
+        return ChangeHealth(changeHealthBy);
     }
 
     public bool ChangeHealth(float changeAmmount)
@@ -39,6 +52,11 @@ public class PlayerHealth : MonoBehaviour
             }
 
             s_PlayerHealthUIManager.updatedHealth = true;
+
+            if(changeAmmount < 0.0f)
+            {
+                s_PlayerAudioManager.PlayPlayerHurtSfx();
+            }
 
             return true;
         }

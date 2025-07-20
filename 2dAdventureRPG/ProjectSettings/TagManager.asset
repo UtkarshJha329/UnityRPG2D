@@ -17,6 +17,7 @@ TagManager:
   - GrassSandConversionManager
   - FinalConversionManager
   - AllAudioContainer
+  - ThemeMusicManager
   layers:
   - Default
   - TransparentFX

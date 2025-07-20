@@ -1663,12 +1663,17 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 58c79f6d006848d458eb38c28a8e9e76, type: 3}
   - foliageType: 1
     audioClip: {fileID: 8300000, guid: e5a3de3b34bce8c41bb32de349be960e, type: 3}
+  slicedSfx:
+  - {fileID: 8300000, guid: 421e9a4142de9104da79339d95229e78, type: 3}
+  - {fileID: 8300000, guid: d8aaa027a2347ae4098f528756e6207c, type: 3}
   knightArmourWalkingClips:
   - {fileID: 8300000, guid: cafce87a792af8749972040e50e4e2ae, type: 3}
   - {fileID: 8300000, guid: 14efaaa9dd93ba4429a5ce5c9021f85e, type: 3}
   - {fileID: 8300000, guid: 105ce00ad0523ec47838c6e51e3d5ac6, type: 3}
   - {fileID: 8300000, guid: 5975bf98650a7924da4e420bcb7a7578, type: 3}
   - {fileID: 8300000, guid: 06d4b8dc59edae647b40d150955e127f, type: 3}
+  knightHitArmourClips:
+  - {fileID: 8300000, guid: 7878d4112884a6944883a88354277d57, type: 3}
 --- !u!4 &1752594494
 Transform:
   m_ObjectHideFlags: 0

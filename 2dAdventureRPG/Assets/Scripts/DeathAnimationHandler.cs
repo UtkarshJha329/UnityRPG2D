@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [RequireComponent(typeof(Animator))]
 public class DeathAnimationHandler : MonoBehaviour
@@ -21,6 +22,7 @@ public class DeathAnimationHandler : MonoBehaviour
     {
         deathSoundSource.pitch = pitch;
         deathSoundSource.PlayOneShot(AllAudioContainer.enemyDeadBasedOnEnemyType[enemyType]);
+        deathSoundSource.PlayOneShot(AllAudioContainer.hitBySwordAudioClips[Random.Range(0, AllAudioContainer.hitBySwordAudioClips.Count)], Random.Range(4.0f, 8.0f));
         StartCoroutine(BuryIn(duration));
     }
 

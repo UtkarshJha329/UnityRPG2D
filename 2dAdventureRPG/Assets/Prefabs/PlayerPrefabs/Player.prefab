@@ -427,7 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80488a60d1988c14eb19a5a082f0bef5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBetweenSandDamage: 2.5
+  timeBetweenSandDamage: 15.5
   knockbackForce: 0.05
   sandDamageAmount: -1
 --- !u!114 &962191278581702546
@@ -535,9 +535,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   environmentWalkAudioSource: {fileID: 3781221997538927268}
   knightArmourWalkAudioSource: {fileID: 7341458132551123922}
-  grassWalkVolume: 0.06
-  sandWalkVolume: 0.04
-  knightArmourWalkVolume: 0.06
+  grassWalkVolume: 0.25
+  sandWalkVolume: 0.25
+  knightArmourWalkVolume: 0.25
 --- !u!82 &4699781467180392083
 AudioSource:
   m_ObjectHideFlags: 0

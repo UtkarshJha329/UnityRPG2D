@@ -33,9 +33,16 @@ public class PlayerPickupsHandler : MonoBehaviour
         increasedSpeedIndicator.SetActive(increasedSpeedCount > 0);
     }
 
-    public void IncreasePlayerHealthByAmount(int amount)
+    public void IncreasePlayerHealthByAmount(int amount, bool onlyUptilNextFullHeart = false)
     {
-        s_PlayerHealth.ChangeHealth(amount);
+        if (onlyUptilNextFullHeart)
+        {
+            s_PlayerHealth.IncreasePlayerHealthOnlyUntilNextFullHeart();
+        }
+        else
+        {
+            s_PlayerHealth.ChangeHealth(amount);
+        }
     }
 
     public void IncreaseAttackDamageForSeconds(int increaseAmount, float duration)

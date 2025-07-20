@@ -20,5 +20,6 @@ public class EnemyAudioManager : MonoBehaviour
     public void PlayHurtAudio()
     {
         audioSource.PlayOneShot(AllAudioContainer.enemyHurtBasedOnEnemyType[s_EnemyProperties.enemyType]);
+        audioSource.PlayOneShot(AllAudioContainer.hitBySwordAudioClips[Random.Range(0, AllAudioContainer.hitBySwordAudioClips.Count)], Random.Range(4.0f, 8.0f));
     }
 }

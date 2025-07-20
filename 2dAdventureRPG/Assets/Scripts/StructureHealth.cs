@@ -19,7 +19,7 @@ public class StructureHealth : MonoBehaviour
 
     public Vector3Int structureTilePos = Vector3Int.zero;
 
-    public FinalSandToGrassConversionManager finalSandToGrassConversionManager;
+    //public FinalSandToGrassConversionManager finalSandToGrassConversionManager;
 
     private Sprite originalStructureSprite;
 

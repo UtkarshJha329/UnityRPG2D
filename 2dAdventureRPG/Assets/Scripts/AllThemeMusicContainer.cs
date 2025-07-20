@@ -200,7 +200,7 @@ public class AllThemeMusicContainer : MonoBehaviour
     [SerializeField] private List<AudioClip> themesMusicPatterns = new List<AudioClip>();
     [SerializeField] private AudioSource themeMusicSource;
 
-    [SerializeField] private List<Theme> themeMusics = new List<Theme>();
+    [SerializeField] public List<Theme> themeMusics = new List<Theme>();
 
     [SerializeField] private int mainMenuMusicIndex = 0;
     [SerializeField] private int combatMusicIndex = 1;
@@ -222,8 +222,7 @@ public class AllThemeMusicContainer : MonoBehaviour
 
     private List<List<AudioSource>> audioSourcePerThemePerTrack = new List<List<AudioSource>>();
 
-    private bool interruptWithOtherTrackSplit = false;
-    private int currentTrackListIndex = 0;
+    public bool interruptWithOtherTrackSplit = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -259,24 +258,9 @@ public class AllThemeMusicContainer : MonoBehaviour
         //    once = false;
         //}
         //PlayMusic(mainMenuMusicIndex);
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            interruptWithOtherTrackSplit = true;
-        }
-
-        if (!interruptWithOtherTrackSplit)
-        {
-            PlayMusic(combatMusicIndex);
-        }
-        else
-        {
-            int trackListIndexToInterruptWith = currentTrackListIndex == 0 ? 1 : 0;
-            InterruptMusicToChangeTrackLists(combatMusicIndex, trackListIndexToInterruptWith);
-        }
     }
 
-    private void InterruptMusicToChangeTrackLists(int musicIndex, int trackListIndexToInterruptWith)
+    public bool InterruptMusicToChangeTrackLists(int musicIndex, int trackListIndexToInterruptWith)
     {
         //bool someTrackHasBeenPlayingFromBeforeInterruption = false;
         for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
@@ -285,46 +269,31 @@ public class AllThemeMusicContainer : MonoBehaviour
             if (themeMusics[musicIndex].themeTracks[i].IsTrackPlaying())
             {
                 //someTrackHasBeenPlayingFromBeforeInterruption = true;
-                return;
+                return false;
             }
         }
-
-        //if (someTrackHasBeenPlayingFromBeforeInterruption)
-        //{
-        //    for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
-        //    {
-        //        if (!audioSourcePerThemePerTrack[musicIndex][i].isPlaying)
-        //        {
-        //            //audioSourcePerThemePerTrack[musicIndex][i].Play();
-        //            audioSourcePerThemePerTrack[musicIndex][i].loop = true;
-        //        }
-        //    }
-
-        //    return;
-        //}
-        //else
-        //{
-        //    for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
-        //    {
-        //        if (!audioSourcePerThemePerTrack[musicIndex][i].isPlaying)
-        //        {
-        //            //audioSourcePerThemePerTrack[musicIndex][i].Play();
-        //            audioSourcePerThemePerTrack[musicIndex][i].loop = false;
-        //        }
-        //    }
-        //}
 
         for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
         {
             themeMusics[musicIndex].themeTracks[i].InterruptWithNewTrackSplitIndex(trackListIndexToInterruptWith);
         }
 
-        currentTrackListIndex = trackListIndexToInterruptWith;
-
         interruptWithOtherTrackSplit = false;
+
+        return true;
     }
 
-    private void PlayMusic(int musicIndex)
+    public void MuteAudioSourceForTrack(int musicIndex, int trackIndex)
+    {
+        audioSourcePerThemePerTrack[musicIndex][trackIndex].mute = true;
+    }
+
+    public void UnMuteAudioSourceForTrack(int musicIndex, int trackIndex)
+    {
+        audioSourcePerThemePerTrack[musicIndex][trackIndex].mute = false;
+    }
+
+    public void PlayMusic(int musicIndex)
     {
         for (int i = 0; i < themeMusics[musicIndex].themeTracks.Count; i++)
         {
