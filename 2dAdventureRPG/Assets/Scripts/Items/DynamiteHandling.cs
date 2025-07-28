@@ -147,8 +147,8 @@ public class DynamiteHandling : MonoBehaviour
             explosionSoundEffectHandler.explosionSfxClip = AllAudioContainer.blastBasedOnEnemyType[dynamiteLaunchedFromEnemy];
             explosionSoundEffectHandler.explosionVolume = dynamiteExplosionVolume;
 
-            Destroy(gameObject);
-
         }
+
+        Destroy(gameObject);
     }
 }
