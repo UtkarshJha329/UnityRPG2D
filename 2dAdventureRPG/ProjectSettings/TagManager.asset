@@ -18,6 +18,7 @@ TagManager:
   - FinalConversionManager
   - AllAudioContainer
   - ThemeMusicManager
+  - GameStatsManager
   layers:
   - Default
   - TransparentFX

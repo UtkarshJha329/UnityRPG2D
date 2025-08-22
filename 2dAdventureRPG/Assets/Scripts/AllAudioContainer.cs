@@ -69,6 +69,8 @@ public class AllAudioContainer : MonoBehaviour
     [Header("Foliage")]
     [SerializeField] private List<FoliageMovementAudio> foliageMovementClips = new List<FoliageMovementAudio>();
 
+    [Header("Structures")]
+    [SerializeField] private List<AudioClip> structureCollapseSfx = new List<AudioClip>();
 
     [Header("Knight Specific")]
     [SerializeField] private List<AudioClip> knightArmourWalkingClips = new List<AudioClip>();
@@ -84,6 +86,7 @@ public class AllAudioContainer : MonoBehaviour
     //public static List<AudioClip> dynamiteExplodingSoundEffects = new List<AudioClip>();
     public static List<AudioClip> hitBySwordAudioClips = new List<AudioClip>();
     public static List<AudioClip> knightHitArmourAudioClips = new List<AudioClip>();
+    public static List<AudioClip> structureCollapseAudioClips = new List<AudioClip>();
 
     private void OnValidate()
     {
@@ -139,6 +142,12 @@ public class AllAudioContainer : MonoBehaviour
         for (int i = 0; i < knightHitArmourClips.Count; i++)
         {
             knightHitArmourAudioClips.Add(knightHitArmourClips[i]);
+        }
+        
+        structureCollapseAudioClips.Clear();
+        for (int i = 0; i < structureCollapseSfx.Count; i++)
+        {
+            structureCollapseAudioClips.Add(structureCollapseSfx[i]);
         }
     }
 

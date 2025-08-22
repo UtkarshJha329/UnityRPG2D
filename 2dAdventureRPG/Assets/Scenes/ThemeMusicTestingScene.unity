@@ -119,398 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &473887728
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 473887729}
-  - component: {fileID: 473887730}
-  - component: {fileID: 473887732}
-  - component: {fileID: 473887731}
-  m_Layer: 0
-  m_Name: ThemeMusicManager
-  m_TagString: ThemeMusicManager
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &473887729
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 473887728}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &473887730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 473887728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0464b9cd43c1f284c8e97b3598baa5af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  themesMusicPatterns:
-  - {fileID: 8300000, guid: 662dae73f1c6e754a9e6ff2c6db51bae, type: 3}
-  - {fileID: 8300000, guid: b1432da9ace27824ab4549f6849919ce, type: 3}
-  - {fileID: 8300000, guid: 88485dc78887263408f65c91ffd47536, type: 3}
-  - {fileID: 8300000, guid: 584dcf87afd81d5469e9537464a7cf53, type: 3}
-  - {fileID: 8300000, guid: b3b2870e035913c49abe7ed3cf0ead86, type: 3}
-  - {fileID: 8300000, guid: 0482775828b8d0a42a23bc4dca0e50ff, type: 3}
-  - {fileID: 8300000, guid: 319040188ff939f45997fd375add784d, type: 3}
-  - {fileID: 8300000, guid: e9b31965232bd6c46ade1489ebff57dd, type: 3}
-  - {fileID: 8300000, guid: ffb1b5d84a2ba204d8f477184e8c15ef, type: 3}
-  - {fileID: 8300000, guid: acd72e78aa7547f48bb5e4f2f178f36d, type: 3}
-  - {fileID: 8300000, guid: 6942f6b0dc88ba54a99220daa716d48b, type: 3}
-  - {fileID: 8300000, guid: 8d18819e624b75b47a993c48cd377999, type: 3}
-  - {fileID: 8300000, guid: 230c23eb46262d54c9514e6e9de185db, type: 3}
-  - {fileID: 8300000, guid: 45c692c865d669442a858f78b90e1a09, type: 3}
-  - {fileID: 8300000, guid: db513b13764e2bf41a18f3495b169f1a, type: 3}
-  - {fileID: 8300000, guid: 17078443b09da69418befc2f49b6b910, type: 3}
-  - {fileID: 8300000, guid: 82889f303a7c5254da23e9c0800bcea6, type: 3}
-  - {fileID: 8300000, guid: 17f0a93a8a2337544a616f9e519cf6f8, type: 3}
-  - {fileID: 8300000, guid: 204c124d0fcc05f4789bcafa91e5ccc4, type: 3}
-  - {fileID: 8300000, guid: d2f02157f24d85c4983afb3c6fc9ea5d, type: 3}
-  - {fileID: 8300000, guid: 48cc99eb2a55a2743ac76656a9ad48a0, type: 3}
-  - {fileID: 8300000, guid: 08a6eaf97f85b024a8c92c7d795a20d3, type: 3}
-  - {fileID: 8300000, guid: 04956507dc9c3b542a1065e61366ab50, type: 3}
-  - {fileID: 8300000, guid: 997ecf2004042bf4098599835e6e5a5a, type: 3}
-  - {fileID: 8300000, guid: bd1257976b971b44686b47b57dc5f97e, type: 3}
-  - {fileID: 8300000, guid: 0e18a510f622ad84385db0a38cebe7d1, type: 3}
-  - {fileID: 8300000, guid: 8e321a1cbca1d81478c0ce9d9bda5b51, type: 3}
-  - {fileID: 8300000, guid: 0ab53430cd4d2e84488d0204c77e81b8, type: 3}
-  - {fileID: 8300000, guid: bbbf396b82b1fe142854dd2726e0a2ec, type: 3}
-  - {fileID: 8300000, guid: 132ec47ee88eeb548ba6dd8812eb8351, type: 3}
-  - {fileID: 8300000, guid: a92c4aa2f56029c4aa530d7e712064d8, type: 3}
-  - {fileID: 8300000, guid: 13b58ba43c8bc5e48839e11df360b290, type: 3}
-  - {fileID: 8300000, guid: cdc92d258157c7949980fb256cd83df7, type: 3}
-  - {fileID: 8300000, guid: 785d1e5ac4de599488d65b86ea79da01, type: 3}
-  - {fileID: 8300000, guid: ac685e3d624ab9a46b0e44650923a592, type: 3}
-  - {fileID: 8300000, guid: f49e146e34b12d240b76818ec6009eac, type: 3}
-  - {fileID: 8300000, guid: 07d9a6bf64b11c14b9bf00e60835cf7b, type: 3}
-  - {fileID: 8300000, guid: 4ce4a79e8cbd3b64db8b87ce112db23b, type: 3}
-  - {fileID: 8300000, guid: 0462cde042fc0374596b9ff9996383a6, type: 3}
-  - {fileID: 8300000, guid: 998a7e3850785d44e99465a84c48015b, type: 3}
-  - {fileID: 8300000, guid: 321c9e74d7c7ae54cb5921424a8391cb, type: 3}
-  - {fileID: 8300000, guid: 13115e004873cec43b7113aee6c9fbe1, type: 3}
-  - {fileID: 8300000, guid: 23a29608fb091de46a09a262053253ca, type: 3}
-  - {fileID: 8300000, guid: b3f27175d4334ea419a76023f5c2b4b7, type: 3}
-  - {fileID: 8300000, guid: 59f92a603ae4c4c4aa0e6cfffc817661, type: 3}
-  - {fileID: 8300000, guid: d0005c3692e1fdf4a9b2c28a02f8ba3f, type: 3}
-  - {fileID: 8300000, guid: bd4fd88f83f625b4db563b414c8a348e, type: 3}
-  - {fileID: 8300000, guid: 49b1f74c3ffc50b41850529273b2ec5b, type: 3}
-  - {fileID: 8300000, guid: df7bb6d9ebfc00d4abe3104c32ea7a63, type: 3}
-  - {fileID: 8300000, guid: efea76f74c1eae2449bea428dc1a5782, type: 3}
-  - {fileID: 8300000, guid: b930c27abeab1fa458b5c9165c4d0f73, type: 3}
-  - {fileID: 8300000, guid: 514be8dfedf42cb4c8a1867085918827, type: 3}
-  - {fileID: 8300000, guid: e3a06dec8ce75f24a8a31003516d5327, type: 3}
-  - {fileID: 8300000, guid: eafaffb0ef9bdb049955a18a0df2c4cd, type: 3}
-  - {fileID: 8300000, guid: cd35cc124ed97de45bef620775123d56, type: 3}
-  - {fileID: 8300000, guid: 156f0e648bfe295449455f79c84b553e, type: 3}
-  - {fileID: 8300000, guid: 281dd92c7e871194e849d02c870d5747, type: 3}
-  - {fileID: 8300000, guid: 8d1e0504af76472438200a71ce171cdf, type: 3}
-  themeMusicSource: {fileID: 473887731}
-  themeMusics:
-  - themeTracks:
-    - trackPatterns: 000000000000000000000000000000000200000001000000030000000300000004000000050000000600000000000000
-      volume: 1
-      loopTrack: 1
-      trackSplits: []
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: feffffff0a0000000a0000000b0000000d0000000e0000000c0000000d00000010000000fefffffffefffffffeffffff
-      volume: 1
-      loopTrack: 1
-      trackSplits: []
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffeffffff1c0000001c0000001d0000001f0000001e0000001e000000210000001c000000fefffffffeffffff
-      volume: 0.39
-      loopTrack: 1
-      trackSplits: []
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffefffffffeffffff22000000220000002200000026000000260000002600000022000000fefffffffeffffff
-      volume: 0.07
-      loopTrack: 1
-      trackSplits: []
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffefffffffefffffffefffffffefffffffeffffff270000002700000027000000fefffffffefffffffeffffff
-      volume: 0.04
-      loopTrack: 1
-      trackSplits: []
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffeffffff12000000130000001400000015000000160000001700000018000000190000001a000000feffffff
-      volume: 1
-      loopTrack: 1
-      trackSplits: []
-      muteTrack: 0
-      trackIndex: -1
-  - themeTracks:
-    - trackPatterns: 280000002800000029000000290000002b000000280000002800000028000000fdffffff0700000009000000080000000800000007000000070000000700000007000000fdfffffffdfffffffdffffff
-      volume: 1
-      loopTrack: 1
-      trackSplits:
-      - trackSplitPatternIndexStart: 0
-        trackSplitPatternIndexEnd: 7
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      - trackSplitPatternIndexStart: 8
-        trackSplitPatternIndexEnd: 16
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffeffffff3100000031000000340000000f0000000f0000000f0000001100000011000000fdfffffffefffffffefffffffeffffff
-      volume: 1
-      loopTrack: 1
-      trackSplits:
-      - trackSplitPatternIndexStart: 0
-        trackSplitPatternIndexEnd: 4
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 0
-          outroVolumePattern: 1
-      - trackSplitPatternIndexStart: 5
-        trackSplitPatternIndexEnd: 13
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: 2c0000002c0000002c0000002c0000002c0000002c0000002c0000002c0000002d0000002d0000002e0000002e0000002e0000002e0000002e0000002e0000002c000000
-      volume: 1
-      loopTrack: 1
-      trackSplits:
-      - trackSplitPatternIndexStart: 0
-        trackSplitPatternIndexEnd: 7
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      - trackSplitPatternIndexStart: 7
-        trackSplitPatternIndexEnd: 16
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffeffffff380000003800000036000000fdfffffffdfffffffdfffffffeffffff
-      volume: 1
-      loopTrack: 1
-      trackSplits:
-      - trackSplitPatternIndexStart: 0
-        trackSplitPatternIndexEnd: 7
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      - trackSplitPatternIndexStart: 8
-        trackSplitPatternIndexEnd: 15
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 0
-          outroVolumePattern: 1
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffeffffff2f0000002f0000002f0000002f000000fefffffffeffffff
-      volume: 1
-      loopTrack: 1
-      trackSplits:
-      - trackSplitPatternIndexStart: 0
-        trackSplitPatternIndexEnd: 7
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      - trackSplitPatternIndexStart: 8
-        trackSplitPatternIndexEnd: 16
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffeffffff2300000023000000230000002300000023000000230000002400000024000000240000002400000024000000240000002400000024000000feffffff
-      volume: 0.07
-      loopTrack: 1
-      trackSplits:
-      - trackSplitPatternIndexStart: 0
-        trackSplitPatternIndexEnd: 7
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      - trackSplitPatternIndexStart: 8
-        trackSplitPatternIndexEnd: 16
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      muteTrack: 0
-      trackIndex: -1
-    - trackPatterns: fefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffeffffff390000003900000039000000fefffffffefffffffeffffff
-      volume: 1
-      loopTrack: 1
-      trackSplits:
-      - trackSplitPatternIndexStart: 0
-        trackSplitPatternIndexEnd: 7
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      - trackSplitPatternIndexStart: 8
-        trackSplitPatternIndexEnd: 16
-        mixingRules:
-          ignoreVolumePatternsForInBetweenPlays: 0
-          introVolumePattern: 1
-          outroVolumePattern: 1
-      muteTrack: 0
-      trackIndex: -1
-  mainMenuMusicIndex: 0
-  combatMusicIndex: 1
-  trackAudioSourceGameObject: {fileID: 3322986547514600125, guid: 141eed1d8f4d10849a4968a7c3e0efde, type: 3}
---- !u!82 &473887731
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 473887728}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &473887732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 473887728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 048d7cbb5b9c9524db7ceea30b457b31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  combatState: 0
-  winningCombatThemeGroupsTracksData:
-    tracksIncluded: 00000000010000000200000003000000040000000500000006000000
-  idlingCombatSlowThemeGroupsTracksData:
-    tracksIncluded: 000000000200000005000000
-  losingCombatThemeGroupsTracksData:
-    tracksIncluded: 00000000010000000200000003000000040000000500000006000000
-  idlingCombatUpbeatThemeGroupsTracksData:
-    tracksIncluded: 0000000001000000020000000400000005000000
 --- !u!1 &1788500388
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,9 +256,66 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1001 &2092807290104463479
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4322051720271817171, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449581123767450609, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
+      propertyPath: m_Name
+      value: ThemeMusicManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 96150bd259d58d845b2fe296db3a0a80, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1788500391}
-  - {fileID: 473887729}
+  - {fileID: 2092807290104463479}

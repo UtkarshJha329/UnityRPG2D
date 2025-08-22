@@ -1,6 +1,7 @@
 using System.Xml.Schema;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(SpriteRenderer))]
 public class StructureHealth : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class StructureHealth : MonoBehaviour
     //public FinalSandToGrassConversionManager finalSandToGrassConversionManager;
 
     private Sprite originalStructureSprite;
+    private AudioSource structureBrokeAudioSourcePlayer;
 
     public bool foliage = false;
     private bool alreadyUsedForConversionToGrass = false;
@@ -46,6 +48,8 @@ public class StructureHealth : MonoBehaviour
         jiggleManager = GetComponent<JiggleStructure>();
 
         originalStructureSprite = structureSpriteRenderer.sprite;
+
+        structureBrokeAudioSourcePlayer = GetComponent<AudioSource>();
     }
 
 
@@ -85,6 +89,8 @@ public class StructureHealth : MonoBehaviour
 
             if (isMine && !alreadyUsedForConversionToGrass)
             {
+                structureBrokeAudioSourcePlayer.PlayOneShot(AllAudioContainer.structureCollapseAudioClips[Random.Range(0, AllAudioContainer.structureCollapseAudioClips.Count)], 5.0f);
+
                 grassSandConversionManager.AddMineTileToTurnIntoGrassFrom(structureTilePos, true);
                 alreadyUsedForConversionToGrass = true;
             }

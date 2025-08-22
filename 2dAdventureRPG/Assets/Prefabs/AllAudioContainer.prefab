@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5748900532608032037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3018817887833914467}
+  - component: {fileID: 7763527254122082368}
+  m_Layer: 0
+  m_Name: AllAudioContainer
+  m_TagString: AllAudioContainer
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3018817887833914467
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5748900532608032037}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7763527254122082368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5748900532608032037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f6023936b3449a489628ccfd16cdf47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyHurtSfx:
+  - enemyType: 0
+    audioClip: {fileID: 8300000, guid: f8acce2a9f396ba4f9917f50dc1cf316, type: 3}
+  - enemyType: 2
+    audioClip: {fileID: 8300000, guid: 9b556b51cffdadb4280ac789d7cc4de6, type: 3}
+  - enemyType: 1
+    audioClip: {fileID: 8300000, guid: 9b556b51cffdadb4280ac789d7cc4de6, type: 3}
+  enemyDeadSfx:
+  - enemyType: 0
+    audioClip: {fileID: 8300000, guid: cce4263192936324dbb22cb9a9883893, type: 3}
+  - enemyType: 2
+    audioClip: {fileID: 8300000, guid: 3145b66d5466686469886fcac254e16a, type: 3}
+  - enemyType: 1
+    audioClip: {fileID: 8300000, guid: 3145b66d5466686469886fcac254e16a, type: 3}
+  enemyBlastSfx:
+  - enemyType: 2
+    audioClip: {fileID: 8300000, guid: f7910e6396bf057459b1177c055dfa23, type: 3}
+  - enemyType: 1
+    audioClip: {fileID: 8300000, guid: 0a056596aa5d6944cb02b3f1ef8fa90c, type: 3}
+  swishSfx:
+  - gameObjectType: 0
+    audioClip: []
+  - gameObjectType: 1
+    audioClip:
+    - {fileID: 8300000, guid: d6e56e34dd7daaf43834e5d3f262129c, type: 3}
+    - {fileID: 8300000, guid: ac939dfc0f8a3df4e998e2798da655be, type: 3}
+  slicedSfx:
+  - {fileID: 8300000, guid: 421e9a4142de9104da79339d95229e78, type: 3}
+  - {fileID: 8300000, guid: d8aaa027a2347ae4098f528756e6207c, type: 3}
+  environmentWalkSfx:
+  - environmentType: 0
+    audioClips:
+    - {fileID: 8300000, guid: 81a71f8c48f09984da0df15ea551b6b9, type: 3}
+    - {fileID: 8300000, guid: 00400f19faafd0348bb52b163d619943, type: 3}
+    - {fileID: 8300000, guid: bcff0473cf986ba43a29170a05562bf3, type: 3}
+    - {fileID: 8300000, guid: 5975bf98650a7924da4e420bcb7a7578, type: 3}
+    - {fileID: 8300000, guid: 06d4b8dc59edae647b40d150955e127f, type: 3}
+  - environmentType: 1
+    audioClips:
+    - {fileID: 8300000, guid: 0c02c5a8f42509f469686c9c57cd9e85, type: 3}
+    - {fileID: 8300000, guid: 6085aa97b19a0bd47b0b04896edb33d0, type: 3}
+    - {fileID: 8300000, guid: f6cbbebfdbf8b174887410758b775890, type: 3}
+    - {fileID: 8300000, guid: 8c517c4e639f57441af2589c11f2ab89, type: 3}
+    - {fileID: 8300000, guid: 89be4d390b53ea34999094802249d574, type: 3}
+  foliageMovementClips:
+  - foliageType: 0
+    audioClip: {fileID: 8300000, guid: 58c79f6d006848d458eb38c28a8e9e76, type: 3}
+  - foliageType: 1
+    audioClip: {fileID: 8300000, guid: e5a3de3b34bce8c41bb32de349be960e, type: 3}
+  structureCollapseSfx:
+  - {fileID: 8300000, guid: 6235ad4ab2147ed49a50d73693937b53, type: 3}
+  - {fileID: 8300000, guid: d1beb69db776dc84cb91ec1a596b982f, type: 3}
+  - {fileID: 8300000, guid: efe910550e3d0eb4a859d55baaca1913, type: 3}
+  - {fileID: 8300000, guid: 4cea19fc79bb85b4e8866852f8089e7b, type: 3}
+  - {fileID: 8300000, guid: 5f21c03a50e0b254ab5317ffb1965de3, type: 3}
+  knightArmourWalkingClips:
+  - {fileID: 8300000, guid: cafce87a792af8749972040e50e4e2ae, type: 3}
+  - {fileID: 8300000, guid: 14efaaa9dd93ba4429a5ce5c9021f85e, type: 3}
+  - {fileID: 8300000, guid: 105ce00ad0523ec47838c6e51e3d5ac6, type: 3}
+  - {fileID: 8300000, guid: 5975bf98650a7924da4e420bcb7a7578, type: 3}
+  - {fileID: 8300000, guid: 06d4b8dc59edae647b40d150955e127f, type: 3}
+  knightHitArmourClips:
+  - {fileID: 8300000, guid: 7878d4112884a6944883a88354277d57, type: 3}

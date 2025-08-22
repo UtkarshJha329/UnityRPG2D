@@ -42,7 +42,7 @@ public class Track
 
     [HideInInspector] public int trackIndex = -1;
 
-    private int currentPlayingTrackSplitIndex = 1;
+    private int currentPlayingTrackSplitIndex = 0;  // TODO expose better for more control <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private int currentPlayingPatternIndex = -1;
     private List<bool> patternPlayingStatus = new List<bool>();
 
@@ -288,9 +288,20 @@ public class AllThemeMusicContainer : MonoBehaviour
         audioSourcePerThemePerTrack[musicIndex][trackIndex].mute = true;
     }
 
+    public bool IsAudioSourceForTrackMuted(int musicIndex, int trackIndex)
+    {
+        return audioSourcePerThemePerTrack[musicIndex][trackIndex].mute;
+    }
+
     public void UnMuteAudioSourceForTrack(int musicIndex, int trackIndex)
     {
         audioSourcePerThemePerTrack[musicIndex][trackIndex].mute = false;
+    }
+
+    public void ApplyFadeInToTrack(int musicIndex, int trackIndex)
+    {
+        tracksToFadeIn.Add(new TracksFadingProperties(musicIndex, trackIndex, Time.time));
+        audioSourcePerThemePerTrack[musicIndex][trackIndex].volume = fadeInBeginVolume;
     }
 
     public void PlayMusic(int musicIndex)

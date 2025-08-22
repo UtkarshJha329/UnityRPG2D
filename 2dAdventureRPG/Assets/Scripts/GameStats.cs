@@ -2,23 +2,39 @@ using UnityEngine;
 
 public class GameStats : MonoBehaviour
 {
-    public bool fighting = false;
-    public bool finishedCurrentSection = true;
+    private int numEnemiesKilled = 0;
 
-    public int currentSectionIndex = -1;
-    public int previousSectionIndex = -1;
+    private int numTorchGoblinsKilled = 0;
+    private int numBarrelGoblinsKilled = 0;
+    private int numTNTGoblinsKilled = 0;
 
-    public bool WasPreviousSectionCompleted()
+    public int currentKillStreak = 0;
+
+    private void Awake()
     {
-        // return number of enemies in last section or simply store the state of the number of enemies alive in the last section when you leave it?.
-
-        return false;
+        currentKillStreak = 0;
     }
 
-    public bool WasSectionCompletedInTheLastSomeTime()
+    public int NumEnemiesKilled()
     {
-        // return some arbiritary decay timer value is greater than zero that resets each time the player kills all the enemies in a section.
+        return numEnemiesKilled;
+    }
 
-        return false;
+    public void KilledTorchGoblin()
+    {
+        numTorchGoblinsKilled++;
+        numEnemiesKilled++;
+    }
+
+    public void KilledBarrelGoblin()
+    {
+        numBarrelGoblinsKilled++;
+        numEnemiesKilled++;
+    }
+
+    public void KilledTNTGoblin()
+    {
+        numTNTGoblinsKilled++;
+        numEnemiesKilled++;
     }
 }

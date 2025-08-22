@@ -16,6 +16,8 @@ public class EnemyDeath : MonoBehaviour
 
     private Transform playerTransform;
 
+    private GameStats s_GameStats;
+
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
@@ -23,6 +25,8 @@ public class EnemyDeath : MonoBehaviour
         dropManager = GetComponent<EnemyDropManager>();
 
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+
+        s_GameStats = GameObject.FindGameObjectWithTag("GameStatsManager").GetComponent<GameStats>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -49,6 +53,19 @@ public class EnemyDeath : MonoBehaviour
                 GameObject instantiatedDeathObject = Instantiate(deathObject, transform.position, Quaternion.identity);
                 DeathAnimationHandler deathAnimationHandler = instantiatedDeathObject.GetComponent<DeathAnimationHandler>();
                 deathAnimationHandler.BuryInTime(s_EnemyProperties.audioSourcePitch, s_EnemyProperties.enemyType, 2.5f);
+
+                if(s_EnemyProperties.enemyType == EnemyType.TorchGoblin)
+                {
+                    s_GameStats.KilledTorchGoblin();
+                }
+                else if (s_EnemyProperties.enemyType == EnemyType.TNTBarrelGoblin)
+                {
+                    s_GameStats.KilledBarrelGoblin();
+                }
+                else if (s_EnemyProperties.enemyType == EnemyType.BombGoblin)
+                {
+                    s_GameStats.KilledTNTGoblin();
+                }
             }
             gameObject.SetActive(false);
         }

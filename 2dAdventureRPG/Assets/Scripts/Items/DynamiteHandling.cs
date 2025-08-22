@@ -60,7 +60,12 @@ public class DynamiteHandling : MonoBehaviour
         {
             Debug.LogError("explosionRadiusIndicator reference is missing in Dynamite Handling script.");
         }
+
         shadowSpriteTransform = Instantiate(shadowSpriteObjectToSpawn, transform.position, Quaternion.identity, dynamiteShadowsParentTransform).transform;
+        if(shadowSpriteTransform == null)
+        {
+            Debug.LogError("Shadow sprite transform is null in " + gameObject.name);
+        }
     }
 
     // Update is called once per frame
