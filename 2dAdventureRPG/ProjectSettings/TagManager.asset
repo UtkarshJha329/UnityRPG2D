@@ -19,6 +19,7 @@ TagManager:
   - AllAudioContainer
   - ThemeMusicManager
   - GameStatsManager
+  - FinalCutSceneManager
   layers:
   - Default
   - TransparentFX

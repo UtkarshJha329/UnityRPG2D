@@ -225,7 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnGrassIntoSandEveryXSeconds: 1
   turnSandIntoGrassEveryXSecondsForMineDestruction: 5
-  turnGrassIntoSandEveryXSecondsForStructureDestruction: 0.09
+  turnGrassIntoSandEveryXSecondsForStructureDestruction: 0.5
   maxNumTilesToConvertEachFrame: 30
   maxTilesToConvertSandIntoGrassFromMines: 20
   maxTilesToConvertSandIntoGrassFromFinalStructureDestruction: 30
@@ -2234,9 +2234,9 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 332330453
+  m_SortingLayer: 1
+  m_SortingOrder: 5000
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -2264,7 +2264,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
-  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileAnchor: {x: 0, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
@@ -2295,7 +2295,7 @@ GameObject:
   - component: {fileID: 1287538632}
   m_Layer: 0
   m_Name: FinalCutsceneManager
-  m_TagString: Untagged
+  m_TagString: FinalCutSceneManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2312,6 +2312,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280daebdf4233884f88dc6d2c313709c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  holyLightTileMap: {fileID: 1274252142}
+  holyLightDescendedLoopTile: {fileID: 11400000, guid: fcf982cc7f3708d479e13dd44a3f43b8, type: 2}
+  holyLightFinishedAfterDescendedLoopTile: {fileID: 11400000, guid: 29d577350ae7f404596b1de8446f58db, type: 2}
+  finalRoomCameraTargetManager: {fileID: 0}
 --- !u!4 &1287538633
 Transform:
   m_ObjectHideFlags: 0
@@ -2431,9 +2435,9 @@ MonoBehaviour:
   treesObjectPrefab: {fileID: 2188781144886451970, guid: c55099ece364b0f449185a42aec6d7b9, type: 3}
   goblinSpawnTowerPrefab: {fileID: 2188781144886451970, guid: 2f0a4e129e00d034aba9ad5089af1f2d, type: 3}
   goblinTowerSpawnerPositions:
-  - {x: 7, y: 5}
-  - {x: 14, y: 12}
-  - {x: 21, y: 5}
+  - {x: 8, y: 5}
+  - {x: 15, y: 12}
+  - {x: 22, y: 5}
   cineCamera: {fileID: 680040132}
   currentRoomBoundaryObject: {fileID: 5922302738048870979, guid: 416241a9ef47efb408760005a0bd0df9, type: 3}
   debugStringVisitedRooms: 

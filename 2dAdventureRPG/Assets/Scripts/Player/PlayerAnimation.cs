@@ -68,11 +68,12 @@ public class PlayerAnimation : MonoBehaviour
 
     private void LateUpdate()
     {
-        animator.SetBool("isIdling", characterStates.isIdling);
+        animator.SetBool("isIdling", characterStates.isIdling && !GameStats.playerReachedCutSceneTile);
         animator.SetBool("isMoving", characterStates.isMoving);
         animator.SetBool("isAttackingSide", characterStates.isAttackingSide);
         animator.SetBool("isAttackingDown", characterStates.isAttackingDown);
         animator.SetBool("isAttackingUp", characterStates.isAttackingUp);
+        animator.SetBool("isPosing", GameStats.playerReachedCutSceneTile);
 
         if (characterStates.IsAttacking())
         {

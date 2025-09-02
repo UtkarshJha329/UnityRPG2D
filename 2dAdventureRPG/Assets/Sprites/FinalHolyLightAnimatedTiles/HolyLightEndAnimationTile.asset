@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: HolyLightEndAnimationTile
+  m_EditorClassIdentifier: 
+  m_AnimatedSprites:
+  - {fileID: 8247328512572994474, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: 2741615852878624135, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: -8388990012763299280, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: -438638002072212212, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: -2946000412294439142, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: 8313567913981557996, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: -6011490455016477817, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: 7852042426304220554, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: -365875827, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  - {fileID: 580175183, guid: be733ec85f75d1643a45f0b914a7ffbe, type: 3}
+  m_MinSpeed: 10
+  m_MaxSpeed: 10
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 8

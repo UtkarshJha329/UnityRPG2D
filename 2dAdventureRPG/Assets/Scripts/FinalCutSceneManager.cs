@@ -1,11 +1,21 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class FinalCutSceneManager : MonoBehaviour
 {
+    public Tilemap holyLightTileMap;
+    public AnimatedTile holyLightDescendedLoopTile;
+    public AnimatedTile holyLightFinishedAfterDescendedLoopTile;
+
     private GameObject playerGameObject;
     private PlayerProperties s_PlayerProperties;
+    private MapGenerator mapGenerator;
 
     private bool once = true;
+
+    private bool temp = true;
+
+    public CameraTargetManager finalRoomCameraTargetManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -16,24 +26,93 @@ public class FinalCutSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (temp)
+        //{
+        //    MapGenerator mapGenerator = GameObject.FindGameObjectWithTag("MapTileGrid").GetComponent<MapGenerator>();
+
+        //    Vector2Int playerTilePosition = mapGenerator.castleSpawnRoom * mapGenerator.NumTilesInRooms() + mapGenerator.NumTilesInRooms() / 2;
+        //    Vector3Int holyLightTilePosition = new Vector3Int(playerTilePosition.x, playerTilePosition.y, 0);
+
+        //    for (int yOffset = 0; yOffset < mapGenerator.NumTilesInRooms().y / 2; yOffset++)
+        //    {
+        //        holyLightTileMap.SetTile(holyLightTilePosition, holyLightDescendedLoopTile);
+        //        holyLightTilePosition.y++;
+        //    }
+
+        //    temp = false;
+        //}
+
         if (GameStats.finalStructuresHaveBeenDestroyed && once)
         {
-            MapGenerator mapGenerator = GameObject.FindGameObjectWithTag("MapTileGrid").GetComponent<MapGenerator>();
+            mapGenerator = GameObject.FindGameObjectWithTag("MapTileGrid").GetComponent<MapGenerator>();
             playerGameObject = GameObject.FindGameObjectWithTag("Player");
             s_PlayerProperties = playerGameObject.GetComponent<PlayerProperties>();
             s_PlayerProperties.currentCutsceneMovementTarget = new Vector2(mapGenerator.castleSpawnRoom.x * mapGenerator.NumTilesInRooms().x, mapGenerator.castleSpawnRoom.y * mapGenerator.NumTilesInRooms().y)
                                                                 + new Vector2(mapGenerator.NumTilesInRooms().x, mapGenerator.NumTilesInRooms().y) * 0.5f;
+
             s_PlayerProperties.isPlayingCutscene = true;
             once = false;
         }
 
-        if (GameStats.finalStructuresHaveBeenDestroyed)
+        if (GameStats.playerReachedCutSceneTile && !GameStats.playerFinishedFinalCutscene)
         {
-            if(Vector3.Distance(playerGameObject.transform.position, new Vector3(s_PlayerProperties.currentCutsceneMovementTarget.x, s_PlayerProperties.currentCutsceneMovementTarget.y, 0.0f)) < 0.1f)
-            {
-                GameStats.playerFinishedFinalCutscene = true;
-            }
+            PlayCutscene();
         }
 
+        //if (GameStats.finalStructuresHaveBeenDestroyed)
+        //{
+        //    if(Vector3.Distance(playerGameObject.transform.position, new Vector3(s_PlayerProperties.currentCutsceneMovementTarget.x, s_PlayerProperties.currentCutsceneMovementTarget.y, 0.0f)) < 0.1f)
+        //    {
+        //        GameStats.playerFinishedFinalCutscene = true;
+        //    }
+        //}
+    }
+
+    private void PlayCutscene()
+    {
+        DrawHolyLightTiles();
+        Invoke("FinishPlayingHolyLight", 4.0f);
+        Invoke("CompleteCutscene", 5.0f);
+    }
+
+    private void CompleteCutscene()
+    {
+        HideHolyLightTiles();
+        GameStats.playerFinishedFinalCutscene = true;
+    }
+
+    private void DrawHolyLightTiles()
+    {
+        MapGenerator mapGenerator = GameObject.FindGameObjectWithTag("MapTileGrid").GetComponent<MapGenerator>();
+
+        Vector2Int playerTilePosition = mapGenerator.castleSpawnRoom * mapGenerator.NumTilesInRooms() + mapGenerator.NumTilesInRooms() / 2;
+        Vector3Int holyLightTilePosition = new Vector3Int(playerTilePosition.x, playerTilePosition.y, 0);
+
+        for (int yOffset = 0; yOffset < mapGenerator.NumTilesInRooms().y / 2; yOffset++)
+        {
+            holyLightTileMap.SetTile(holyLightTilePosition, holyLightDescendedLoopTile);
+            holyLightTilePosition.y++;
+        }
+
+        finalRoomCameraTargetManager.DestroyAllShadows();
+    }
+
+    private void FinishPlayingHolyLight()
+    {
+        MapGenerator mapGenerator = GameObject.FindGameObjectWithTag("MapTileGrid").GetComponent<MapGenerator>();
+
+        Vector2Int playerTilePosition = mapGenerator.castleSpawnRoom * mapGenerator.NumTilesInRooms() + mapGenerator.NumTilesInRooms() / 2;
+        Vector3Int holyLightTilePosition = new Vector3Int(playerTilePosition.x, playerTilePosition.y, 0);
+
+        for (int yOffset = 0; yOffset < mapGenerator.NumTilesInRooms().y / 2; yOffset++)
+        {
+            holyLightTileMap.SetTile(holyLightTilePosition, holyLightFinishedAfterDescendedLoopTile);
+            holyLightTilePosition.y++;
+        }
+    }
+
+    private void HideHolyLightTiles()
+    {
+        holyLightTileMap.gameObject.SetActive(false);
     }
 }

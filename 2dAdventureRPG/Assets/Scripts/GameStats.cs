@@ -16,6 +16,7 @@ public class GameStats : MonoBehaviour
     public static int gameOverState = 0;
 
     public static bool finalStructuresHaveBeenDestroyed = false;
+    public static bool playerReachedCutSceneTile = false;
     public static bool playerFinishedFinalCutscene = false;
     public static bool finalRoomConvertedIntoGrassFully = false;
 

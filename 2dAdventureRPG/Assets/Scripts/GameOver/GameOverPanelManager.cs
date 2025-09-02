@@ -49,11 +49,6 @@ public class GameOverPanelManager : MonoBehaviour
         gameOverPanelContents.SetActive(true);
     }
 
-    public void HideGameOverPanel()
-    {
-        gameOverPanelContents.SetActive(false);
-    }
-
     public void OnClickLevelRestartButton()
     {
         GameStats.gameOverState = 0;

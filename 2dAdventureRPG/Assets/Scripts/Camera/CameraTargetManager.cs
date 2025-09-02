@@ -39,10 +39,15 @@ public class CameraTargetManager : MonoBehaviour
             enemiesParent.gameObject.SetActive(false);
             enemiesParent.GetComponent<ActivateAllChildrenEnemy>().SetAllChildrenEnemies(false);
 
-            for (int i = 0; i < dynamiteShadowsParent.childCount; i++)
-            {
-                Destroy(dynamiteShadowsParent.GetChild(i).gameObject);
-            }
+            DestroyAllShadows();
+        }
+    }
+
+    public void DestroyAllShadows()
+    {
+        for (int i = 0; i < dynamiteShadowsParent.childCount; i++)
+        {
+            Destroy(dynamiteShadowsParent.GetChild(i).gameObject);
         }
     }
 }

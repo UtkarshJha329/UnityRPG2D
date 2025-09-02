@@ -190,6 +190,7 @@ public class MapGenerator : MonoBehaviour
     public List<Vector3> mineTilePositions = new List<Vector3>();
 
     private FinalSandToGrassConversionManager finalConversionManager;
+    private FinalCutSceneManager finalCutsceneManager;
 
     public Vector2Int NumTilesInRooms()
     {
@@ -208,6 +209,7 @@ public class MapGenerator : MonoBehaviour
     void Start()
     {
         finalConversionManager = GameObject.FindGameObjectWithTag("FinalConversionManager").GetComponent<FinalSandToGrassConversionManager>();
+        finalCutsceneManager = GameObject.FindGameObjectWithTag("FinalCutSceneManager").GetComponent<FinalCutSceneManager>();
 
         maximumSectionSize = new Vector2Int((2 * numTilesInRooms.x) / 3, (2 * numTilesInRooms.y) / 3);
         minYForResourceRooms = mapSizeInRooms.y / 3;
@@ -1139,6 +1141,12 @@ public class MapGenerator : MonoBehaviour
 
         BoxCollider2D roomBoundaryCollider = curRoomBoundaryObject.GetComponent<BoxCollider2D>();
         roomBoundaryCollider.size = numTilesInRooms;
+
+        if(currentRoomIndex == castleSpawnRoom)
+        {
+            finalCutsceneManager.finalRoomCameraTargetManager = cameraTargetManager;
+        }
+
         return true;
     }
 

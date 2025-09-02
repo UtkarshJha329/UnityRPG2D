@@ -5,7 +5,7 @@ public class TurnGrassToSand : MonoBehaviour
 {
     [SerializeField] private float turnGrassIntoSandEveryXSeconds = 5.0f;
     [SerializeField] private float turnSandIntoGrassEveryXSecondsForMineDestruction = 30.0f;
-    [SerializeField] private float turnGrassIntoSandEveryXSecondsForStructureDestruction = 0.1f;
+    [SerializeField] private float turnGrassIntoSandEveryXSecondsForStructureDestruction = 0.5f;
 
     private MapGenerator mapGenerator;
 
@@ -27,6 +27,9 @@ public class TurnGrassToSand : MonoBehaviour
     public bool performFinalConversion = false;
     public Vector3Int finalPerformanceStartTile = Vector3Int.zero;
 
+    private bool gainedPlayerReference = false;
+    private PlayerProperties s_PlayerProperties;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -41,6 +44,12 @@ public class TurnGrassToSand : MonoBehaviour
         //    AddTileToTurnIntoGrassFinal(finalPerformanceStartTile);
         //    performFinalConversion = false;
         //}
+
+        if (!gainedPlayerReference)
+        {
+            s_PlayerProperties = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperties>();
+        }
+
 
         if (initTilesList)
         {
@@ -61,7 +70,7 @@ public class TurnGrassToSand : MonoBehaviour
             initTilesList = false;
         }
 
-        if(nextTurnGrassIntoSandSeconds <= Time.time /* || notFinishedPreviousConversionsToSand*/)
+        if(nextTurnGrassIntoSandSeconds <= Time.time /* || notFinishedPreviousConversionsToSand*/ && !GameStats.finalStructuresHaveBeenDestroyed)
         {
             int numTilesConvertedThisRound = 0;
             while (numTilesConvertedThisRound < maxNumTilesToConvertEachFrame && tilesToTurnIntoSand.Count > 0)
@@ -222,6 +231,18 @@ public class TurnGrassToSand : MonoBehaviour
                 }
             }
             nextTurnSandIntoGrassSecondsFinal = Time.time + turnGrassIntoSandEveryXSecondsForStructureDestruction;
+
+            if (GameStats.playerReachedCutSceneTile && !GameStats.finalRoomConvertedIntoGrassFully)
+            {
+                s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 0.15f);
+                if (IsCastleRoomFullOfGrass())
+                {
+                    GameStats.finalRoomConvertedIntoGrassFully = true;
+                    //Debug.Log("Castle Room Was Fully Converted Into Grass.");
+                    // WIN THE GAME!!!
+                    GameStats.gameOverState = 1;
+                }
+            }
         }
     }
 
@@ -242,5 +263,22 @@ public class TurnGrassToSand : MonoBehaviour
         //Debug.Log("Called for final conversion.");
         nextTurnSandIntoGrassSecondsFinal = 0.0f;
         tilesToTurnIntoGrassFromFinalStructureDestruction.Enqueue(tileToTurnIntoGrass);
+    }
+
+    public bool IsCastleRoomFullOfGrass()
+    {
+        Vector2Int castleSpawnRoomTileOffset = mapGenerator.castleSpawnRoom * mapGenerator.NumTilesInRooms();
+        for (int x = 0; x < mapGenerator.NumTilesInRooms().x; x++)
+        {
+            for (int y = 0; y < mapGenerator.NumTilesInRooms().y; y++)
+            {
+                if(mapGenerator.IsTileSand(new Vector3Int(castleSpawnRoomTileOffset.x + x, castleSpawnRoomTileOffset.y + y, 0)))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

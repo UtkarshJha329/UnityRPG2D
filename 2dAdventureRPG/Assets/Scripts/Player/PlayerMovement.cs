@@ -48,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
                 else
                 {
                     s_PlayerProperties.currentMovementInput = Vector2.zero;
+                    GameStats.playerReachedCutSceneTile = true;
                 }
             }
 
