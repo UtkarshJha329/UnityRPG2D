@@ -15,6 +15,8 @@ public class PlayerAttack : MonoBehaviour
 
     private float canAttackAtNextTime = 0.0f;
 
+    private GameStats s_GameStats;
+
     private void Awake()
     {
         characterStates = GetComponent<CharacterStates>();
@@ -32,6 +34,8 @@ public class PlayerAttack : MonoBehaviour
             }
             colliderPairs.Add(colliders2D);
         }
+
+        s_GameStats = GameObject.FindGameObjectWithTag("GameStatsManager").GetComponent<GameStats>();
 
     }
 
@@ -123,6 +127,8 @@ public class PlayerAttack : MonoBehaviour
 
                     s_PlayerProperties.playerHitStopManager.StopTimeFor(s_PlayerProperties.enemyHitTimeStopTime, s_PlayerProperties.enemyHitTimeStopTimeScale);
                     s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(knockbackDirection.normalized * 0.05f);
+
+                    s_GameStats.timeSinceLastHitEnemy = 0.0f;
                 }
                 else if (!collidedColliders.isTrigger && collidedColliders.CompareTag("Structure"))
                 {

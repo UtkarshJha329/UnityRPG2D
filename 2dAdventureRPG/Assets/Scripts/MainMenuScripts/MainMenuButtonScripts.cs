@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -8,13 +9,20 @@ public class MainMenuButtonScripts : MonoBehaviour
 {
     public TMP_InputField inputField;
 
+    public GameObject rulesPanel;
     public GameObject loadingScreenPanel;
     public Slider progressBar;
+
+    private CanvasGroup rulesMenuCanvasGroup;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         loadingScreenPanel.SetActive(false);
+        rulesPanel.SetActive(false);
+
+        rulesMenuCanvasGroup = rulesPanel.GetComponent<CanvasGroup>();
+        rulesMenuCanvasGroup.alpha = 0.0f;
     }
 
     // Update is called once per frame
@@ -70,5 +78,41 @@ public class MainMenuButtonScripts : MonoBehaviour
     {
         GameSettings.Instance.MASTER_VOLUME = GameSettings.Instance.MASTER_VOLUME == 0.0f ? 1.0f : 0.0f;
         AudioListener.volume = GameSettings.Instance.MASTER_VOLUME;
+    }
+
+    public void OpenRulesPanel()
+    {
+        rulesPanel.SetActive(true);
+        rulesMenuCanvasGroup.alpha = 0.0f;
+
+        InvokeRepeating("IncreaseRulesPanelCanvasGroupAlpha", 0.0f, 0.1f);
+        Invoke("StopInvokingRulesPanelCanvasGroupAplhaChangingMethodForOpening", 1.5f);
+    }
+
+    private void IncreaseRulesPanelCanvasGroupAlpha()
+    {
+        rulesMenuCanvasGroup.alpha += 0.1f;
+    }
+
+    private void StopInvokingRulesPanelCanvasGroupAplhaChangingMethodForOpening()
+    {
+        CancelInvoke("IncreaseRulesPanelCanvasGroupAlpha");
+    }
+    
+    public void CloseRulesPanel()
+    {
+        InvokeRepeating("DecreaseRulesPanelCanvasGroupAlpha", 0.0f, 0.1f);
+        Invoke("StopInvokingRulesPanelCanvasGroupAplhaChangingMethodForClosing", 1.5f);
+    }
+
+    private void DecreaseRulesPanelCanvasGroupAlpha()
+    {
+        rulesMenuCanvasGroup.alpha -= 0.1f;
+    }
+
+    private void StopInvokingRulesPanelCanvasGroupAplhaChangingMethodForClosing()
+    {
+        CancelInvoke("DecreaseRulesPanelCanvasGroupAlpha");
+        rulesPanel.SetActive(false);
     }
 }

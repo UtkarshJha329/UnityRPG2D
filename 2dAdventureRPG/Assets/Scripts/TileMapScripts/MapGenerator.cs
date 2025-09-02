@@ -191,6 +191,11 @@ public class MapGenerator : MonoBehaviour
 
     private FinalSandToGrassConversionManager finalConversionManager;
 
+    public Vector2Int NumTilesInRooms()
+    {
+        return numTilesInRooms;
+    }
+
     private void Awake()
     {
         if (groundTileMap == null)
@@ -319,6 +324,10 @@ public class MapGenerator : MonoBehaviour
         Vector3 playerSpawnSectionCentre = playerSpawnRoomData.sections[playerSpawnSectionIndex].bottomLeft + playerSpawnRoomData.sections[playerSpawnSectionIndex].size * 0.5f;
         player.transform.position = new Vector3(playerSpawnRoom.x * numTilesInRooms.x + playerSpawnSectionCentre.x, playerSpawnRoom.y * numTilesInRooms.y + playerSpawnSectionCentre.y, 0.0f);
         playerSpawnTile = new Vector2Int((int)playerSpawnSectionCentre.x, (int)playerSpawnSectionCentre.y);
+
+        //Camera.main.transform.position = player.transform.position;
+        Vector3 cameraStartPosition = new Vector3(playerSpawnRoom.x * numTilesInRooms.x, playerSpawnRoom.y * numTilesInRooms.y, 0.0f) + new Vector3(numTilesInRooms.x, numTilesInRooms.y, 0.0f) * 0.5f;
+        cineCamera.ForceCameraPosition(cameraStartPosition, Quaternion.identity);
 
         roomsSeen.Clear();
         TraverseUniqueRoomsThroughConnections(playerSpawnRoom, Vector2Int.down + Vector2Int.left, ref roomsSeen, GenerateEnemiesForRoom);                   // V/X -> Pregenerate all the enemies that this room will need?

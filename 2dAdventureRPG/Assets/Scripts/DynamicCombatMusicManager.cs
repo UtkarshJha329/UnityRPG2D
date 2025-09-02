@@ -122,7 +122,7 @@ public class DynamicCombatMusicManager : MonoBehaviour
             if (themeMusicHandler.InterruptMusicToChangeTrackLists(combatMusicIndex, changeToTrackList))
             {
                 currentTrackListIndex = changeToTrackList;
-                Debug.Log("Interrupted with new track list : " + currentTrackListIndex);
+                //Debug.Log("Interrupted with new track list : " + currentTrackListIndex);
             }
         }
 

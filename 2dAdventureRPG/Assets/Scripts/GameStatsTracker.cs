@@ -11,6 +11,8 @@ public class GameStatsTracker : MonoBehaviour
     private bool killStreakActive = false;
     private float killStreakCooldownTimeAt = 0.0f;
 
+    private float maximumTimeFromLastHitEnemyToCooldownKillStreak = 10.0f;
+
     private GameStats s_GameStats;
 
     private void Awake()
@@ -31,11 +33,16 @@ public class GameStatsTracker : MonoBehaviour
         HandleResetKillStreak();
     }
 
+    private void LateUpdate()
+    {
+        s_GameStats.timeSinceLastHitEnemy += Time.deltaTime;
+    }
+
     private void HandleEnemyKilled()
     {
         if(lastEnemyKillCount != s_GameStats.NumEnemiesKilled())
         {
-            Debug.Log("Activated Killstreak.");
+            //Debug.Log("Activated Killstreak.");
 
             killStreakActive = true;
             killStreakCooldownTimeAt = Time.time + killStreakCooldownTime;
@@ -47,9 +54,9 @@ public class GameStatsTracker : MonoBehaviour
 
     private void HandleResetKillStreak()
     {
-        if(killStreakActive && killStreakCooldownTimeAt <= Time.time)
+        if(killStreakActive && s_GameStats.timeSinceLastHitEnemy >= maximumTimeFromLastHitEnemyToCooldownKillStreak && killStreakCooldownTimeAt <= Time.time)
         {
-            Debug.Log("Deactivated Killstreak.");
+            //Debug.Log("Deactivated Killstreak.");
 
             s_GameStats.currentKillStreak = 0;
             killStreakActive = false;

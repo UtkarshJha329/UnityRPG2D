@@ -115,11 +115,7 @@ public class Track
                 {
                     if (loopTrack)
                     {
-                        //currentPlayingPatternIndex = 0;
-                        //currentPlayingTrackSplitIndex = -1;
-
                         currentPlayingPatternIndex = trackSplits[currentPlayingTrackSplitIndex].trackSplitPatternIndexStart;
-                        currentPlayingPatternIndex--;
 
                         patternPlayingStatus[currentPlayingPatternIndex] = true;
                         return trackPatterns[currentPlayingPatternIndex];

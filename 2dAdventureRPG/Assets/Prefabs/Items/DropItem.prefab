@@ -138,9 +138,28 @@ MonoBehaviour:
   damageDropSprite: {fileID: 21300000, guid: 951f07abf92779840b345e342c0f1be0, type: 3}
   healthDropSprite: {fileID: -367015839217504639, guid: 99c7c683868c37347817f1018a2bf685, type: 3}
   speedDropSprite: {fileID: 21300000, guid: c88e7b35296cff4488438c5302bfb45d, type: 3}
+  damageDropPickupSfx: {fileID: 8300000, guid: 9dd61c70b5adcaf45ac60b6f6a81920a, type: 3}
+  healthDropPickupSfx: {fileID: 8300000, guid: daaecf37878135b40937175b140578fb, type: 3}
+  speedDropPickupSfx: {fileID: 8300000, guid: 0426e7071f1d6d047841202996af20ac, type: 3}
+  damageDropKnightSfx:
+  - {fileID: 8300000, guid: bf2da5b679c6e8645baa711e235e34d5, type: 3}
+  - {fileID: 8300000, guid: a3f296078b48ba34f9800a4cd240448a, type: 3}
+  healthDropKnightSfx:
+  - {fileID: 8300000, guid: 97a2cef30d560c54f96ef277aa096d9e, type: 3}
+  - {fileID: 8300000, guid: 35a39c8f188c1de499fb46c5e77434b7, type: 3}
+  speedDropKnightSfx:
+  - {fileID: 8300000, guid: fbc7eb48bcab04f4c9c123083ff229af, type: 3}
+  - {fileID: 8300000, guid: c502dd2fbccc6d049a6b5f7379f21f21, type: 3}
+  - {fileID: 8300000, guid: 5cbeeedd9c101004dbaff4ada9657b28, type: 3}
   pickupDistance: 0.5
   bobUpDownDistance: 0.75
   bobSpeed: 1
+  increaseAttackDamageByUponPickup: -1
+  increaseAttackDamageForAmountOfTime: 7
+  increaseMovementSpeedByUponPickup: 1
+  increaseMovementSpeedForSeconds: 7
+  increasePlayerHealthByAmountUponPickup: 4
+  increasePlayerHealthToOnlyNextFullHeart: 1
 --- !u!1001 &4414289375606280359
 PrefabInstance:
   m_ObjectHideFlags: 0

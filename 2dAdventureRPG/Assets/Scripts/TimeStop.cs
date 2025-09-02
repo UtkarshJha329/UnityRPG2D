@@ -10,7 +10,7 @@ public class TimeStop : MonoBehaviour
     {
         if (!waiting)
         {
-            //Debug.Log("Starting time stop!");
+            //Debug.Log("Starting time stop for " + duration + " seconds with scale " + scale + ".");
             waiting = true;
             Time.timeScale = scale;
             StartCoroutine(WaitForSecondsBeforeResettingTimeScale(duration));

@@ -34,10 +34,24 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log(characterStates.isKnockbacked);
         if (!characterStates.isKnockbacked && !characterStates.IsAttacking() && !characterStates.isDead)
         {
-            s_PlayerProperties.currentMovementInput.x = Input.GetAxisRaw("Horizontal");
-            s_PlayerProperties.currentMovementInput.y = Input.GetAxisRaw("Vertical");
+            if (!s_PlayerProperties.isPlayingCutscene)
+            {
+                s_PlayerProperties.currentMovementInput.x = Input.GetAxisRaw("Horizontal");
+                s_PlayerProperties.currentMovementInput.y = Input.GetAxisRaw("Vertical");
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, new Vector3(s_PlayerProperties.currentCutsceneMovementTarget.x, s_PlayerProperties.currentCutsceneMovementTarget.y, 0.0f)) > 0.1f)
+                {
+                    s_PlayerProperties.currentMovementInput = (s_PlayerProperties.currentCutsceneMovementTarget - new Vector2(transform.position.x, transform.position.y)).normalized;
+                }
+                else
+                {
+                    s_PlayerProperties.currentMovementInput = Vector2.zero;
+                }
+            }
 
-            if(s_PlayerProperties.currentMovementInput.y != 0.0f)
+            if (s_PlayerProperties.currentMovementInput.y != 0.0f)
             {
                 s_PlayerProperties.lastMovementInput.y = s_PlayerProperties.currentMovementInput.y;
                 s_PlayerProperties.lastMovementInput.x = 0.0f;

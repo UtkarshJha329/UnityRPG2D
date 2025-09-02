@@ -8,6 +8,10 @@ public class PlayerPickupsHandler : MonoBehaviour
     public GameObject increasedSpeedIndicator;
     public GameObject increasedAttackDamageIndicator;
 
+    public AudioSource pickupAudioSource;
+    public AudioSource pickupKnightAudioSource;
+    public float pickupSfxAudioSourceVolume = 0.5f;
+
     private PlayerProperties s_PlayerProperties;
     private PlayerHealth s_PlayerHealth;
 
@@ -31,6 +35,19 @@ public class PlayerPickupsHandler : MonoBehaviour
     {
         increasedAttackDamageIndicator.SetActive(increasedAttackCount > 0);
         increasedSpeedIndicator.SetActive(increasedSpeedCount > 0);
+    }
+
+    public void PlaySoundEffect(AudioClip sfxToPlay, float volume)
+    {
+        pickupAudioSource.PlayOneShot(sfxToPlay, volume);
+    }
+
+    public void PlaySoundEffectDirect(AudioClip sfxToPlay, float volume, float pitch)
+    {
+        pickupKnightAudioSource.pitch = pitch;
+        pickupKnightAudioSource.volume = volume;
+        pickupKnightAudioSource.clip = sfxToPlay;
+        pickupKnightAudioSource.Play();
     }
 
     public void IncreasePlayerHealthByAmount(int amount, bool onlyUptilNextFullHeart = false)

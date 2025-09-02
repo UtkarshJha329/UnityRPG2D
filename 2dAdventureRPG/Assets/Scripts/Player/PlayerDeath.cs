@@ -26,6 +26,7 @@ public class PlayerDeath : MonoBehaviour
     {
         if (characterStates.isDead)
         {
+            GameStats.gameOverState = -1;
             gameObject.SetActive(false);
         }
     }

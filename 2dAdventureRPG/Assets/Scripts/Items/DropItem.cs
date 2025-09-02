@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -20,6 +21,14 @@ public class DropItem : MonoBehaviour
     public Sprite damageDropSprite;
     public Sprite healthDropSprite;
     public Sprite speedDropSprite;
+
+    public AudioClip damageDropPickupSfx;
+    public AudioClip healthDropPickupSfx;
+    public AudioClip speedDropPickupSfx;
+
+    public List<AudioClip> damageDropKnightSfx;
+    public List<AudioClip> healthDropKnightSfx;
+    public List<AudioClip> speedDropKnightSfx;
 
     //public CircleCollider2D dropPlayerPickupCollider;
 
@@ -81,6 +90,9 @@ public class DropItem : MonoBehaviour
                 //s_PlayerProperties.attackDamageValue--;
                 //s_PlayerProperties.IncreaseAttackDamageForSeconds(1, 5);
                 playerPickupsHandler.IncreaseAttackDamageForSeconds(increaseAttackDamageByUponPickup, increaseAttackDamageForAmountOfTime);
+                //playerPickupsHandler.PlaySoundEffect(damageDropPickupSfx, 1.0f);
+
+                playerPickupsHandler.PlaySoundEffectDirect(damageDropKnightSfx[Random.Range(0, damageDropKnightSfx.Count)], 1.75f, Random.Range(0.90f, 1.0f));
             }
             else if (dropItemType == DropType.SpeedDrop)
             {
@@ -89,6 +101,9 @@ public class DropItem : MonoBehaviour
                 //s_PlayerProperties.speed++;
                 //s_PlayerProperties.IncreaseMovementSpeedForSeconds(1, 5);
                 playerPickupsHandler.IncreaseMovementSpeedForSeconds(increaseMovementSpeedByUponPickup, increaseMovementSpeedForSeconds);
+                //playerPickupsHandler.PlaySoundEffect(speedDropPickupSfx, 0.5f);
+
+                playerPickupsHandler.PlaySoundEffectDirect(speedDropKnightSfx[Random.Range(0, speedDropKnightSfx.Count)], 1.0f, Random.Range(0.80f, 0.95f));
             }
             else if (dropItemType == DropType.HealthDrop)
             {
@@ -97,6 +112,9 @@ public class DropItem : MonoBehaviour
                 //s_PlayerHealthManager.IncreaseMaxHealth(1);
                 //s_PlayerHealthManager.ChangeHealth(1);
                 playerPickupsHandler.IncreasePlayerHealthByAmount(increasePlayerHealthByAmountUponPickup, true);
+                //playerPickupsHandler.PlaySoundEffect(healthDropPickupSfx, 1.0f);
+
+                playerPickupsHandler.PlaySoundEffectDirect(healthDropKnightSfx[Random.Range(0, healthDropKnightSfx.Count)], 1.0f, Random.Range(0.80f, 0.95f));
             }
             else if (dropItemType == DropType.PlayerDeath)
             {

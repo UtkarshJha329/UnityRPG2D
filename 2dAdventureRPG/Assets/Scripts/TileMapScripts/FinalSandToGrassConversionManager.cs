@@ -45,12 +45,32 @@ public class FinalSandToGrassConversionManager : MonoBehaviour
                 }
             }
 
-            if (performFinalConversion)
+            GameStats.finalStructuresHaveBeenDestroyed = performFinalConversion;
+            if (performFinalConversion && GameStats.playerFinishedFinalCutscene)
             {
                 //Debug.Log("Performing final conversion.");
 
-                s_PlayerProperties.playerHitStopManager.StopTimeFor(5.0f, 0.1f);
-                s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 0.05f);
+                s_PlayerProperties.playerHitStopManager.StopAllCoroutines();
+                TimeStop.waiting = false;
+
+
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+                // DO CAMERA SHAKE EACH TIME THE BEAM PULSES AND THE SAND IS CONVERTED INTO GRASS!!!
+
+                s_PlayerProperties.playerHitStopManager.StopTimeFor(30.0f, 0.1f);
+                s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 0.15f);
+
+                // PLAYER WIN STATE ACTIVATE!!!!!
+                GameStats.gameOverState = 1;
 
                 grassSandConversionManager.AddTileToTurnIntoGrassFinal(startFinalConversionFromTile);
 

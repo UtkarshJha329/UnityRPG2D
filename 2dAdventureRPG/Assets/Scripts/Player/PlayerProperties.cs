@@ -37,6 +37,9 @@ public class PlayerProperties : MonoBehaviour
 
     public bool sandDamage = false;
 
+    public bool isPlayingCutscene = false;
+    public Vector2 currentCutsceneMovementTarget = Vector2.zero;
+
     private void Awake()
     {
         playerHitStopManager = GameObject.FindGameObjectWithTag("HitStopManager").GetComponent<TimeStop>();
