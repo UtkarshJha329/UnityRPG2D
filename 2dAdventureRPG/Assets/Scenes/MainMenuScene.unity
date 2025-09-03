@@ -470,8 +470,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputField: {fileID: 476264850}
   rulesPanel: {fileID: 972513970}
-  loadingScreenPanel: {fileID: 702983988}
-  progressBar: {fileID: 1855434788}
   pageTurningAudioClip: {fileID: 8300000, guid: 9e6cca881eb8c524a86957c887c31226, type: 3}
 --- !u!82 &46860224
 AudioSource:

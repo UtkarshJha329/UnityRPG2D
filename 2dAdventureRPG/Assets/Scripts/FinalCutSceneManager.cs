@@ -88,6 +88,7 @@ public class FinalCutSceneManager : MonoBehaviour
     {
         HideHolyLightTiles();
         GameStats.playerFinishedFinalCutscene = true;
+        playerGameObject.GetComponent<PlayerHaloManager>().haloIsVisible = false;
     }
 
     private void DrawHolyLightTiles()

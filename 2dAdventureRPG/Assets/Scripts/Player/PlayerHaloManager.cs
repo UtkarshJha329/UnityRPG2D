@@ -4,6 +4,8 @@ public class PlayerHaloManager : MonoBehaviour
 {
     public GameObject knightHalo;
 
+    public bool haloIsVisible = true;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,7 +17,8 @@ public class PlayerHaloManager : MonoBehaviour
     {
         if (GameStats.playerReachedCutSceneTile)
         {
-            knightHalo.SetActive(true);
+            knightHalo.SetActive(haloIsVisible);
         }
     }
+
 }

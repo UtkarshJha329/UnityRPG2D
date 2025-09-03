@@ -71,6 +71,6 @@ public class GameOverPanelManager : MonoBehaviour
         GameStats.playerFinishedFinalCutscene = false;
         GameStats.finalRoomConvertedIntoGrassFully = false;
 
-        Debug.Log("Reset game stats.");
+        //Debug.Log("Reset game stats.");
     }
 }
