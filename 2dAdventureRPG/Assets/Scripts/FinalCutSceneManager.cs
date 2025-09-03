@@ -11,16 +11,23 @@ public class FinalCutSceneManager : MonoBehaviour
     private PlayerProperties s_PlayerProperties;
     private MapGenerator mapGenerator;
 
-    private bool once = true;
-
-    private bool temp = true;
-
     public CameraTargetManager finalRoomCameraTargetManager;
+
+    public AudioClip finalCutSceneBeamPowerUpClip;
+    public AudioSource finalCutSceneBeamPowerUpAudioSource;
+
+    public bool once = true;
+    private bool playedCutScene = false;
+
+    private void Awake()
+    {
+        finalCutSceneBeamPowerUpAudioSource = GetComponent<AudioSource>();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -54,9 +61,10 @@ public class FinalCutSceneManager : MonoBehaviour
             once = false;
         }
 
-        if (GameStats.playerReachedCutSceneTile && !GameStats.playerFinishedFinalCutscene)
+        if (GameStats.playerReachedCutSceneTile && !GameStats.playerFinishedFinalCutscene && !playedCutScene)
         {
             PlayCutscene();
+            playedCutScene = true;
         }
 
         //if (GameStats.finalStructuresHaveBeenDestroyed)
@@ -70,6 +78,7 @@ public class FinalCutSceneManager : MonoBehaviour
 
     private void PlayCutscene()
     {
+        finalCutSceneBeamPowerUpAudioSource.PlayOneShot(finalCutSceneBeamPowerUpClip, 1.5f);
         DrawHolyLightTiles();
         Invoke("FinishPlayingHolyLight", 4.0f);
         Invoke("CompleteCutscene", 5.0f);

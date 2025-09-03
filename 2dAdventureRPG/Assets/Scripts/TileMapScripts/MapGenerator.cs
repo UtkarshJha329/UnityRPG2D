@@ -1,11 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static System.Collections.Specialized.BitVector32;
 
 public enum TileBorderType
 {
@@ -199,6 +195,8 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
+        GameSettings.SetSeed();
+
         if (groundTileMap == null)
         {
             Debug.LogWarning("WARNING : Ground tilemap reference not set in Map Generator.");
@@ -394,6 +392,23 @@ public class MapGenerator : MonoBehaviour
     public void SetGroundTileToGrass(Vector3Int tilePositionOnTilesMap)
     {
         groundTileMap.SetTile(tilePositionOnTilesMap, groundTileGrassMM);
+    }
+
+    public Vector2Int RoomIndexOfTile(Vector3Int tilePositionOnTileMap)
+    {
+        return new Vector2Int(tilePositionOnTileMap.x / numTilesInRooms.x, tilePositionOnTileMap.y / numTilesInRooms.y);
+    }
+
+    public Vector2Int PlayerRoomIndex()
+    {
+        return new Vector2Int((int)(player.transform.position.x / numTilesInRooms.x), (int)(player.transform.position.y / numTilesInRooms.y));
+    }
+
+    public bool IsTileInSameRoomAsPlayer(Vector3Int tilePositionOnTileMap)
+    {
+        Vector2Int roomIndexOfTile = RoomIndexOfTile(tilePositionOnTileMap);
+        Vector2Int roomIndexOfPlayer = PlayerRoomIndex();
+        return roomIndexOfTile == roomIndexOfPlayer;
     }
 
     public bool IsTileSand(Vector3Int tilePositionOnTileMap)

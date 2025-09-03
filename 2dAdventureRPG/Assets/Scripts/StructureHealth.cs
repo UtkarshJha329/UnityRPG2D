@@ -108,9 +108,9 @@ public class StructureHealth : MonoBehaviour
             // Add smoke and sound effects during the change.
             if(isGoblinHut && !playedGoblinHutDestroyedSfx)
             {
-                structureBrokeAudioSourcePlayer.pitch = Random.Range(0.95f, 1.0f);
+                structureBrokeAudioSourcePlayer.pitch = Random.Range(0.80f, 0.85f);
                 structureBrokeAudioSourcePlayer.clip = goblinHutCollapseSFX;
-                structureBrokeAudioSourcePlayer.volume = Random.Range(0.85f, 1.5f);
+                structureBrokeAudioSourcePlayer.volume = Random.Range(0.85f, 1.25f);
                 structureBrokeAudioSourcePlayer.Play();
 
                 playedGoblinHutDestroyedSfx = true;

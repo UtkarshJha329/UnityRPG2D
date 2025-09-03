@@ -27,11 +27,11 @@ public class GameOverPanelManager : MonoBehaviour
                 youWinTextGameObject.SetActive(true);
                 gameOverPanelContents.SetActive(true);
             }
-            else if (GameStats.gameOverState == -1)
-            {
-                youDiedTextGameObject.SetActive(true);
-                gameOverPanelContents.SetActive(true);
-            }
+        }
+        else if (GameStats.gameOverState == -1)
+        {
+            youDiedTextGameObject.SetActive(true);
+            gameOverPanelContents.SetActive(true);
         }
     }
 
@@ -51,15 +51,26 @@ public class GameOverPanelManager : MonoBehaviour
 
     public void OnClickLevelRestartButton()
     {
-        GameStats.gameOverState = 0;
-        Time.timeScale = 1.0f;
+        ResetGameStats();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnClickReturnToMainMenuButton()
     {
-        GameStats.gameOverState = 0;
-        Time.timeScale = 1.0f;
+        ResetGameStats();
         SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    private void ResetGameStats()
+    {
+        Time.timeScale = 1.0f;
+
+        GameStats.gameOverState = 0;
+        GameStats.finalStructuresHaveBeenDestroyed = false;
+        GameStats.playerReachedCutSceneTile = false;
+        GameStats.playerFinishedFinalCutscene = false;
+        GameStats.finalRoomConvertedIntoGrassFully = false;
+
+        Debug.Log("Reset game stats.");
     }
 }

@@ -90,6 +90,16 @@ public class AllAudioContainer : MonoBehaviour
 
     private void OnValidate()
     {
+        UpdateAudioReferences();
+    }
+
+    private void Awake()
+    {
+        UpdateAudioReferences();
+    }
+
+    private void UpdateAudioReferences()
+    {
         enemyHurtBasedOnEnemyType.Clear();
         for (int i = 0; i < enemyHurtSfx.Count; i++)
         {
@@ -143,7 +153,7 @@ public class AllAudioContainer : MonoBehaviour
         {
             knightHitArmourAudioClips.Add(knightHitArmourClips[i]);
         }
-        
+
         structureCollapseAudioClips.Clear();
         for (int i = 0; i < structureCollapseSfx.Count; i++)
         {

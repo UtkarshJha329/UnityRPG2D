@@ -19,4 +19,13 @@ public class GameSettings : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public static void SetSeed()
+    {
+        if (GameSettings.Instance.GAME_SEED.Length == 0)
+        {
+            GameSettings.Instance.GAME_SEED = Random.Range(197, 1283128).ToString();
+        }
+        Random.InitState(GameSettings.Instance.GAME_SEED.GetHashCode());
+    }
 }

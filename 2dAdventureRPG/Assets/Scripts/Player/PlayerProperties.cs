@@ -49,6 +49,6 @@ public class PlayerProperties : MonoBehaviour
         }
 
         impulseSourceForScreenShake = GetComponent<CinemachineImpulseSource>();
-
+        isPlayingCutscene = false;
     }
 }

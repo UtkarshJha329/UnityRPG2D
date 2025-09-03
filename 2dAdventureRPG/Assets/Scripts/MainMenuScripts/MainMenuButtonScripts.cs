@@ -10,15 +10,20 @@ public class MainMenuButtonScripts : MonoBehaviour
     public TMP_InputField inputField;
 
     public GameObject rulesPanel;
-    public GameObject loadingScreenPanel;
-    public Slider progressBar;
 
     private CanvasGroup rulesMenuCanvasGroup;
+
+    private AudioSource mainMenuAudioSource;
+    public AudioClip pageTurningAudioClip;
+
+    private void Awake()
+    {
+        mainMenuAudioSource = GetComponent<AudioSource>();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        loadingScreenPanel.SetActive(false);
         rulesPanel.SetActive(false);
 
         rulesMenuCanvasGroup = rulesPanel.GetComponent<CanvasGroup>();
@@ -36,7 +41,6 @@ public class MainMenuButtonScripts : MonoBehaviour
         string gameSceneName = "GameBalanceScene";
         //SceneManager.LoadScene(gameSceneName);
 
-        loadingScreenPanel.SetActive(true);
         StartCoroutine(LoadSceneAsync(gameSceneName));
 
     }
@@ -55,16 +59,12 @@ public class MainMenuButtonScripts : MonoBehaviour
         {
             // Progress is typically from 0 to 0.9, representing loading progress
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
-            progressBar.value = progress;
+            //progressBar.value = progress;
 
             // When loading is almost complete, allow scene activation
             if (operation.progress >= 0.9f)
             {
-                if(GameSettings.Instance.GAME_SEED.Length == 0)
-                {
-                    GameSettings.Instance.GAME_SEED = Random.Range(197, 1283128).ToString();
-                }
-                Random.InitState(GameSettings.Instance.GAME_SEED.GetHashCode());
+                GameSettings.SetSeed();
                 // Optionally, you can wait for a key press or a delay here
                 operation.allowSceneActivation = true;
                 //loadingScreenPanel.SetActive(false); // Hide the loading screen after activation
@@ -86,6 +86,7 @@ public class MainMenuButtonScripts : MonoBehaviour
         rulesMenuCanvasGroup.alpha = 0.0f;
 
         InvokeRepeating("IncreaseRulesPanelCanvasGroupAlpha", 0.0f, 0.1f);
+        Invoke("PlayPageTurningSoundEffect", 0.25f);
         Invoke("StopInvokingRulesPanelCanvasGroupAplhaChangingMethodForOpening", 1.5f);
     }
 
@@ -99,9 +100,15 @@ public class MainMenuButtonScripts : MonoBehaviour
         CancelInvoke("IncreaseRulesPanelCanvasGroupAlpha");
     }
     
+    private void PlayPageTurningSoundEffect()
+    {
+        mainMenuAudioSource.PlayOneShot(pageTurningAudioClip);
+    }
+
     public void CloseRulesPanel()
     {
         InvokeRepeating("DecreaseRulesPanelCanvasGroupAlpha", 0.0f, 0.1f);
+        Invoke("PlayPageTurningSoundEffect", 0.15f);
         Invoke("StopInvokingRulesPanelCanvasGroupAplhaChangingMethodForClosing", 1.5f);
     }
 

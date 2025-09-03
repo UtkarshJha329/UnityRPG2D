@@ -23,6 +23,11 @@ public class GameStats : MonoBehaviour
     private void Awake()
     {
         currentKillStreak = 0;
+
+        finalStructuresHaveBeenDestroyed = false;
+        playerReachedCutSceneTile = false;
+        playerFinishedFinalCutscene = false;
+        finalRoomConvertedIntoGrassFully = false;
     }
 
     public int NumEnemiesKilled()

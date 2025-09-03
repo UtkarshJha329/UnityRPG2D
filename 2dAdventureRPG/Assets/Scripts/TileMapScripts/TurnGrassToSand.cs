@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public class TurnGrassToSand : MonoBehaviour
@@ -30,10 +32,36 @@ public class TurnGrassToSand : MonoBehaviour
     private bool gainedPlayerReference = false;
     private PlayerProperties s_PlayerProperties;
 
+    public AudioClip grassToSandSFX;
+    public AudioClip sandToGrassSFX;
+    private AudioSource conversionSoundAudioSource;
+
+    private float grassToSandAudioSourcePlayingVolumeOffset = 1.0f;
+
+    public GameObject sandToGrassParticleSystemGameObjectPrefab;
+
+    private Queue<SandGrassConversionParticleManager> conversionParticleSystems = new Queue<SandGrassConversionParticleManager>();
+    private Queue<SandGrassConversionParticleManager> conversionParticleSystemsInUse = new Queue<SandGrassConversionParticleManager>();
+
+    private void Awake()
+    {
+        conversionSoundAudioSource = GetComponent<AudioSource>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         mapGenerator = GameObject.FindGameObjectWithTag("MapTileGrid").GetComponent<MapGenerator>();
+
+        int maxParticleSystemsEverNeeded = Mathf.Max(maxTilesToConvertSandIntoGrassFromFinalStructureDestruction, maxTilesToConvertSandIntoGrassFromMines);
+        maxParticleSystemsEverNeeded = Mathf.Max(maxParticleSystemsEverNeeded, maxNumTilesToConvertEachFrame);
+
+        for (int i = 0; i < maxParticleSystemsEverNeeded; i++)
+        {
+            GameObject currentParticleSystemGameObject = Instantiate(sandToGrassParticleSystemGameObjectPrefab, transform);
+            currentParticleSystemGameObject.SetActive(false);
+            conversionParticleSystems.Enqueue(currentParticleSystemGameObject.GetComponent<SandGrassConversionParticleManager>());
+        }
     }
 
     // Update is called once per frame
@@ -47,9 +75,31 @@ public class TurnGrassToSand : MonoBehaviour
 
         if (!gainedPlayerReference)
         {
-            s_PlayerProperties = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperties>();
+            GameObject playerGameObject = GameObject.FindGameObjectWithTag("Player");
+            if(playerGameObject != null)
+            {
+                s_PlayerProperties = playerGameObject.GetComponent<PlayerProperties>();
+            }
         }
 
+        if(s_PlayerProperties == null)
+        {
+            return;
+        }
+
+        while(conversionParticleSystemsInUse.Count > 0)
+        {
+            if (conversionParticleSystemsInUse.Peek().IsParticleSystemPlaying())
+            {
+                break;
+            }
+            else
+            {
+                SandGrassConversionParticleManager currentFinishedUseParticleSystem = conversionParticleSystemsInUse.Dequeue();
+                currentFinishedUseParticleSystem.gameObject.SetActive(false);
+                conversionParticleSystems.Enqueue(currentFinishedUseParticleSystem);
+            }
+        }
 
         if (initTilesList)
         {
@@ -70,18 +120,23 @@ public class TurnGrassToSand : MonoBehaviour
             initTilesList = false;
         }
 
-        if(nextTurnGrassIntoSandSeconds <= Time.time /* || notFinishedPreviousConversionsToSand*/ && !GameStats.finalStructuresHaveBeenDestroyed)
+        if (nextTurnGrassIntoSandSeconds <= Time.time /* || notFinishedPreviousConversionsToSand*/ && !GameStats.finalStructuresHaveBeenDestroyed)
         {
             int numTilesConvertedThisRound = 0;
+            bool playedForThisItterationOfConversion = false;
             while (numTilesConvertedThisRound < maxNumTilesToConvertEachFrame && tilesToTurnIntoSand.Count > 0)
             {
                 numTilesConvertedThisRound++;
- 
+
                 Vector3Int currentTilePosition = tilesToTurnIntoSand.Dequeue();
 
                 if (mapGenerator.IsTileGrass(currentTilePosition))
                 {
                     mapGenerator.SetGroundTileToSand(currentTilePosition);
+                    if (mapGenerator.IsTileInSameRoomAsPlayer(currentTilePosition))
+                    {
+                        PlayAvailableParticleEffectAtPosition(currentTilePosition, true);
+                    }
 
                     if (mapGenerator.bushOnTile.ContainsKey(currentTilePosition))
                     {
@@ -115,6 +170,15 @@ public class TurnGrassToSand : MonoBehaviour
                         tilesToTurnIntoSand.Enqueue(left);
                     }
 
+                    if (!playedForThisItterationOfConversion && mapGenerator.IsTileInSameRoomAsPlayer(currentTilePosition))
+                    {
+                        //Debug.Log("Grass to sand := " + mapGenerator.RoomIndexOfTile(currentTilePosition) + ", " + mapGenerator.PlayerRoomIndex());
+                        //StartCoroutine(PlayNConversionSFXDelayed(5, 0.0f, 0.15f, grassToSandSFX, 0.0f));
+                        PlayConversionSFXImmediate(grassToSandSFX, 0.0f);
+                        s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 0.15f);
+                        playedForThisItterationOfConversion = true;
+                    }
+
                     //Debug.Log("Converted tile to sand.");
                 }
             }
@@ -122,18 +186,23 @@ public class TurnGrassToSand : MonoBehaviour
             nextTurnGrassIntoSandSeconds = Time.time + turnGrassIntoSandEveryXSeconds;
         }
 
-        if(nextTurnSandIntoGrassSeconds <= Time.time)
+        if (nextTurnSandIntoGrassSeconds <= Time.time)
         {
             int numTilesConvertedThisRound = 0;
+            bool playedForThisItterationOfConversion = false;
             while (numTilesConvertedThisRound < maxTilesToConvertSandIntoGrassFromMines && tilesToTurnIntoGrassFromMineDestruction.Count > 0)
             {
                 numTilesConvertedThisRound++;
- 
+
                 Vector3Int currentTilePosition = tilesToTurnIntoGrassFromMineDestruction.Dequeue();
 
                 if (mapGenerator.IsTileSand(currentTilePosition))
                 {
                     mapGenerator.SetGroundTileToGrass(currentTilePosition);
+                    if (mapGenerator.IsTileInSameRoomAsPlayer(currentTilePosition))
+                    {
+                        PlayAvailableParticleEffectAtPosition(currentTilePosition, false);
+                    }
 
                     if (mapGenerator.bushOnTile.ContainsKey(currentTilePosition))
                     {
@@ -167,11 +236,20 @@ public class TurnGrassToSand : MonoBehaviour
                         tilesToTurnIntoGrassFromMineDestruction.Enqueue(left);
                     }
 
+                    if (!playedForThisItterationOfConversion && mapGenerator.IsTileInSameRoomAsPlayer(currentTilePosition))
+                    {
+                        //Debug.Log("Sand to grass := " + mapGenerator.RoomIndexOfTile(currentTilePosition) + ", " + mapGenerator.PlayerRoomIndex());
+                        //StartCoroutine(PlayNConversionSFXDelayed(5, 0.0f, 0.15f, sandToGrassSFX, 0.0f));
+                        PlayConversionSFXImmediate(sandToGrassSFX, grassToSandAudioSourcePlayingVolumeOffset);
+                        s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 0.15f);
+                        playedForThisItterationOfConversion = true;
+                    }
+
                     //Debug.Log("Converted tile to grass.");
                 }
             }
 
-            if(numTilesConvertedThisRound >= maxTilesToConvertSandIntoGrassFromMines)
+            if (numTilesConvertedThisRound >= maxTilesToConvertSandIntoGrassFromMines)
             {
                 tilesToTurnIntoGrassFromMineDestruction.Clear();
             }
@@ -184,6 +262,7 @@ public class TurnGrassToSand : MonoBehaviour
             //Debug.Log("Checking to perform final conversion at := " + nextTurnSandIntoGrassSecondsFinal);
             //Debug.Log("Can convert but := " + tilesToTurnIntoGrassFromFinalStructureDestruction.Count);
             int numTilesConvertedThisRound = 0;
+            bool playedForThisItterationOfConversion = false;
             while (tilesToTurnIntoGrassFromFinalStructureDestruction.Count > 0 && numTilesConvertedThisRound < maxTilesToConvertSandIntoGrassFromFinalStructureDestruction)
             {
                 //Debug.Log("Converting to grass final.");
@@ -194,6 +273,10 @@ public class TurnGrassToSand : MonoBehaviour
                 if (mapGenerator.IsTileSand(currentTilePosition))
                 {
                     mapGenerator.SetGroundTileToGrass(currentTilePosition);
+                    if (mapGenerator.IsTileInSameRoomAsPlayer(currentTilePosition))
+                    {
+                        PlayAvailableParticleEffectAtPosition(currentTilePosition, false);
+                    }
 
                     if (mapGenerator.bushOnTile.ContainsKey(currentTilePosition))
                     {
@@ -227,6 +310,13 @@ public class TurnGrassToSand : MonoBehaviour
                         tilesToTurnIntoGrassFromFinalStructureDestruction.Enqueue(left);
                     }
 
+                    if (!playedForThisItterationOfConversion && mapGenerator.IsTileInSameRoomAsPlayer(currentTilePosition))
+                    {
+                        //Debug.Log("Sand to grass := " + mapGenerator.RoomIndexOfTile(currentTilePosition) + ", " + mapGenerator.PlayerRoomIndex());
+                        PlayConversionSFXImmediate(sandToGrassSFX, grassToSandAudioSourcePlayingVolumeOffset);
+                        playedForThisItterationOfConversion = true;
+                    }
+
                     //Debug.Log("Converted tile to grass final conversion.");
                 }
             }
@@ -235,6 +325,8 @@ public class TurnGrassToSand : MonoBehaviour
             if (GameStats.playerReachedCutSceneTile && !GameStats.finalRoomConvertedIntoGrassFully)
             {
                 s_PlayerProperties.impulseSourceForScreenShake.GenerateImpulseWithVelocity(Random.insideUnitCircle * 0.15f);
+                //StartCoroutine(PlayNConversionSFXDelayed(5, 0.0f, 0.15f, grassToSandSFX, 0.0f));
+
                 if (IsCastleRoomFullOfGrass())
                 {
                     GameStats.finalRoomConvertedIntoGrassFully = true;
@@ -272,7 +364,7 @@ public class TurnGrassToSand : MonoBehaviour
         {
             for (int y = 0; y < mapGenerator.NumTilesInRooms().y; y++)
             {
-                if(mapGenerator.IsTileSand(new Vector3Int(castleSpawnRoomTileOffset.x + x, castleSpawnRoomTileOffset.y + y, 0)))
+                if (mapGenerator.IsTileSand(new Vector3Int(castleSpawnRoomTileOffset.x + x, castleSpawnRoomTileOffset.y + y, 0)))
                 {
                     return false;
                 }
@@ -280,5 +372,30 @@ public class TurnGrassToSand : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void PlayConversionSFXImmediate(AudioClip conversionSFX, float volumeOffset)
+    {
+        conversionSoundAudioSource.PlayOneShot(conversionSFX, Random.Range(0.75f, 1.0f) + volumeOffset);
+    }
+
+    private void PlayAvailableParticleEffectAtPosition(Vector3 position, bool playGrassParticles)
+    {
+        SandGrassConversionParticleManager newUseParticleSystem;
+        if(conversionParticleSystems.TryDequeue(out newUseParticleSystem))
+        {
+            newUseParticleSystem.transform.position = position;
+            if (playGrassParticles)
+            {
+                newUseParticleSystem.PlayGrassParticles(position);
+            }
+            else
+            {
+                newUseParticleSystem.PlaySandParticles(position);
+            }
+            newUseParticleSystem.gameObject.SetActive(true);
+
+            conversionParticleSystemsInUse.Enqueue(newUseParticleSystem);
+        }
     }
 }

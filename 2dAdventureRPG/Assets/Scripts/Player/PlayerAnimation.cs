@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 
 [RequireComponent(typeof(CharacterStates))]

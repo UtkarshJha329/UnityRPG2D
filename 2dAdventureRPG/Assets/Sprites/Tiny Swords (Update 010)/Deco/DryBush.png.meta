@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      DryBush_0: 7078275109311534920
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
