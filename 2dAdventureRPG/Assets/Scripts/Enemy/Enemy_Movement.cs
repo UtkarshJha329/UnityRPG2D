@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -36,6 +37,8 @@ public class Enemy_Movement : MonoBehaviour
     private bool useAllPatrolPoints = true;
 
     private float emptyApproachingWayPointDistance = 1.5f;
+
+    private bool isInAttackRange = false;
 
     private void Awake()
     {
@@ -81,8 +84,16 @@ public class Enemy_Movement : MonoBehaviour
     {
         if (!characterStates.isKnockbacked)
         {
-            s_EnemyProperties.facingDirection = new Vector3(rb2d.linearVelocity.x != 0.0f ? Mathf.Sign(rb2d.linearVelocity.x) : s_EnemyProperties.facingDirection.x, 1.0f, 0.0f);
-            transform.localScale = new Vector3(s_EnemyProperties.facingDirection.x, s_EnemyProperties.facingDirection.y, 0.0f);
+            if (!characterStates.IsAttacking() && !isInAttackRange)
+            {
+                s_EnemyProperties.facingDirection = new Vector3(rb2d.linearVelocity.x != 0.0f ? Mathf.Sign(rb2d.linearVelocity.x) : s_EnemyProperties.facingDirection.x, 1.0f, 0.0f);
+                transform.localScale = new Vector3(s_EnemyProperties.facingDirection.x, s_EnemyProperties.facingDirection.y, 0.0f);
+            }
+            else
+            {
+                s_EnemyProperties.facingDirection = new Vector3(Mathf.Sign(playerTransform.position.x - transform.position.x), 1.0f, 0.0f);
+                transform.localScale = new Vector3(s_EnemyProperties.facingDirection.x, s_EnemyProperties.facingDirection.y, 0.0f);
+            }
         }
     }
 
@@ -101,9 +112,10 @@ public class Enemy_Movement : MonoBehaviour
                     rb2d.linearVelocity = directionToPlayer * s_EnemyProperties.speed;
 
                     //Debug.Log("Moving to attack player!");
-
                     characterStates.isMoving = true;
                     characterStates.isIdling = false;
+
+                    isInAttackRange = false;
                 }
                 else
                 {
@@ -111,6 +123,8 @@ public class Enemy_Movement : MonoBehaviour
 
                     characterStates.isMoving = false;
                     characterStates.isIdling = true;
+
+                    isInAttackRange = true;
                 }
             }
             else
@@ -119,6 +133,8 @@ public class Enemy_Movement : MonoBehaviour
 
                 characterStates.isMoving = false;
                 characterStates.isIdling = false;
+
+                isInAttackRange = false;
             }
         }
         else

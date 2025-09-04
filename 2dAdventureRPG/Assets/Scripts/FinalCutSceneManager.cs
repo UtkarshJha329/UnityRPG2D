@@ -80,6 +80,7 @@ public class FinalCutSceneManager : MonoBehaviour
     {
         finalCutSceneBeamPowerUpAudioSource.PlayOneShot(finalCutSceneBeamPowerUpClip, 1.5f);
         DrawHolyLightTiles();
+        GameStats.playerFinishedFinalCutscene = true;
         Invoke("FinishPlayingHolyLight", 4.0f);
         Invoke("CompleteCutscene", 5.0f);
     }
